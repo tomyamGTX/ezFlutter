@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../providers/auth.provider.dart';
 import '../screen/getapi.dart';
 import '../screen/phone.number.screen.dart';
-import '../text/styles/basic.text.dart';
+import '../style/text/basic.text.dart';
 
 Drawer buildDrawer(BuildContext context) {
   return Drawer(
@@ -28,9 +28,7 @@ Drawer buildDrawer(BuildContext context) {
                 child: CircleAvatar(
                   radius: 38,
                   child: Text(
-                    AppUser.instance.user!.email!
-                        .substring(0, 1)
-                        .toUpperCase(),
+                    AppUser.instance.user!.email!.substring(0, 1).toUpperCase(),
                     style: basicTextStyle(),
                   ),
                 ),

@@ -1,10 +1,12 @@
-import 'dart:math';
-
 import 'package:ez_flutter/screen/register.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../style/button/button1.dart';
+
 import '../providers/auth.provider.dart';
+import '../widgets/form.dart';
+import '../widgets/pass.ui.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -22,6 +24,7 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         body: Center(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -30,56 +33,57 @@ class _LoginState extends State<Login> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  TextFormField(
-                    validator: (e) {
-                      if (e!.isEmpty) {
-                        return 'Please insert email';
-                      }
-                    },
-                    controller: _email,
-                    decoration: const InputDecoration(label: Text('Email')),
+                  Flexible(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.mail),
+                          Flexible(
+                            child: FormUi(email: _email),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                  TextFormField(
-                    obscureText: true,
-                    validator: (e) {
-                      if (e!.isEmpty) {
-                        return 'Please insert password';
-                      }
-                    },
-                    controller: _pass,
-                    decoration: const InputDecoration(label: Text('Password')),
-                  ),
+                  PassUI(pass: _pass),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton(
+                        style: buttonStyle(),
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             try {
                               await Provider.of<AppUser>(context, listen: false)
-                                  .signIn(email: _email.text,
-                                  password: _pass.text);
+                                  .signIn(
+                                      email: _email.text, password: _pass.text);
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(content: Text('Logging in')),
                               );
-                            }catch(e){
+                            } catch (e) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Error. Try again')),
+                                const SnackBar(
+                                    content: Text('Error. Try again')),
                               );
                             }
                           }
                         },
-                        child: const Text('Login')),
+                        child: const Text('Sign In')),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text('OR'),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
+                    child: TextButton(
                         onPressed: () {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => const Register()));
                         },
-                        child: const Text('Register')),
+                        child: const Text('Register Now')),
                   )
                 ],
               ),

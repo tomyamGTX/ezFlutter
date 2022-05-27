@@ -1,12 +1,13 @@
-import 'package:ez_flutter/screen/phone.number.screen.dart';
+
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+
 import 'package:timeline_tile/timeline_tile.dart';
 
 import '../providers/auth.provider.dart';
-import '../text/styles/basic.text.dart';
+
+import '../style/text/basic.text.dart';
 import '../widgets/drawer.home.dart';
-import 'getapi.dart';
+
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
