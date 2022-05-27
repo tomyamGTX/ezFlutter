@@ -47,7 +47,7 @@ class _GetAPIState extends State<GetApi> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Get Azan Time API'),
+          title: const Text('Get Azan Time API (KL)'),
           centerTitle: true,
         ),
         body: Padding(

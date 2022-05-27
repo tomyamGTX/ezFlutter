@@ -1,4 +1,3 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +16,10 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(
+          title: Text(AppUser.instance.user!.phoneNumber ?? 'Not link yet'),
+          centerTitle: true,
+        ),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
@@ -27,13 +29,16 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
                 decoration:
                     const InputDecoration(label: Text('Insert Phone Number')),
               ),
-              ElevatedButton(
-                  onPressed: () async {
-                    if (_phone.text.isNotEmpty) {
-                      getOtp(_phone.text, '123456');
-                    }
-                  },
-                  child: const Text('Get Code'))
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                    onPressed: () async {
+                      if (_phone.text.isNotEmpty) {
+                        getOtp(_phone.text, '123456');
+                      }
+                    },
+                    child: const Text('Get Code')),
+              )
             ],
           ),
         ));

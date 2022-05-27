@@ -23,61 +23,68 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Center(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextFormField(
-                validator: (e) {
-                  if (e!.isEmpty) {
-                    return 'Please insert email';
-                  }
-                },
-                controller: _email,
-                decoration: const InputDecoration(label: Text('Email')),
-              ),
-              TextFormField(
-                obscureText: true,
-                validator: (e) {
-                  if (e!.isEmpty) {
-                    return 'Please insert password';
-                  }
-                },
-                controller: _pass,
-                decoration: const InputDecoration(label: Text('Password')),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        Provider.of<AppUser>(context, listen: false)
-                            .signIn(email: _email.text, password: _pass.text);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Logging in')),
-                        );
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextFormField(
+                    validator: (e) {
+                      if (e!.isEmpty) {
+                        return 'Please insert email';
                       }
                     },
-                    child: const Text('Login')),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const Register()));
+                    controller: _email,
+                    decoration: const InputDecoration(label: Text('Email')),
+                  ),
+                  TextFormField(
+                    obscureText: true,
+                    validator: (e) {
+                      if (e!.isEmpty) {
+                        return 'Please insert password';
+                      }
                     },
-                    child: const Text('Register')),
-              )
-            ],
+                    controller: _pass,
+                    decoration: const InputDecoration(label: Text('Password')),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            try {
+                              await Provider.of<AppUser>(context, listen: false)
+                                  .signIn(email: _email.text,
+                                  password: _pass.text);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Logging in')),
+                              );
+                            }catch(e){
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Error. Try again')),
+                              );
+                            }
+                          }
+                        },
+                        child: const Text('Login')),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const Register()));
+                        },
+                        child: const Text('Register')),
+                  )
+                ],
+              ),
+            ),
           ),
-        ),
-      ),
-    ));
+        ));
   }
 }
