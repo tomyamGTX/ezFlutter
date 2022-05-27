@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../providers/auth.provider.dart';
 import '../screen/getapi.dart';
 import '../screen/phone.number.screen.dart';
-import '../style/text/basic.text.dart';
+import '../style/text/text.dart';
 
 Drawer buildDrawer(BuildContext context) {
   return Drawer(
@@ -44,7 +44,7 @@ Drawer buildDrawer(BuildContext context) {
                 context, MaterialPageRoute(builder: (context) => GetApi()));
           },
         ),
-        if (AppUser.instance.user?.phoneNumber != null)
+        if (AppUser.instance.user?.phoneNumber == null)
           ListTile(
             trailing: const Icon(Icons.navigate_next),
             subtitle: const Text('Link Your Phone Number'),

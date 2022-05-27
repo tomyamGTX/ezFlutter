@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../style/button/button1.dart';
 
 import '../providers/auth.provider.dart';
+import '../style/text/text.dart';
 import '../widgets/form.dart';
 import '../widgets/pass.ui.dart';
 
@@ -33,6 +34,13 @@ class _LoginState extends State<Login> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      'Welcome to EzFlutter',
+                      style: titleTextStyle(),
+                    ),
+                  ),
                   Flexible(
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),

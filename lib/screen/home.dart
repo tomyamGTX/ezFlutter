@@ -1,13 +1,11 @@
-
 import 'package:flutter/material.dart';
 
 import 'package:timeline_tile/timeline_tile.dart';
 
 import '../providers/auth.provider.dart';
 
-import '../style/text/basic.text.dart';
+import '../style/text/text.dart';
 import '../widgets/drawer.home.dart';
-
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -31,6 +29,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+          resizeToAvoidBottomInset: false,
           drawer: buildDrawer(context),
           appBar: AppBar(
             title: Text('Welcome ${AppUser.instance.user?.email}'),
