@@ -29,6 +29,49 @@
             {
               "client_id": "640666311692-nd21s2ngdvlo36i19n900akn7qkkpe81.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "640666311692-utar57hrq1npiucd5ot3ku151nlkmm16.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.ezFlutter"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:640666311692:android:d7f53edcbac49e89522229",
+        "android_client_info": {
+          "package_name": "com.kimi.ezFlutter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "640666311692-nd21s2ngdvlo36i19n900akn7qkkpe81.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMJCGAaywbclRT5WUXEDqoe5x-k-BL_c8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "640666311692-nd21s2ngdvlo36i19n900akn7qkkpe81.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "640666311692-utar57hrq1npiucd5ot3ku151nlkmm16.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.ezFlutter"
+              }
             }
           ]
         }
@@ -58,6 +101,13 @@
             {
               "client_id": "640666311692-nd21s2ngdvlo36i19n900akn7qkkpe81.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "640666311692-utar57hrq1npiucd5ot3ku151nlkmm16.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.ezFlutter"
+              }
             }
           ]
         }

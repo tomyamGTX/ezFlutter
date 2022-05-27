@@ -58,7 +58,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBMJCGAaywbclRT5WUXEDqoe5x-k-BL_c8',
-    appId: '1:640666311692:android:bc61ee1575a487ec522229',
+    appId: '1:640666311692:android:d7f53edcbac49e89522229',
     messagingSenderId: '640666311692',
     projectId: 'emailandphoneauth-6ab6d',
     storageBucket: 'emailandphoneauth-6ab6d.appspot.com',

@@ -1,4 +1,4 @@
-package com.example.ez_flutter
+package com.kimi.ezFlutter
 
 import io.flutter.embedding.android.FlutterActivity
 
