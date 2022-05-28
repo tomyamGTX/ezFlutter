@@ -51,14 +51,11 @@ class TimelineWidget extends StatelessWidget {
                 ),
               ),
             ),
-            startChild: Container(
-              color: Colors.white,
-              child: Center(
-                  child: Text(
-                    text[i],
-                    textAlign: TextAlign.center,
-                  )),
-            ),
+            startChild: Center(
+                child: Text(
+              text[i],
+              textAlign: TextAlign.center,
+            )),
           ),
         Padding(
           padding: const EdgeInsets.only(top: 8.0, bottom: 8.0, right: 160),
