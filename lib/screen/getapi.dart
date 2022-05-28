@@ -33,6 +33,7 @@ class _GetAPIState extends State<GetApi> {
     super.initState();
   }
 
+  String _state = '';
   String? status;
   int? code;
   bool search = false;
@@ -51,6 +52,8 @@ class _GetAPIState extends State<GetApi> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: DropdownSearch(
+                  showSelectedItems: true,
+                  showSearchBox: true,
                   items: const [
                     "Johor",
                     "Kedah",
@@ -64,11 +67,17 @@ class _GetAPIState extends State<GetApi> {
                     'Sabah',
                     'Sarawak',
                     'Selangor',
-                    'Terengganu'
+                    'Terengganu',
+                    'Kuala Lumpur',
+                    'Labuan',
+                    'Putrajaya',
                   ],
                   dropdownSearchDecoration:
                       const InputDecoration(labelText: "Choose State"),
                   onChanged: (String? state) {
+                    setState(() {
+                      _state = state!;
+                    });
                     var item;
                     search = true;
                     if (state == 'Johor') {
@@ -98,21 +107,30 @@ class _GetAPIState extends State<GetApi> {
                     } else if (state == 'Perlis') {
                       item = [3, 3, 0, 1, 1, 1, 0, 1, 0];
                       getResponse(state!, 'Malaysia', item);
-                    }else if (state == 'Sabah') {
+                    } else if (state == 'Sabah') {
                       item = [2, 2, 0, 1, 1, 1, 0, 1, 0];
                       getResponse(state!, 'Malaysia', item);
-                    }else if (state == 'Sarawak') {
+                    } else if (state == 'Sarawak') {
                       item = [2, 2, 0, 1, 1, 1, 0, 1, 0];
                       getResponse(state!, 'Malaysia', item);
-                    }else if (state == 'Selangor') {
+                    } else if (state == 'Selangor') {
                       item = [3, 3, 1, 1, 1, 1, 0, 1, 0];
                       getResponse(state!, 'Malaysia', item);
-                    }else if (state == 'Terengganu') {
+                    } else if (state == 'Terengganu') {
+                      item = [2, 2, 0, 1, 1, 1, 0, 1, 0];
+                      getResponse(state!, 'Malaysia', item);
+                    } else if (state == 'Kuala Lumpur') {
+                      item = [2, 2, 0, 0, 1, 1, 0, 1, 0];
+                      getResponse(state!, 'Malaysia', item);
+                    } else if (state == 'Labuan') {
+                      item = [2, 2, 0, 1, 1, 1, 0, 1, 0];
+                      getResponse(state!, 'Malaysia', item);
+                    } else if (state == 'Putrajaya') {
                       item = [2, 2, 0, 1, 1, 1, 0, 1, 0];
                       getResponse(state!, 'Malaysia', item);
                     }
                   },
-                  selectedItem: "Johor",
+                  selectedItem: _state,
                 ),
               ),
               Visibility(

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import '../providers/auth.provider.dart';
-import '../widgets/drawer.home.dart';
 
-class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+import '../widgets/timeline.widget.dart';
+
+class Timeline extends StatefulWidget {
+  const Timeline({Key? key}) : super(key: key);
 
   @override
-  State<Home> createState() => _HomeState();
+  State<Timeline> createState() => _TimelineState();
 }
 
-class _HomeState extends State<Home> {
+class _TimelineState extends State<Timeline> {
   var color = [Colors.lightGreenAccent, Colors.blueAccent, Colors.redAccent];
 
   var url = [
@@ -25,14 +25,12 @@ class _HomeState extends State<Home> {
     return SafeArea(
       child: Scaffold(
           resizeToAvoidBottomInset: false,
-          drawer: buildDrawer(context),
           appBar: AppBar(
-            title: Text('Welcome ${AppUser.instance.user?.email}'),
+            title: const Text('Planet Timeline'),
+            centerTitle: true,
           ),
           body: Center(
-            child: Column(
-              children: [],
-            ),
+            child: TimelineWidget(url: url, color: color, text: text),
           )),
     );
   }

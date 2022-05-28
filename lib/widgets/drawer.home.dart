@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../providers/auth.provider.dart';
 import '../screen/getapi.dart';
 import '../screen/phone.number.screen.dart';
+import '../screen/timeline.dart';
 import '../style/text/text.dart';
 
 Drawer buildDrawer(BuildContext context) {
@@ -42,6 +43,14 @@ Drawer buildDrawer(BuildContext context) {
           onTap: () {
             Navigator.push(
                 context, MaterialPageRoute(builder: (context) => GetApi()));
+          },
+        ),
+        ListTile(
+          trailing: const Icon(Icons.navigate_next),
+          title: const Text('Planet Timeline'),
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const Timeline()));
           },
         ),
         if (AppUser.instance.user?.phoneNumber == null)
