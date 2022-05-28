@@ -33,12 +33,14 @@ dependencies:
   firebase_core:
   firebase_auth:
   provider:
-  date_picker_timeline: ^1.2.3
   change_app_package_name: ^1.0.0
-  timeline_tile: ^2.0.0
+  timeline_tile:
   dropdown_search:
-  geolocator: ^8.2.1
-  rive_splash_screen: ^0.1.0
+  geolocator:
+  rive_splash_screen:
+  rive:
+  custom_floating_action_button:
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
@@ -67,8 +69,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - asset/rives/intro.riv
-
+    - asset/rives/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

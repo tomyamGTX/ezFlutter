@@ -1,8 +1,13 @@
-import 'package:ez_flutter/providers/location.provider.dart';
+import 'package:custom_floating_action_button/custom_floating_action_button.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:rive/rive.dart';
+import '../animations/evolution.dart';
+import '../animations/light.switch.dart';
+import '../animations/liquid.download.dart';
+import '../animations/little.machine.dart';
+import '../animations/simple.animation.dart';
+import '../animations/state.machine.dart';
 import '../providers/auth.provider.dart';
-import '../style/button/button1.dart';
 import '../widgets/drawer.home.dart';
 
 class Home extends StatefulWidget {
@@ -13,67 +18,157 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final _controller = PageController(initialPage: 0);
+
+  var index = 0;
+
   @override
   Widget build(BuildContext context) {
+    var _options1 = [
+      GestureDetector(
+          onTap: () {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const PlayOneShotAnimation()));
+          },
+          child: const Chip(
+              label: Text(
+            'Bounce Animation',
+          ))),
+      GestureDetector(
+          onTap: () {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const ExampleStateMachine()));
+          },
+          child: const Chip(
+              label: Text(
+            'Button Effect Animation',
+          ))),
+      GestureDetector(
+          onTap: () {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const StateMachineSkills()));
+          },
+          child: const Chip(
+              label: Text(
+            'Evolution Animation',
+          ))),
+    ];
+    var _options2 = [
+      GestureDetector(
+          onTap: () {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const LiquidDownload()));
+          },
+          child: const Chip(
+              label: Text(
+            'Liquid Download Animation',
+          ))),
+      GestureDetector(
+          onTap: () {
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => const LittleMachine()));
+          },
+          child: const Chip(
+              label: Text(
+            'Little Machine Animation',
+          ))),
+      GestureDetector(
+          onTap: () {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const StateMachineAction()));
+          },
+          child: const Chip(
+              label: Text(
+            'State Machine Animation',
+          ))),
+    ];
     return SafeArea(
-      child: Scaffold(
-          resizeToAvoidBottomInset: false,
-          drawer: buildDrawer(context),
-          appBar: AppBar(
-            title: Text('Welcome ${AppUser.instance.user?.email}'),
+        child: Scaffold(
+      drawer: buildDrawer(context),
+      appBar: AppBar(
+        actions: [
+          GestureDetector(
+              onTap: () {
+                index = 0;
+                _controller.animateToPage(index,
+                    duration: const Duration(seconds: 2),
+                    curve: Curves.fastLinearToSlowEaseIn);
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CircleAvatar(
+                  radius: 18,
+                  backgroundColor: Colors.white,
+                  child: CircleAvatar(
+                    radius: 16,
+                    backgroundColor: Theme.of(context).primaryColor,
+                    child: const Text(
+                      '1',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+              )),
+          GestureDetector(
+              onTap: () {
+                index = 1;
+                _controller.animateToPage(index,
+                    duration: const Duration(seconds: 2),
+                    curve: Curves.fastLinearToSlowEaseIn);
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CircleAvatar(
+                  radius: 18,
+                  backgroundColor: Colors.white,
+                  child: CircleAvatar(
+                    radius: 16,
+                    backgroundColor: Theme.of(context).primaryColor,
+                    child: const Text(
+                      '2',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+              )),
+        ],
+        title: Text('Welcome ${AppUser.instance.user?.email!.split('@')[0]}'),
+      ),
+      body: PageView(
+        controller: _controller,
+        children: [
+          CustomFloatingActionButton(
+            body: const RiveAnimation.asset(
+              'asset/rives/person_snowday.riv',
+              fit: BoxFit.cover,
+            ),
+            options: _options1,
+            type: CustomFloatingActionButtonType.circular,
+            openFloatingActionButton: const Icon(Icons.add),
+            closeFloatingActionButton: const Icon(Icons.close),
           ),
-          body: Center(
-            child: Consumer<LocationProvider>(builder: (context, gps, child) {
-              if (gps.position == null) {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Center(child: Text('Location unavailable')),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ElevatedButton(
-                          style: buttonStyle(),
-                          onPressed: () async {
-                            setState(() {});
-                            await Provider.of<LocationProvider>(context,
-                                    listen: false)
-                                .determinePosition();
-                          },
-                          child: const Text('Get Current Location')),
-                    )
-                  ],
-                );
-              }
-              return Column(
-                children: [
-                  Card(
-                    child: ListTile(
-                      title: const Text('Your position accuracy '),
-                      subtitle: Text('${gps.position!.accuracy}'),
-                    ),
-                  ),
-                  Card(
-                    child: ListTile(
-                      title: const Text('Your position longitude'),
-                      subtitle: Text('${gps.position!.longitude}'),
-                    ),
-                  ),
-                  Card(
-                    child: ListTile(
-                      title: const Text('Your position latitude '),
-                      subtitle: Text('${gps.position!.latitude}'),
-                    ),
-                  ),
-                  Card(
-                    child: ListTile(
-                      title: const Text('Last sync'),
-                      subtitle: Text('${gps.position!.timestamp}'),
-                    ),
-                  ),
-                ],
-              );
-            }),
-          )),
-    );
+          CustomFloatingActionButton(
+            body: const RiveAnimation.asset(
+              'asset/rives/bird.riv',
+              fit: BoxFit.contain,
+            ),
+            options: _options2,
+            type: CustomFloatingActionButtonType.circular,
+            openFloatingActionButton: const Icon(Icons.add),
+            closeFloatingActionButton: const Icon(Icons.close),
+          ),
+        ],
+      ),
+    ));
   }
 }

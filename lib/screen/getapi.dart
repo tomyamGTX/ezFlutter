@@ -52,8 +52,6 @@ class _GetAPIState extends State<GetApi> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: DropdownSearch(
-                  showSelectedItems: true,
-                  showSearchBox: true,
                   items: const [
                     "Johor",
                     "Kedah",
