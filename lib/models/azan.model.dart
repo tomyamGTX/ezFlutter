@@ -1,27 +1,22 @@
 class Azan {
   int? code;
   String? status;
-  List<Data>? data;
+  Data? data;
 
   Azan({this.code, this.status, this.data});
 
   Azan.fromJson(Map<String, dynamic> json) {
     code = json['code'];
     status = json['status'];
-    if (json['data'] != null) {
-      data = <Data>[];
-      json['data'].forEach((v) {
-        data!.add(Data.fromJson(v));
-      });
-    }
+    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = new Map<String, dynamic>();
     data['code'] = this.code;
     data['status'] = this.status;
     if (this.data != null) {
-      data['data'] = this.data!.map((v) => v.toJson()).toList();
+      data['data'] = this.data!.toJson();
     }
     return data;
   }
@@ -108,30 +103,151 @@ class Timings {
 class Date {
   String? readable;
   String? timestamp;
-  Gregorian? gregorian;
   Hijri? hijri;
+  Gregorian? gregorian;
 
-  Date({this.readable, this.timestamp, this.gregorian, this.hijri});
+  Date({this.readable, this.timestamp, this.hijri, this.gregorian});
 
   Date.fromJson(Map<String, dynamic> json) {
     readable = json['readable'];
     timestamp = json['timestamp'];
+    hijri = json['hijri'] != null ? new Hijri.fromJson(json['hijri']) : null;
     gregorian = json['gregorian'] != null
         ? new Gregorian.fromJson(json['gregorian'])
         : null;
-    hijri = json['hijri'] != null ? new Hijri.fromJson(json['hijri']) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['readable'] = this.readable;
     data['timestamp'] = this.timestamp;
-    if (this.gregorian != null) {
-      data['gregorian'] = this.gregorian!.toJson();
-    }
     if (this.hijri != null) {
       data['hijri'] = this.hijri!.toJson();
     }
+    if (this.gregorian != null) {
+      data['gregorian'] = this.gregorian!.toJson();
+    }
+    return data;
+  }
+}
+
+class Hijri {
+  String? date;
+  String? format;
+  String? day;
+  Weekday? weekday;
+  Month? month;
+  String? year;
+  Designation? designation;
+  List<Null>? holidays;
+
+  Hijri(
+      {this.date,
+        this.format,
+        this.day,
+        this.weekday,
+        this.month,
+        this.year,
+        this.designation,
+        this.holidays});
+
+  Hijri.fromJson(Map<String, dynamic> json) {
+    date = json['date'];
+    format = json['format'];
+    day = json['day'];
+    weekday =
+    json['weekday'] != null ? new Weekday.fromJson(json['weekday']) : null;
+    month = json['month'] != null ? new Month.fromJson(json['month']) : null;
+    year = json['year'];
+    designation = json['designation'] != null
+        ? new Designation.fromJson(json['designation'])
+        : null;
+    if (json['holidays'] != null) {
+      holidays = <Null>[];
+      json['holidays'].forEach((v) {
+        holidays!.add(v);
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['date'] = this.date;
+    data['format'] = this.format;
+    data['day'] = this.day;
+    if (this.weekday != null) {
+      data['weekday'] = this.weekday!.toJson();
+    }
+    if (this.month != null) {
+      data['month'] = this.month!.toJson();
+    }
+    data['year'] = this.year;
+    if (this.designation != null) {
+      data['designation'] = this.designation!.toJson();
+    }
+    if (this.holidays != null) {
+      data['holidays'] = this.holidays!.map((v) => v).toList();
+    }
+    return data;
+  }
+}
+
+class Weekday {
+  String? en;
+  String? ar;
+
+  Weekday({this.en, this.ar});
+
+  Weekday.fromJson(Map<String, dynamic> json) {
+    en = json['en'];
+    ar = json['ar'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['en'] = this.en;
+    data['ar'] = this.ar;
+    return data;
+  }
+}
+
+class Month {
+  int? number;
+  String? en;
+  String? ar;
+
+  Month({this.number, this.en, this.ar});
+
+  Month.fromJson(Map<String, dynamic> json) {
+    number = json['number'];
+    en = json['en'];
+    ar = json['ar'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['number'] = this.number;
+    data['en'] = this.en;
+    data['ar'] = this.ar;
+    return data;
+  }
+}
+
+class Designation {
+  String? abbreviated;
+  String? expanded;
+
+  Designation({this.abbreviated, this.expanded});
+
+  Designation.fromJson(Map<String, dynamic> json) {
+    abbreviated = json['abbreviated'];
+    expanded = json['expanded'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['abbreviated'] = this.abbreviated;
+    data['expanded'] = this.expanded;
     return data;
   }
 }
@@ -186,151 +302,37 @@ class Gregorian {
   }
 }
 
-class Weekday {
-  String? en;
-
-  Weekday({this.en});
-
-  Weekday.fromJson(Map<String, dynamic> json) {
-    en = json['en'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['en'] = this.en;
-    return data;
-  }
-}
-
-class Month {
-  int? number;
-  String? en;
-
-  Month({this.number, this.en});
-
-  Month.fromJson(Map<String, dynamic> json) {
-    number = json['number'];
-    en = json['en'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['number'] = this.number;
-    data['en'] = this.en;
-    return data;
-  }
-}
-
-class Designation {
-  String? abbreviated;
-  String? expanded;
-
-  Designation({this.abbreviated, this.expanded});
-
-  Designation.fromJson(Map<String, dynamic> json) {
-    abbreviated = json['abbreviated'];
-    expanded = json['expanded'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['abbreviated'] = this.abbreviated;
-    data['expanded'] = this.expanded;
-    return data;
-  }
-}
-
-class Hijri {
-  String? date;
-  String? format;
-  String? day;
-  Weekday? weekday;
-  Month? month;
-  String? year;
-  Designation? designation;
-  List<String>? holidays;
-
-  Hijri(
-      {this.date,
-        this.format,
-        this.day,
-        this.weekday,
-        this.month,
-        this.year,
-        this.designation,
-        this.holidays});
-
-  Hijri.fromJson(Map<String, dynamic> json) {
-    date = json['date'];
-    format = json['format'];
-    day = json['day'];
-    weekday =
-    json['weekday'] != null ? new Weekday.fromJson(json['weekday']) : null;
-    month = json['month'] != null ? new Month.fromJson(json['month']) : null;
-    year = json['year'];
-    designation = json['designation'] != null
-        ? new Designation.fromJson(json['designation'])
-        : null;
-    holidays = json['holidays'].cast<String>();
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['date'] = this.date;
-    data['format'] = this.format;
-    data['day'] = this.day;
-    if (this.weekday != null) {
-      data['weekday'] = this.weekday!.toJson();
-    }
-    if (this.month != null) {
-      data['month'] = this.month!.toJson();
-    }
-    data['year'] = this.year;
-    if (this.designation != null) {
-      data['designation'] = this.designation!.toJson();
-    }
-    data['holidays'] = this.holidays;
-    return data;
-  }
-}
-
 // class Weekday {
 //   String? en;
-//   String? ar;
 //
-//   Weekday({this.en, this.ar});
+//   Weekday({this.en});
 //
 //   Weekday.fromJson(Map<String, dynamic> json) {
 //     en = json['en'];
-//     ar = json['ar'];
 //   }
 //
 //   Map<String, dynamic> toJson() {
 //     final Map<String, dynamic> data = new Map<String, dynamic>();
 //     data['en'] = this.en;
-//     data['ar'] = this.ar;
 //     return data;
 //   }
 // }
-//
+
 // class Month {
 //   int? number;
 //   String? en;
-//   String? ar;
 //
-//   Month({this.number, this.en, this.ar});
+//   Month({this.number, this.en});
 //
 //   Month.fromJson(Map<String, dynamic> json) {
 //     number = json['number'];
 //     en = json['en'];
-//     ar = json['ar'];
 //   }
 //
 //   Map<String, dynamic> toJson() {
 //     final Map<String, dynamic> data = new Map<String, dynamic>();
 //     data['number'] = this.number;
 //     data['en'] = this.en;
-//     data['ar'] = this.ar;
 //     return data;
 //   }
 // }
@@ -457,15 +459,15 @@ class Location {
 }
 
 class Offset {
-  int? imsak;
-  int? fajr;
-  int? sunrise;
-  int? dhuhr;
-  int? asr;
-  int? maghrib;
-  int? sunset;
-  int? isha;
-  int? midnight;
+  var imsak;
+  var fajr;
+  var sunrise;
+  var dhuhr;
+  var asr;
+  var maghrib;
+  var sunset;
+  var isha;
+  var midnight;
 
   Offset(
       {this.imsak,

@@ -1,9 +1,8 @@
 import 'dart:convert';
 
-import 'package:date_picker_timeline/date_picker_widget.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
 import '../models/azan.model.dart';
 
 class GetApi extends StatefulWidget {
@@ -24,122 +23,166 @@ class _GetAPIState extends State<GetApi> {
 
   String? asr;
 
-  String? susnset;
-
   String? maghrib;
 
   String? isha;
 
-  String? midnight;
-
   @override
   void initState() {
     // TODO: implement initState
-    getResponse(
-        DateTime.now().day - 1, DateTime.now().month, DateTime.now().year);
     super.initState();
   }
 
   String? status;
   int? code;
+  bool search = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Get Azan Time API (KL)'),
+          title: const Text('Get Azan Time API'),
           centerTitle: true,
         ),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: ListView(
             children: [
-              DatePicker(
-                DateTime.now(),
-                initialSelectedDate: DateTime.now(),
-                selectionColor: Colors.black,
-                selectedTextColor: Colors.white,
-                onDateChange: (date) {
-                  // New date selected
-                  setState(() {});
-                  getResponse(date.day - 1, date.month, date.year);
-                },
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: DropdownSearch(
+                  items: const [
+                    "Johor",
+                    "Kedah",
+                    "Kelantan",
+                    'Melaka',
+                    'Negeri Sembilan',
+                    'Pahang',
+                    'Pulau Pinang',
+                    'Perak',
+                    'Perlis',
+                    'Sabah',
+                    'Sarawak',
+                    'Selangor',
+                    'Terengganu'
+                  ],
+                  dropdownSearchDecoration:
+                      const InputDecoration(labelText: "Choose State"),
+                  onChanged: (String? state) {
+                    var item;
+                    search = true;
+                    if (state == 'Johor') {
+                      item = [2, 2, 0, 1, 0, 1, 0, 1, 0];
+                      getResponse(state!, 'Malaysia', item);
+                    } else if (state == 'Kedah') {
+                      item = [3, 3, -1, 1, 1, 1, 0, 1, 0];
+                      getResponse(state!, 'Malaysia', item);
+                    } else if (state == 'Kelantan') {
+                      item = [2, 2, 0, 1, 1, 1, 0, 1, 0];
+                      getResponse(state!, 'Malaysia', item);
+                    } else if (state == 'Melaka') {
+                      item = [2, 2, 0, 1, 1, 1, 0, 1, 0];
+                      getResponse(state!, 'Malaysia', item);
+                    } else if (state == 'Negeri Sembilan') {
+                      item = [3, 3, 0, 1, 1, 1, 0, 1, 0];
+                      getResponse(state!, 'Malaysia', item);
+                    } else if (state == 'Pahang') {
+                      item = [2, 2, 0, 1, 0, 1, 0, 1, 0];
+                      getResponse(state!, 'Malaysia', item);
+                    } else if (state == 'Pulau Pinang') {
+                      item = [2, 2, 0, 1, 1, 1, 0, 1, 0];
+                      getResponse(state!, 'Malaysia', item);
+                    } else if (state == 'Perak') {
+                      item = [3, 3, 0, 1, 1, 1, 0, 1, 0];
+                      getResponse(state!, 'Malaysia', item);
+                    } else if (state == 'Perlis') {
+                      item = [3, 3, 0, 1, 1, 1, 0, 1, 0];
+                      getResponse(state!, 'Malaysia', item);
+                    }else if (state == 'Sabah') {
+                      item = [2, 2, 0, 1, 1, 1, 0, 1, 0];
+                      getResponse(state!, 'Malaysia', item);
+                    }else if (state == 'Sarawak') {
+                      item = [2, 2, 0, 1, 1, 1, 0, 1, 0];
+                      getResponse(state!, 'Malaysia', item);
+                    }else if (state == 'Selangor') {
+                      item = [3, 3, 1, 1, 1, 1, 0, 1, 0];
+                      getResponse(state!, 'Malaysia', item);
+                    }else if (state == 'Terengganu') {
+                      item = [2, 2, 0, 1, 1, 1, 0, 1, 0];
+                      getResponse(state!, 'Malaysia', item);
+                    }
+                  },
+                  selectedItem: "Johor",
+                ),
               ),
-              Card(
-                  child: ListTile(
-                leading: const Icon(Icons.access_alarm),
-                title: const Text('Imsak'),
-                subtitle: Text('$imsak'),
-              )),
-              Card(
-                  child: ListTile(
-                leading: const Icon(Icons.access_alarm),
-                title: const Text('Fajar'),
-                subtitle: Text('$fajr'),
-              )),
-              Card(
-                  child: ListTile(
-                leading: const Icon(Icons.sunny_snowing),
-                title: const Text('Sunrise'),
-                subtitle: Text('$sunrise'),
-              )),
-              Card(
-                  child: ListTile(
-                leading: const Icon(Icons.access_alarm),
-                title: const Text('Zohor'),
-                subtitle: Text('$dhuhr'),
-              )),
-              Card(
-                  child: ListTile(
-                leading: const Icon(Icons.access_alarm),
-                title: const Text('Asar'),
-                subtitle: Text('$asr'),
-              )),
-              Card(
-                  child: ListTile(
-                leading: const Icon(Icons.sunny),
-                title: const Text('Sunset'),
-                subtitle: Text('$susnset'),
-              )),
-              Card(
-                  child: ListTile(
-                leading: const Icon(Icons.access_alarm),
-                title: const Text('Maghrib'),
-                subtitle: Text('$maghrib'),
-              )),
-              Card(
-                  child: ListTile(
-                leading: const Icon(Icons.access_alarm),
-                title: const Text('Isya'),
-                subtitle: Text('$isha'),
-              )),
-              Card(
-                  child: ListTile(
-                leading: const Icon(Icons.nightlight_round),
-                title: const Text('Midnight'),
-                subtitle: Text('$midnight'),
-              )),
+              Visibility(
+                visible: search,
+                child: Column(
+                  children: [
+                    Card(
+                        child: ListTile(
+                      leading: const Icon(Icons.nightlight_round),
+                      title: const Text('Imsak'),
+                      subtitle: Text('$imsak'),
+                    )),
+                    Card(
+                        child: ListTile(
+                      leading: const Icon(Icons.access_alarm),
+                      title: const Text('Fajar'),
+                      subtitle: Text('$fajr'),
+                    )),
+                    Card(
+                        child: ListTile(
+                      leading: const Icon(Icons.sunny_snowing),
+                      title: const Text('Sunrise'),
+                      subtitle: Text('$sunrise'),
+                    )),
+                    Card(
+                        child: ListTile(
+                      leading: const Icon(Icons.sunny),
+                      title: const Text('Zohor'),
+                      subtitle: Text('$dhuhr'),
+                    )),
+                    Card(
+                        child: ListTile(
+                      leading: const Icon(Icons.sunny),
+                      title: const Text('Asar'),
+                      subtitle: Text('$asr'),
+                    )),
+                    Card(
+                        child: ListTile(
+                      leading: const Icon(Icons.nightlight_round),
+                      title: const Text('Maghrib'),
+                      subtitle: Text('$maghrib'),
+                    )),
+                    Card(
+                        child: ListTile(
+                      leading: const Icon(Icons.nightlight_round),
+                      title: const Text('Isya'),
+                      subtitle: Text('$isha'),
+                    )),
+                  ],
+                ),
+              ),
             ],
           ),
         ));
   }
 
-  Future<void> getResponse(int day, int month, int year) async {
+  Future<void> getResponse(String city, String country, List tune) async {
     var url = Uri.parse(
-        'https://api.aladhan.com/v1/calendarByCity?city=Kuala%20Lumpur&country=Malaysia&method=2&month=$month&year=$year');
+        'https://api.aladhan.com/v1/timingsByCity?city=$city&country=$country&method=1&tune=${tune[0]},${tune[1]},${tune[2]},${tune[3]},${tune[4]},${tune[5]},${tune[6]},${tune[7]},${tune[8]}');
     var response = await http.get(url);
     var data = Azan.fromJson(json.decode(response.body));
     setState(() {});
     status = data.status;
     code = data.code;
-    fajr = data.data![day].timings!.fajr;
-    imsak = data.data![day].timings!.imsak;
-    sunrise = data.data![day].timings!.sunrise;
-    dhuhr = data.data![day].timings!.dhuhr;
-    asr = data.data![day].timings!.asr;
-    susnset = data.data![day].timings!.sunset;
-    maghrib = data.data![day].timings!.maghrib;
-    isha = data.data![day].timings!.isha;
-    midnight = data.data![day].timings!.midnight;
+    fajr = data.data!.timings!.fajr;
+    imsak = data.data!.timings!.imsak;
+    sunrise = data.data!.timings!.sunrise;
+    dhuhr = data.data!.timings!.dhuhr;
+    asr = data.data!.timings!.asr;
+    maghrib = data.data!.timings!.maghrib;
+    isha = data.data!.timings!.isha;
   }
 }
