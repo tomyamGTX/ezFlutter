@@ -1,5 +1,9 @@
+import 'package:ez_flutter/providers/location.provider.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:provider/provider.dart';
 import '../providers/auth.provider.dart';
+import '../style/button/button1.dart';
 import '../widgets/drawer.home.dart';
 
 class Home extends StatefulWidget {
@@ -10,15 +14,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  var color = [Colors.lightGreenAccent, Colors.blueAccent, Colors.redAccent];
-
-  var url = [
-    "https://qph.cf2.quoracdn.net/main-qimg-005e40dfa083a45068cb6c11a18805c8-lq",
-    "https://upload.wikimedia.org/wikipedia/commons/2/2c/Rotating_earth_%28large%29.gif",
-    "https://i.pinimg.com/originals/ef/62/15/ef62159fccabc474c22cdc6c73d36736.gif"
-  ];
-
-  var text = ['5 billion years ago', 'Today', 'Soon'];
+  Position? location;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +27,68 @@ class _HomeState extends State<Home> {
           ),
           body: Center(
             child: Column(
-              children: [],
+              children: [
+                Consumer<LocationProvider>(builder: (context, gps, child) {
+                  if (gps.position == null) {
+                    return const SizedBox(
+                      height: 100,
+                      child: Center(child: Text('Location unavailable')),
+                    );
+                  }
+                  return Column(
+                    children: [
+                      Card(
+                        child: ListTile(
+                          title: const Text('Your position accuracy '),
+                          subtitle: Text('${gps.position!.accuracy}'),
+                        ),
+                      ),
+                      Card(
+                        child: ListTile(
+                          title: const Text('Your position longitude'),
+                          subtitle: Text('${gps.position!.longitude}'),
+                        ),
+                      ),
+                      Card(
+                        child: ListTile(
+                          title: const Text('Your position latitude '),
+                          subtitle: Text('${gps.position!.latitude}'),
+                        ),
+                      ),
+                      Card(
+                        child: ListTile(
+                          title: const Text('Your position altitude '),
+                          subtitle: Text('${gps.position!.altitude}'),
+                        ),
+                      ),
+                      Card(
+                        child: ListTile(
+                          title: const Text('Your position floor '),
+                          subtitle: Text('${gps.position!.floor}'),
+                        ),
+                      ),
+                      Card(
+                        child: ListTile(
+                          title: const Text('Your position floor'),
+                          subtitle: Text('${gps.position!.floor}'),
+                        ),
+                      ),
+                    ],
+                  );
+                }),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                      style: buttonStyle(),
+                      onPressed: () async {
+                        setState(() {});
+                        await Provider.of<LocationProvider>(context,
+                                listen: false)
+                            .determinePosition();
+                      },
+                      child: const Text('Get Current Location')),
+                )
+              ],
             ),
           )),
     );

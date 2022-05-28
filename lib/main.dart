@@ -1,4 +1,5 @@
 import 'package:ez_flutter/providers/auth.provider.dart';
+import 'package:ez_flutter/providers/location.provider.dart';
 import 'package:ez_flutter/screen/landing.page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -22,7 +23,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (context) => AppUser())],
+      providers: [
+        ChangeNotifierProvider(create: (context) => AppUser()),
+        ChangeNotifierProvider(create: (context) => LocationProvider())
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'EZFlutter',
