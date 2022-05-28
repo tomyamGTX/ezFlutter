@@ -43,4 +43,6 @@ class LocationProvider extends ChangeNotifier {
         desiredAccuracy: LocationAccuracy.high);
     notifyListeners();
   }
+
+  getAddress(int lang, int long) {}
 }

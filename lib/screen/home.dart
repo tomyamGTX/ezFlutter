@@ -1,6 +1,5 @@
 import 'package:ez_flutter/providers/location.provider.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth.provider.dart';
 import '../style/button/button1.dart';
@@ -14,8 +13,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  Position? location;
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -57,20 +54,8 @@ class _HomeState extends State<Home> {
                       ),
                       Card(
                         child: ListTile(
-                          title: const Text('Your position altitude '),
-                          subtitle: Text('${gps.position!.altitude}'),
-                        ),
-                      ),
-                      Card(
-                        child: ListTile(
-                          title: const Text('Your position floor '),
-                          subtitle: Text('${gps.position!.floor}'),
-                        ),
-                      ),
-                      Card(
-                        child: ListTile(
-                          title: const Text('Your position floor'),
-                          subtitle: Text('${gps.position!.floor}'),
+                          title: const Text('Last sync'),
+                          subtitle: Text('${gps.position!.timestamp}'),
                         ),
                       ),
                     ],
