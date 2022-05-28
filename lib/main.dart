@@ -4,6 +4,7 @@ import 'package:ez_flutter/screen/landing.page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
+import 'package:rive_splash_screen/rive_splash_screen.dart';
 import 'firebase_options.dart';
 
 // ...
@@ -33,7 +34,13 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: const LandingPage(),
+        home: SplashScreen.navigate(
+          backgroundColor: Colors.white,
+          name: 'asset/rives/intro.riv',
+          next: (context) => const LandingPage(),
+          until: () => Future.delayed(const Duration(seconds: 2)),
+          startAnimation: 'Landing',
+        ),
       ),
     );
   }

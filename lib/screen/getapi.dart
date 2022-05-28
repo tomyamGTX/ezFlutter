@@ -33,7 +33,7 @@ class _GetAPIState extends State<GetApi> {
     super.initState();
   }
 
-  String _state = '';
+  String _state = 'Select state';
   String? status;
   int? code;
   bool search = false;

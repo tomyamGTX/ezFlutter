@@ -23,58 +23,56 @@ class _HomeState extends State<Home> {
             title: Text('Welcome ${AppUser.instance.user?.email}'),
           ),
           body: Center(
-            child: Column(
-              children: [
-                Consumer<LocationProvider>(builder: (context, gps, child) {
-                  if (gps.position == null) {
-                    return const SizedBox(
-                      height: 100,
-                      child: Center(child: Text('Location unavailable')),
-                    );
-                  }
-                  return Column(
-                    children: [
-                      Card(
-                        child: ListTile(
-                          title: const Text('Your position accuracy '),
-                          subtitle: Text('${gps.position!.accuracy}'),
-                        ),
-                      ),
-                      Card(
-                        child: ListTile(
-                          title: const Text('Your position longitude'),
-                          subtitle: Text('${gps.position!.longitude}'),
-                        ),
-                      ),
-                      Card(
-                        child: ListTile(
-                          title: const Text('Your position latitude '),
-                          subtitle: Text('${gps.position!.latitude}'),
-                        ),
-                      ),
-                      Card(
-                        child: ListTile(
-                          title: const Text('Last sync'),
-                          subtitle: Text('${gps.position!.timestamp}'),
-                        ),
-                      ),
-                    ],
-                  );
-                }),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ElevatedButton(
-                      style: buttonStyle(),
-                      onPressed: () async {
-                        setState(() {});
-                        await Provider.of<LocationProvider>(context,
-                                listen: false)
-                            .determinePosition();
-                      },
-                      child: const Text('Get Current Location')),
-                )
-              ],
-            ),
+            child: Consumer<LocationProvider>(builder: (context, gps, child) {
+              if (gps.position == null) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Center(child: Text('Location unavailable')),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ElevatedButton(
+                          style: buttonStyle(),
+                          onPressed: () async {
+                            setState(() {});
+                            await Provider.of<LocationProvider>(context,
+                                    listen: false)
+                                .determinePosition();
+                          },
+                          child: const Text('Get Current Location')),
+                    )
+                  ],
+                );
+              }
+              return Column(
+                children: [
+                  Card(
+                    child: ListTile(
+                      title: const Text('Your position accuracy '),
+                      subtitle: Text('${gps.position!.accuracy}'),
+                    ),
+                  ),
+                  Card(
+                    child: ListTile(
+                      title: const Text('Your position longitude'),
+                      subtitle: Text('${gps.position!.longitude}'),
+                    ),
+                  ),
+                  Card(
+                    child: ListTile(
+                      title: const Text('Your position latitude '),
+                      subtitle: Text('${gps.position!.latitude}'),
+                    ),
+                  ),
+                  Card(
+                    child: ListTile(
+                      title: const Text('Last sync'),
+                      subtitle: Text('${gps.position!.timestamp}'),
+                    ),
+                  ),
+                ],
+              );
+            }),
           )),
     );
   }
