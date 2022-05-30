@@ -1,8 +1,10 @@
 import 'package:ez_flutter/providers/auth.provider.dart';
+import 'package:ez_flutter/providers/azan.time.provider.dart';
 import 'package:ez_flutter/providers/location.provider.dart';
 import 'package:ez_flutter/screen/landing.page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:rive_splash_screen/rive_splash_screen.dart';
 import 'firebase_options.dart';
@@ -14,6 +16,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await GetStorage.init();
   runApp(const MyApp());
 }
 
@@ -26,7 +29,8 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => AppUser()),
-        ChangeNotifierProvider(create: (context) => LocationProvider())
+        ChangeNotifierProvider(create: (context) => LocationProvider()),
+        ChangeNotifierProvider(create: (context) => AzanProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

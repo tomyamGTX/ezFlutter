@@ -1,9 +1,10 @@
-import 'dart:convert';
-
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:ez_flutter/models/method.azan.dart';
+import 'package:ez_flutter/providers/azan.time.provider.dart';
+import 'package:ez_flutter/screen/getlocation.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import '../models/azan.model.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:provider/provider.dart';
 
 class GetApi extends StatefulWidget {
   const GetApi({Key? key}) : super(key: key);
@@ -13,192 +14,182 @@ class GetApi extends StatefulWidget {
 }
 
 class _GetAPIState extends State<GetApi> {
-  String? fajr;
-
-  String? imsak;
-
-  String? sunrise;
-
-  String? dhuhr;
-
-  String? asr;
-
-  String? maghrib;
-
-  String? isha;
-
   @override
   void initState() {
     // TODO: implement initState
+    if (GetStorage().read('lat') != null) {
+      Provider.of<AzanProvider>(context, listen: false).getResponse(
+          GetStorage().read('lat'),
+          GetStorage().read('long'),
+          GetStorage().read('id') ?? 3);
+    } else {
+      Future.delayed(const Duration(seconds: 1), () {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const GetLocation()));
+      });
+    }
+
     super.initState();
   }
 
-  String _state = 'Select state';
   String? status;
   int? code;
   bool search = false;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text('Get Azan Time API'),
-          centerTitle: true,
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ListView(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: DropdownSearch(
-                  items: const [
-                    "Johor",
-                    "Kedah",
-                    "Kelantan",
-                    'Melaka',
-                    'Negeri Sembilan',
-                    'Pahang',
-                    'Pulau Pinang',
-                    'Perak',
-                    'Perlis',
-                    'Sabah',
-                    'Sarawak',
-                    'Selangor',
-                    'Terengganu',
-                    'Kuala Lumpur',
-                    'Labuan',
-                    'Putrajaya',
-                  ],
-                  dropdownSearchDecoration:
-                      const InputDecoration(labelText: "Choose State"),
-                  onChanged: (String? state) {
-                    setState(() {
-                      _state = state!;
-                    });
-                    var item;
-                    search = true;
-                    if (state == 'Johor') {
-                      item = [2, 2, 0, 1, 0, 1, 0, 1, 0];
-                      getResponse(state!, 'Malaysia', item);
-                    } else if (state == 'Kedah') {
-                      item = [3, 3, -1, 1, 1, 1, 0, 1, 0];
-                      getResponse(state!, 'Malaysia', item);
-                    } else if (state == 'Kelantan') {
-                      item = [2, 2, 0, 1, 1, 1, 0, 1, 0];
-                      getResponse(state!, 'Malaysia', item);
-                    } else if (state == 'Melaka') {
-                      item = [2, 2, 0, 1, 1, 1, 0, 1, 0];
-                      getResponse(state!, 'Malaysia', item);
-                    } else if (state == 'Negeri Sembilan') {
-                      item = [3, 3, 0, 1, 1, 1, 0, 1, 0];
-                      getResponse(state!, 'Malaysia', item);
-                    } else if (state == 'Pahang') {
-                      item = [2, 2, 0, 1, 0, 1, 0, 1, 0];
-                      getResponse(state!, 'Malaysia', item);
-                    } else if (state == 'Pulau Pinang') {
-                      item = [2, 2, 0, 1, 1, 1, 0, 1, 0];
-                      getResponse(state!, 'Malaysia', item);
-                    } else if (state == 'Perak') {
-                      item = [3, 3, 0, 1, 1, 1, 0, 1, 0];
-                      getResponse(state!, 'Malaysia', item);
-                    } else if (state == 'Perlis') {
-                      item = [3, 3, 0, 1, 1, 1, 0, 1, 0];
-                      getResponse(state!, 'Malaysia', item);
-                    } else if (state == 'Sabah') {
-                      item = [2, 2, 0, 1, 1, 1, 0, 1, 0];
-                      getResponse(state!, 'Malaysia', item);
-                    } else if (state == 'Sarawak') {
-                      item = [2, 2, 0, 1, 1, 1, 0, 1, 0];
-                      getResponse(state!, 'Malaysia', item);
-                    } else if (state == 'Selangor') {
-                      item = [3, 3, 1, 1, 1, 1, 0, 1, 0];
-                      getResponse(state!, 'Malaysia', item);
-                    } else if (state == 'Terengganu') {
-                      item = [2, 2, 0, 1, 1, 1, 0, 1, 0];
-                      getResponse(state!, 'Malaysia', item);
-                    } else if (state == 'Kuala Lumpur') {
-                      item = [2, 2, 0, 0, 1, 1, 0, 1, 0];
-                      getResponse(state!, 'Malaysia', item);
-                    } else if (state == 'Labuan') {
-                      item = [2, 2, 0, 1, 1, 1, 0, 1, 0];
-                      getResponse(state!, 'Malaysia', item);
-                    } else if (state == 'Putrajaya') {
-                      item = [2, 2, 0, 1, 1, 1, 0, 1, 0];
-                      getResponse(state!, 'Malaysia', item);
-                    }
-                  },
-                  selectedItem: _state,
-                ),
-              ),
-              Visibility(
-                visible: search,
+    return Consumer<AzanProvider>(builder: (context, azan, child) {
+      if (azan.time.isEmpty || GetStorage().read('lat') == null) {
+        return Scaffold(
+            appBar: AppBar(
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const GetApi()));
+                    },
+                    child: const Text(
+                      'Refresh',
+                      style: TextStyle(color: Colors.white),
+                    ))
+              ],
+            ),
+            body: Center(
                 child: Column(
-                  children: [
-                    Card(
-                        child: ListTile(
-                      leading: const Icon(Icons.nightlight_round),
-                      title: const Text('Imsak'),
-                      subtitle: Text('$imsak'),
-                    )),
-                    Card(
-                        child: ListTile(
-                      leading: const Icon(Icons.access_alarm),
-                      title: const Text('Fajar'),
-                      subtitle: Text('$fajr'),
-                    )),
-                    Card(
-                        child: ListTile(
-                      leading: const Icon(Icons.sunny_snowing),
-                      title: const Text('Sunrise'),
-                      subtitle: Text('$sunrise'),
-                    )),
-                    Card(
-                        child: ListTile(
-                      leading: const Icon(Icons.sunny),
-                      title: const Text('Zohor'),
-                      subtitle: Text('$dhuhr'),
-                    )),
-                    Card(
-                        child: ListTile(
-                      leading: const Icon(Icons.sunny),
-                      title: const Text('Asar'),
-                      subtitle: Text('$asr'),
-                    )),
-                    Card(
-                        child: ListTile(
-                      leading: const Icon(Icons.nightlight_round),
-                      title: const Text('Maghrib'),
-                      subtitle: Text('$maghrib'),
-                    )),
-                    Card(
-                        child: ListTile(
-                      leading: const Icon(Icons.nightlight_round),
-                      title: const Text('Isya'),
-                      subtitle: Text('$isha'),
-                    )),
-                  ],
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    'Please enable location,then click the refresh button to get the Prayer Time',
+                    textAlign: TextAlign.center,
+                  ),
                 ),
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: CircularProgressIndicator(),
+                ),
+              ],
+            )));
+      }
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(azan.source),
+          actions: [
+            IconButton(
+                onPressed: () async {
+                  await showDialog(
+                    barrierDismissible: false,
+                    context: context,
+                    builder: (BuildContext context) {
+                      var id;
+                      return AlertDialog(
+                        content: DropdownSearch<MWL>(
+                          asyncItems: (String filter) => getData(filter),
+                          itemAsString: (MWL m) => m.name!,
+                          onChanged: (MWL? data) async {
+                            GetStorage().write('id', data!.id);
+                            id = data.id;
+                          },
+                          dropdownSearchDecoration: const InputDecoration(
+                              labelText: "Choose Other Method"),
+                        ),
+                        actions: [
+                          TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text('Back')),
+                          TextButton(
+                              onPressed: () {
+                                Provider.of<AzanProvider>(context,
+                                        listen: false)
+                                    .getResponse(GetStorage().read('lat'),
+                                        GetStorage().read('long'), id);
+                                Navigator.pop(context);
+                              },
+                              child: const Text('Change'))
+                        ],
+                      );
+                    },
+                  );
+                },
+                icon: const Icon(Icons.cached))
+          ],
+        ),
+        body: Column(
+          children: [
+            Flexible(
+              child: Row(
+                children: [
+                  Flexible(
+                    child: Card(
+                        child: ListTile(
+                      title: const Text('Date in Masihi'),
+                      subtitle: Text(azan.date),
+                    )),
+                  ),
+                  Flexible(
+                    child: Card(
+                        child: ListTile(
+                      title: const Text('Date in Hijri'),
+                      subtitle: Text(azan.dateHijri),
+                    )),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ));
+            ),
+            Card(
+                child: ListTile(
+              leading: const Icon(Icons.nightlight_round),
+              title: const Text('Imsak'),
+              subtitle: Text(azan.time[0]),
+            )),
+            Card(
+                child: ListTile(
+              leading: const Icon(Icons.access_alarm),
+              title: const Text('Fajar'),
+              subtitle: Text(azan.time[1]),
+            )),
+            Card(
+                child: ListTile(
+              leading: const Icon(Icons.sunny_snowing),
+              title: const Text('Sunrise'),
+              subtitle: Text(azan.time[2]),
+            )),
+            Card(
+                child: ListTile(
+              leading: const Icon(Icons.sunny),
+              title: const Text('Zohor'),
+              subtitle: Text(azan.time[3]),
+            )),
+            Card(
+                child: ListTile(
+              leading: const Icon(Icons.sunny),
+              title: const Text('Asar'),
+              subtitle: Text(azan.time[4]),
+            )),
+            Card(
+                child: ListTile(
+              leading: const Icon(Icons.nightlight_round),
+              title: const Text('Maghrib'),
+              subtitle: Text(azan.time[5]),
+            )),
+            Card(
+                child: ListTile(
+              leading: const Icon(Icons.nightlight_round),
+              title: const Text('Isya'),
+              subtitle: Text(azan.time[6]),
+            )),
+          ],
+        ),
+      );
+    });
   }
 
-  Future<void> getResponse(String city, String country, List tune) async {
-    var url = Uri.parse(
-        'https://api.aladhan.com/v1/timingsByCity?city=$city&country=$country&method=1&tune=${tune[0]},${tune[1]},${tune[2]},${tune[3]},${tune[4]},${tune[5]},${tune[6]},${tune[7]},${tune[8]}');
-    var response = await http.get(url);
-    var data = Azan.fromJson(json.decode(response.body));
-    setState(() {});
-    status = data.status;
-    code = data.code;
-    fajr = data.data!.timings!.fajr;
-    imsak = data.data!.timings!.imsak;
-    sunrise = data.data!.timings!.sunrise;
-    dhuhr = data.data!.timings!.dhuhr;
-    asr = data.data!.timings!.asr;
-    maghrib = data.data!.timings!.maghrib;
-    isha = data.data!.timings!.isha;
+  Future<List<MWL>> getData(String filter) async {
+    return await Provider.of<AzanProvider>(context, listen: false).getMethod();
   }
 }

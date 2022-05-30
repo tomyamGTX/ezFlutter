@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/auth.provider.dart';
+import '../widgets/loading.dart';
 import 'home.dart';
 import 'login.dart';
 
@@ -17,7 +18,7 @@ class _LandingPageState extends State<LandingPage> {
   Widget build(BuildContext context) {
     var user = Provider.of<AppUser>(context).user;
     if (user != null) {
-      return const Home();
+      return const Loading();
     }
     return const Login();
   }

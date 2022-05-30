@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:get_storage/get_storage.dart';
 
 class LocationProvider extends ChangeNotifier {
-  Position? position;
+  double? lat;
+  double? long;
+  String? accuracy;
+  String? lastSync;
+  final box = GetStorage();
 
   Future<void> determinePosition() async {
     bool serviceEnabled;
@@ -38,11 +43,39 @@ class LocationProvider extends ChangeNotifier {
 
     // When we reach here, permissions are granted and we can
     // continue accessing the position of the device.
-    position = await Geolocator.getCurrentPosition(
+    Position _position = await Geolocator.getCurrentPosition(
         timeLimit: const Duration(seconds: 10),
         desiredAccuracy: LocationAccuracy.high);
+    box.write('lat', _position.latitude);
+    box.write('long', _position.longitude);
+    box.write('acc', _position.accuracy.toString());
+    box.write('sync', _position.timestamp.toString());
+    readLocal();
     notifyListeners();
   }
 
   getAddress(int lang, int long) {}
+
+  void readLocal() {
+    if (box.read('lat') != null) {
+      lat = box.read('lat');
+    }
+    if (box.read('long') != null) {
+      long = box.read('long');
+    }
+    if (box.read('acc') != null) {
+      accuracy = box.read('acc').toString();
+    }
+    if (box.read('sync') != null) {
+      lastSync = box.read('sync').toString();
+    }
+  }
+
+  void remove() {
+    lat = null;
+    long = null;
+    accuracy = null;
+    lastSync = null;
+    notifyListeners();
+  }
 }

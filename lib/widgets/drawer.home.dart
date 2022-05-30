@@ -1,9 +1,12 @@
+import 'package:ez_flutter/providers/location.provider.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/auth.provider.dart';
 import '../screen/getapi.dart';
 import '../screen/getlocation.dart';
+import '../screen/landing.page.dart';
 import '../screen/phone.number.screen.dart';
 import '../screen/timeline.dart';
 import '../style/text/text.dart';
@@ -78,7 +81,15 @@ Drawer buildDrawer(BuildContext context) {
           trailing: const Icon(Icons.logout),
           title: const Text('Logout'),
           onTap: () {
+            GetStorage().remove('lat');
+            GetStorage().remove('long');
+            GetStorage().remove('acc');
+            GetStorage().remove('sync');
+            GetStorage().remove('id');
+            Provider.of<LocationProvider>(context, listen: false).remove();
             Provider.of<AppUser>(context, listen: false).signOut();
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => const LandingPage()));
           },
         ),
       ],

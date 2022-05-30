@@ -1,5 +1,5 @@
 class Azan {
-  int? code;
+  var code;
   String? status;
   Data? data;
 
@@ -212,7 +212,7 @@ class Weekday {
 }
 
 class Month {
-  int? number;
+  var number;
   String? en;
   String? ar;
 
@@ -317,9 +317,9 @@ class Gregorian {
 //     return data;
 //   }
 // }
-
+//
 // class Month {
-//   int? number;
+//   var number;
 //   String? en;
 //
 //   Month({this.number, this.en});
@@ -338,8 +338,8 @@ class Gregorian {
 // }
 
 class Meta {
-  double? latitude;
-  double? longitude;
+  var latitude;
+  var longitude;
   String? timezone;
   Method? method;
   String? latitudeAdjustmentMethod;
@@ -389,7 +389,7 @@ class Meta {
 }
 
 class Method {
-  int? id;
+  var id;
   String? name;
   Params? params;
   Location? location;
@@ -421,8 +421,8 @@ class Method {
 }
 
 class Params {
-  int? fajr;
-  int? isha;
+  var fajr;
+  var isha;
 
   Params({this.fajr, this.isha});
 
@@ -440,8 +440,8 @@ class Params {
 }
 
 class Location {
-  double? latitude;
-  double? longitude;
+  var latitude;
+  var longitude;
 
   Location({this.latitude, this.longitude});
 
