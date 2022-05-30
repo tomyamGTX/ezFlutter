@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -7,6 +8,9 @@ class LocationProvider extends ChangeNotifier {
   double? long;
   String? accuracy;
   String? lastSync;
+  String? address1;
+  String? address2;
+  String? address3;
   final box = GetStorage();
 
   Future<void> determinePosition() async {
@@ -50,11 +54,18 @@ class LocationProvider extends ChangeNotifier {
     box.write('long', _position.longitude);
     box.write('acc', _position.accuracy.toString());
     box.write('sync', _position.timestamp.toString());
+    await getAddress(_position.latitude, _position.longitude);
     readLocal();
     notifyListeners();
   }
 
-  getAddress(int lang, int long) {}
+  getAddress(double lang, double long) async {
+    List<Placemark> placemarks = await placemarkFromCoordinates(lang, long);
+    box.write('address1', "${placemarks.first.street},");
+    box.write('address2', '${placemarks.first.subAdministrativeArea},');
+    box.write('address3',
+        "${placemarks.first.postalCode} ${placemarks.first.administrativeArea}, ${placemarks.first.country}");
+  }
 
   void readLocal() {
     if (box.read('lat') != null) {
@@ -68,6 +79,11 @@ class LocationProvider extends ChangeNotifier {
     }
     if (box.read('sync') != null) {
       lastSync = box.read('sync').toString();
+    }
+    if (box.read('address') != null) {
+      address1 = box.read('address1').toString();
+      address2 = box.read('address2').toString();
+      address3 = box.read('address3').toString();
     }
   }
 

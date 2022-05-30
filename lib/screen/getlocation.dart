@@ -61,6 +61,24 @@ class _GetLocationState extends State<GetLocation> {
                 children: [
                   Card(
                     child: ListTile(
+                      title: const Text('Address line 1'),
+                      subtitle: Text('${gps.address1}'),
+                    ),
+                  ),
+                  Card(
+                    child: ListTile(
+                      title: const Text('Address line 2'),
+                      subtitle: Text('${gps.address2}'),
+                    ),
+                  ),
+                  Card(
+                    child: ListTile(
+                      title: const Text('Address line 3'),
+                      subtitle: Text('${gps.address3}'),
+                    ),
+                  ),
+                  Card(
+                    child: ListTile(
                       title: const Text('Your position accuracy '),
                       subtitle: Text('${gps.accuracy}'),
                     ),
