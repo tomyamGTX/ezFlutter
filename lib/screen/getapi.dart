@@ -16,7 +16,6 @@ class GetApi extends StatefulWidget {
 class _GetAPIState extends State<GetApi> {
   @override
   void initState() {
-    // TODO: implement initState
     if (GetStorage().read('lat') != null) {
       Provider.of<AzanProvider>(context, listen: false).getResponse(
           GetStorage().read('lat'),

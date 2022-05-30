@@ -1,6 +1,5 @@
 import 'package:ez_flutter/providers/location.provider.dart';
 import 'package:flutter/material.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:provider/provider.dart';
 import '../style/button/button1.dart';
 
@@ -14,7 +13,6 @@ class GetLocation extends StatefulWidget {
 class _GetLocationState extends State<GetLocation> {
   @override
   void initState() {
-    // TODO: implement initState
     Provider.of<LocationProvider>(context, listen: false).readLocal();
     super.initState();
   }
