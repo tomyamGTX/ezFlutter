@@ -17,6 +17,14 @@ class _HomeState extends State<Home> {
 
   var name = ['Add category', 'Display All Category', 'Make Payment'];
 
+  var billName = TextEditingController();
+
+  var billDesc = TextEditingController();
+
+  var price = TextEditingController();
+
+  var expired = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -47,9 +55,109 @@ class _HomeState extends State<Home> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   ElevatedButton(
-                      onPressed: () {}, child: const Text('Add New Bill')),
+                      onPressed: () async {
+                        await showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Add New Bill'),
+                              content: SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.5,
+                                width: MediaQuery.of(context).size.width * 0.7,
+                                child: ListView(
+                                  children: [
+                                    TextFormField(
+                                      decoration: const InputDecoration(
+                                          label: Text('Name')),
+                                      controller: billName,
+                                    ),
+                                    TextFormField(
+                                      decoration: const InputDecoration(
+                                          label: Text('Description')),
+                                      controller: billDesc,
+                                    ),
+                                    TextFormField(
+                                      decoration: const InputDecoration(
+                                          label: Text('Price')),
+                                      controller: price,
+                                      keyboardType: TextInputType.number,
+                                    ),
+                                    TextFormField(
+                                      controller: expired,
+                                      decoration: const InputDecoration(
+                                          label: Text('Days expired')),
+                                      keyboardType: TextInputType.number,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              actions: [
+                                TextButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: const Text('Back')),
+                                TextButton(
+                                    onPressed: () async {
+                                      await Provider.of<PaymentProvider>(
+                                              context,
+                                              listen: false)
+                                          .createBill(
+                                              billName: billName.text,
+                                              billDesc: billDesc.text,
+                                              price: price.text,
+                                              expired: int.parse(expired.text));
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text('Add'))
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      child: const Text('Add New Bill')),
                   ElevatedButton(
-                      onPressed: () {}, child: const Text('List All Bill'))
+                      onPressed: () async {
+                        await showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('List All Bill'),
+                              content: SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.5,
+                                width: MediaQuery.of(context).size.width * 0.7,
+                                child: Consumer<PaymentProvider>(
+                                    builder: (context, bill, child) {
+                                  return ListView.builder(
+                                    itemCount: bill.allBill.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return Card(
+                                        child: ListTile(
+                                          title: Text(
+                                              '${bill.allBill[index].billName} (${bill.allBill[index].billCode})'),
+                                          subtitle: Text(bill
+                                              .allBill[index].expired
+                                              .toString()),
+                                          trailing: Text(bill
+                                              .allBill[index].billPrice
+                                              .toString()),
+                                        ),
+                                      );
+                                    },
+                                  );
+                                }),
+                              ),
+                              actions: [
+                                TextButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: Text('Back')),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      child: const Text('List All Bill'))
                 ],
               )
             ],
