@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:ez_flutter/models/create.category.response.model.dart';
 import 'package:ez_flutter/providers/auth.provider.dart';
+import 'package:ez_flutter/providers/db.provider.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 import '../models/Bill.model.dart';
 
@@ -20,6 +22,8 @@ class PaymentProvider extends ChangeNotifier {
       Uri.parse('https://dev.toyyibpay.com/index.php/api/createCategory');
   var createBillUrl =
       Uri.parse('https://dev.toyyibpay.com/index.php/api/createBill');
+  var getBillTransaction =
+      Uri.parse('https://dev.toyyibpay.com/index.php/api/getBillTransactions');
 
   void init() async {
     //for multipartrequest
@@ -55,10 +59,11 @@ class PaymentProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> createBill({
+  Future<void> createBill(
+    BuildContext context, {
     required String billName,
     required String billDesc,
-    required String price,
+    required double price,
     required int expired,
   }) async {
     var request = http.MultipartRequest('POST', createBillUrl);
@@ -66,9 +71,9 @@ class PaymentProvider extends ChangeNotifier {
     request.fields['categoryCode'] = categoryCode!;
     request.fields['billName'] = billName;
     request.fields['billDescription'] = billDesc;
-    request.fields['billPriceSetting'] = '0';
-    request.fields['billPayorInfo'] = '1';
-    request.fields['billAmount'] = price;
+    request.fields['billPriceSetting'] = '1';
+    request.fields['billPayorInfo'] = '0';
+    request.fields['billAmount'] = '${price * 100}';
     request.fields['billReturnUrl'] = 'http://bizapp.my';
     request.fields['billCallbackUrl'] = 'http://bizapp.my/paystatus';
     request.fields['billExternalReferenceNo'] = 'AFR341DFI';
@@ -92,19 +97,35 @@ class PaymentProvider extends ChangeNotifier {
 
     if (response.statusCode == 200) {
       print(responseData);
-      allBill.add(Bill(
-          billCode: responseData[0]['BillCode'],
-          billName: billName,
-          billPrice: int.parse(price),
-          expired: DateTime(DateTime.now().year, DateTime.now().month,
-              DateTime.now().day + expired)));
+      Provider.of<DB>(context, listen: false).addBill(
+          responseData[0]['BillCode'],
+          billName,
+          price,
+          DateTime(DateTime.now().year, DateTime.now().month,
+              DateTime.now().day + expired));
       notifyListeners();
     } else {
       print("ERROR");
     }
   }
 
-  void getBillTransactions() {}
+  Future<void> getBillTransactions(billCode) async {
+    var request = http.MultipartRequest('POST', getBillTransaction);
+
+    request.fields['billCode'] = billCode;
+
+    var response = await request.send();
+
+    var responsed = await http.Response.fromStream(response);
+    final responseData = json.decode(responsed.body);
+
+    if (response.statusCode == 200) {
+      print("SUCCESS");
+      print(responseData);
+    } else {
+      print("ERROR");
+    }
+  }
 
   void getCategory() {}
 }

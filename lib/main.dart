@@ -1,5 +1,6 @@
 import 'package:ez_flutter/providers/auth.provider.dart';
 import 'package:ez_flutter/providers/azan.time.provider.dart';
+import 'package:ez_flutter/providers/db.provider.dart';
 import 'package:ez_flutter/providers/location.provider.dart';
 import 'package:ez_flutter/providers/payment.provider.dart';
 import 'package:ez_flutter/screen/landing.page.dart';
@@ -29,17 +30,19 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => AppUser()),
-        ChangeNotifierProvider(create: (context) => LocationProvider()),
-        ChangeNotifierProvider(create: (context) => AzanProvider()),
+        ChangeNotifierProvider<AppUser>(create: (context) => AppUser()),
+        ChangeNotifierProvider<LocationProvider>(
+            create: (context) => LocationProvider()),
+        ChangeNotifierProvider<AzanProvider>(
+            create: (context) => AzanProvider()),
         ChangeNotifierProvider<PaymentProvider>(
-            create: (context) => PaymentProvider())
+            create: (context) => PaymentProvider()),
+        ChangeNotifierProvider<DB>(create: (context) => DB())
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
