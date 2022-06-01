@@ -38,7 +38,6 @@ class _LittleMachineState extends State<LittleMachine> {
         var controller = StateMachineController.fromArtboard(
           artboard,
           'State Machine 1',
-          onStateChange: _onStateChange,
         );
         if (controller != null) {
           artboard.addController(controller);

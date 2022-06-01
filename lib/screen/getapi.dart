@@ -92,8 +92,9 @@ class _GetAPIState extends State<GetApi> {
                             GetStorage().write('id', data!.id);
                             id = data.id;
                           },
-                          dropdownSearchDecoration: const InputDecoration(
-                              labelText: "Choose Other Method"),
+                          dropdownDecoratorProps: const DropDownDecoratorProps(
+                              dropdownSearchDecoration: InputDecoration(
+                                  label: Text('Choose other method'))),
                         ),
                         actions: [
                           TextButton(

@@ -20,12 +20,6 @@ class _PlayOneShotAnimationState extends State<PlayOneShotAnimation> {
   @override
   void initState() {
     super.initState();
-    _controller = OneShotAnimation(
-      'bounce',
-      autoplay: false,
-      onStop: () => setState(() => _isPlaying = false),
-      onStart: () => setState(() => _isPlaying = true),
-    );
   }
 
   @override
@@ -36,11 +30,10 @@ class _PlayOneShotAnimationState extends State<PlayOneShotAnimation> {
         title: const Text('One-Shot Example'),
         centerTitle: true,
       ),
-      body: Center(
+      body: const Center(
         child: RiveAnimation.network(
           'https://cdn.rive.app/animations/vehicles.riv',
-          animations: const ['idle', 'curves'],
-          controllers: [_controller],
+          animations: ['idle', 'curves'],
         ),
       ),
       floatingActionButton: FloatingActionButton(

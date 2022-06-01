@@ -1,6 +1,7 @@
 import 'package:ez_flutter/providers/auth.provider.dart';
 import 'package:ez_flutter/providers/azan.time.provider.dart';
 import 'package:ez_flutter/providers/location.provider.dart';
+import 'package:ez_flutter/providers/payment.provider.dart';
 import 'package:ez_flutter/screen/landing.page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -20,8 +21,14 @@ Future<void> main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
 
   // This widget is the root of your application.
   @override
@@ -31,6 +38,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => AppUser()),
         ChangeNotifierProvider(create: (context) => LocationProvider()),
         ChangeNotifierProvider(create: (context) => AzanProvider()),
+        ChangeNotifierProvider<PaymentProvider>(
+            create: (context) => PaymentProvider())
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

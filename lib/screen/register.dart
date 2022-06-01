@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/auth.provider.dart';
+import '../providers/payment.provider.dart';
 import '../style/button/button1.dart';
 import '../style/text/text.dart';
 import '../widgets/form.dart';
@@ -73,6 +74,9 @@ class _RegisterState extends State<Register> {
                                 email: _email.text,
                                 password: _pass.text,
                               );
+                              Provider.of<PaymentProvider>(context,
+                                      listen: false)
+                                  .init();
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                     content: Text('Creating new account')),

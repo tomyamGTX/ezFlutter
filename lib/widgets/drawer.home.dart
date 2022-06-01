@@ -1,4 +1,5 @@
 import 'package:ez_flutter/providers/location.provider.dart';
+import 'package:ez_flutter/screen/animation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:provider/provider.dart';
@@ -63,6 +64,16 @@ Drawer buildDrawer(BuildContext context) {
           onTap: () {
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => const GetLocation()));
+          },
+        ),
+        ListTile(
+          trailing: const Icon(Icons.navigate_next),
+          title: const Text('Rive Animation'),
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const AnimationScreen()));
           },
         ),
         if (AppUser.instance.user?.phoneNumber == null)
