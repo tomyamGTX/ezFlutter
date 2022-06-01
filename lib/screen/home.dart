@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:ez_flutter/providers/payment.provider.dart';
+import 'package:ez_flutter/screen/webview.payment.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -32,12 +33,6 @@ class _HomeState extends State<Home> {
       .doc(AppUser().user!.uid)
       .collection('bill');
   final _select = [];
-
-  void _launchUrl(billCode) async {
-    if (!await launchUrl(Uri.parse('https://dev.toyyibpay.com/$billCode'))) {
-      throw 'Could not launch url';
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -153,8 +148,6 @@ class _HomeState extends State<Home> {
                       child: ListView.builder(
                         itemCount: data.length,
                         itemBuilder: (BuildContext context, int index) {
-                          Provider.of<PaymentProvider>(context, listen: false)
-                              .getBillTransactions(data[index]['billCode']);
                           return Card(
                               child: ListTile(
                                   leading: CircleAvatar(
@@ -173,10 +166,20 @@ class _HomeState extends State<Home> {
                                       data[index]['billPrice'].toString()),
                                   trailing: TextButton(
                                     onPressed: () async {
-                                      _launchUrl(data[index]['billCode']);
+                                      // _launchUrl(data[index]['billCode']);
+                                      Provider.of<PaymentProvider>(context,
+                                              listen: false)
+                                          .setBool(data[index]['paid']);
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  WebViewExample(
+                                                      data[index]['billCode'],
+                                                      data[index]['paid'])));
                                     },
                                     child: Text(data[index]['paid']
-                                        ? 'Paid'
+                                        ? 'View Receipt'
                                         : 'Pay Now'),
                                   )));
                         },

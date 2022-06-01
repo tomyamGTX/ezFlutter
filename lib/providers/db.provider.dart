@@ -12,13 +12,23 @@ class DB extends ChangeNotifier {
   Future<void> addBill(code, name, price, expired) {
     // Call the user's CollectionReference to add a new user
     return users
-        .add({
+        .doc(code)
+        .set({
           'billCode': code, // John Doe
           'billName': name, // Stokes and Sons
           'billPrice': price, // 42
           'expired': expired,
           'paid': false
         })
+        .then((value) => print("Bill Added"))
+        .catchError((error) => print("Failed to add bill: $error"));
+  }
+
+  Future<void> updateBill(code, bool status) {
+    // Call the user's CollectionReference to add a new user
+    return users
+        .doc(code)
+        .set({'paid': status}, SetOptions(merge: true))
         .then((value) => print("Bill Added"))
         .catchError((error) => print("Failed to add bill: $error"));
   }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:ez_flutter/models/bill.transaction.model.dart';
 import 'package:ez_flutter/models/create.category.response.model.dart';
 import 'package:ez_flutter/providers/auth.provider.dart';
 import 'package:ez_flutter/providers/db.provider.dart';
@@ -14,6 +15,7 @@ class PaymentProvider extends ChangeNotifier {
     init();
   }
 
+  bool paid = false;
   List<Bill> allBill = <Bill>[];
   var userSecretkey = '0tr6p5m2-j7ds-8gr2-5unc-48lw3c941z6s';
   String? categoryCode;
@@ -71,11 +73,11 @@ class PaymentProvider extends ChangeNotifier {
     request.fields['categoryCode'] = categoryCode!;
     request.fields['billName'] = billName;
     request.fields['billDescription'] = billDesc;
-    request.fields['billPriceSetting'] = '1';
-    request.fields['billPayorInfo'] = '0';
+    request.fields['billPriceSetting'] = '0';
+    request.fields['billPayorInfo'] = '1';
     request.fields['billAmount'] = '${price * 100}';
-    request.fields['billReturnUrl'] = 'http://bizapp.my';
-    request.fields['billCallbackUrl'] = 'http://bizapp.my/paystatus';
+    request.fields['billReturnUrl'] = '';
+    request.fields['billCallbackUrl'] = '';
     request.fields['billExternalReferenceNo'] = 'AFR341DFI';
     request.fields['billTo'] = AppUser().user!.email!.split('@')[0];
     request.fields['billEmail'] = AppUser().user!.email!;
@@ -109,7 +111,8 @@ class PaymentProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> getBillTransactions(billCode) async {
+  Future<void> getBillTransactions(
+      BuildContext context, String billCode) async {
     var request = http.MultipartRequest('POST', getBillTransaction);
 
     request.fields['billCode'] = billCode;
@@ -118,14 +121,38 @@ class PaymentProvider extends ChangeNotifier {
 
     var responsed = await http.Response.fromStream(response);
     final responseData = json.decode(responsed.body);
-
     if (response.statusCode == 200) {
-      print("SUCCESS");
-      print(responseData);
+      for (var item in responseData) {
+        var data = BillTransaction.fromJson(item);
+        if (data.billpaymentStatus == '1') {
+          Provider.of<DB>(context, listen: false).updateBill(billCode, true);
+          Provider.of<PaymentProvider>(context, listen: false).updateBool();
+          print('Successful transaction');
+        } else if (data.billpaymentStatus == '2') {
+          print('Pending transaction');
+        } else if (data.billpaymentStatus == '3') {
+          Provider.of<DB>(context, listen: false).updateBill(billCode, false);
+          print('Unsuccessful transaction');
+        } else if (data.billpaymentStatus == '4') {
+          print('Pending');
+        }
+      }
     } else {
       print("ERROR");
     }
   }
 
   void getCategory() {}
+
+  void updateBool() {
+    paid = !paid;
+    notifyListeners();
+  }
+
+  void setBool(data) {
+    if (data) {
+      paid = false;
+      notifyListeners();
+    }
+  }
 }
