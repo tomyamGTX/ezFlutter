@@ -6,6 +6,7 @@ import '../providers/payment.provider.dart';
 import '../style/button/button1.dart';
 import '../style/text/text.dart';
 import '../widgets/form.dart';
+import '../widgets/loading.dart';
 import '../widgets/pass.ui.dart';
 
 class Register extends StatefulWidget {
@@ -102,7 +103,10 @@ class _RegisterState extends State<Register> {
                                 const SnackBar(
                                     content: Text('Creating new account')),
                               );
-                              Navigator.pop(context);
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const Loading()));
                             } catch (e) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(

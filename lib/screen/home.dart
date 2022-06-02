@@ -6,7 +6,6 @@ import 'package:ez_flutter/screen/update.name.dart';
 import 'package:ez_flutter/screen/webview.payment.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../providers/auth.provider.dart';
 import '../widgets/drawer.home.dart';
 
@@ -82,7 +81,7 @@ class _HomeState extends State<Home> {
                 Visibility(
                   visible: _visible,
                   child: InkWell(
-                    onTap: () => Navigator.pushReplacement(
+                    onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => const PhoneNumberScreen())),
