@@ -18,6 +18,7 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
   final TextEditingController _email = TextEditingController();
   final TextEditingController _pass = TextEditingController();
+  final TextEditingController _name = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -55,9 +56,28 @@ class _RegisterState extends State<Register> {
                         padding: const EdgeInsets.all(8.0),
                         child: Row(
                           children: [
+                            const Icon(Icons.person),
+                            Flexible(
+                              child: FormUi(
+                                controller: _name,
+                                hint: 'Username',
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Flexible(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: [
                             const Icon(Icons.mail),
                             Flexible(
-                              child: FormUi(email: _email),
+                              child: FormUi(
+                                controller: _email,
+                                hint: 'Email',
+                              ),
                             ),
                           ],
                         ),
@@ -73,6 +93,7 @@ class _RegisterState extends State<Register> {
                                   .signUp(
                                 email: _email.text,
                                 password: _pass.text,
+                                name: _name.text,
                               );
                               Provider.of<PaymentProvider>(context,
                                       listen: false)

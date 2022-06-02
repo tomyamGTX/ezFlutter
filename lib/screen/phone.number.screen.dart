@@ -64,10 +64,9 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
 
           // Sign the user in (or link) with the credential
           await AppUser.instance.user!.updatePhoneNumber(credential);
-          Navigator.pop(context);
           print("success b");
         },
         codeAutoRetrievalTimeout: (String verificationId) {},
-        timeout: const Duration(minutes: 5));
+        timeout: const Duration(minutes: 2));
   }
 }

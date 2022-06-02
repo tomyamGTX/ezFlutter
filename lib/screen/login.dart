@@ -1,4 +1,5 @@
 import 'package:ez_flutter/screen/register.dart';
+import 'package:ez_flutter/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -48,7 +49,10 @@ class _LoginState extends State<Login> {
                         children: [
                           const Icon(Icons.mail),
                           Flexible(
-                            child: FormUi(email: _email),
+                            child: FormUi(
+                              controller: _email,
+                              hint: 'Email',
+                            ),
                           ),
                         ],
                       ),
@@ -65,9 +69,10 @@ class _LoginState extends State<Login> {
                               await Provider.of<AppUser>(context, listen: false)
                                   .signIn(
                                       email: _email.text, password: _pass.text);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Logging in')),
-                              );
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const Loading()));
                             } catch (e) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(

@@ -19,7 +19,6 @@ class PaymentProvider extends ChangeNotifier {
   List<Bill> allBill = <Bill>[];
   var userSecretkey = '0tr6p5m2-j7ds-8gr2-5unc-48lw3c941z6s';
   String? categoryCode;
-  String? status;
   var createCategoryUrl =
       Uri.parse('https://dev.toyyibpay.com/index.php/api/createCategory');
   var createBillUrl =
@@ -51,10 +50,8 @@ class PaymentProvider extends ChangeNotifier {
     final responseData = json.decode(responsed.body);
 
     if (response.statusCode == 200) {
-      print("SUCCESS");
       var data = CreateCategoryResponse.fromJson(responseData);
       categoryCode = data.categoryCode;
-      status = data.status;
       notifyListeners();
     } else {
       print("ERROR");
@@ -79,9 +76,9 @@ class PaymentProvider extends ChangeNotifier {
     request.fields['billReturnUrl'] = '';
     request.fields['billCallbackUrl'] = '';
     request.fields['billExternalReferenceNo'] = 'AFR341DFI';
-    request.fields['billTo'] = AppUser().user!.email!.split('@')[0];
+    request.fields['billTo'] = AppUser().user!.displayName!;
     request.fields['billEmail'] = AppUser().user!.email!;
-    request.fields['billPhone'] = AppUser().user!.phoneNumber ?? '+60123456789';
+    request.fields['billPhone'] = AppUser().user!.phoneNumber!;
     request.fields['billSplitPayment'] = '0';
     request.fields['billSplitPaymentArgs'] = '';
     request.fields['billPaymentChannel'] = '0';

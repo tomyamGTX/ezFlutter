@@ -1,13 +1,11 @@
-import 'package:ez_flutter/providers/location.provider.dart';
 import 'package:ez_flutter/screen/animation.dart';
+import 'package:ez_flutter/screen/update.name.dart';
+import 'package:ez_flutter/widgets/loading.dart';
 import 'package:flutter/material.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:provider/provider.dart';
 
 import '../providers/auth.provider.dart';
 import '../screen/getapi.dart';
 import '../screen/getlocation.dart';
-import '../screen/landing.page.dart';
 import '../screen/phone.number.screen.dart';
 import '../screen/timeline.dart';
 import '../style/text/text.dart';
@@ -76,31 +74,35 @@ Drawer buildDrawer(BuildContext context) {
                     builder: (context) => const AnimationScreen()));
           },
         ),
-        if (AppUser.instance.user?.phoneNumber == null)
-          ListTile(
-            trailing: const Icon(Icons.navigate_next),
-            subtitle: const Text('Link Your Phone Number'),
-            title: const Text('Go to Phone number screen'),
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const PhoneNumberScreen()));
-            },
-          ),
+        ListTile(
+          trailing: const Icon(Icons.navigate_next),
+          title: const Text('Update Name'),
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const UpdateName()));
+          },
+        ),
+        ListTile(
+          trailing: const Icon(Icons.navigate_next),
+          subtitle: AppUser.instance.user?.phoneNumber != null
+              ? Text(AppUser.instance.user!.phoneNumber!)
+              : const Text('Link Your Phone Number'),
+          title: AppUser.instance.user?.phoneNumber != null
+              ? const Text('Your Phone Number')
+              : const Text('Go to Phone number screen'),
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const PhoneNumberScreen()));
+          },
+        ),
         ListTile(
           trailing: const Icon(Icons.logout),
           title: const Text('Logout'),
-          onTap: () {
-            GetStorage().remove('lat');
-            GetStorage().remove('long');
-            GetStorage().remove('acc');
-            GetStorage().remove('sync');
-            GetStorage().remove('id');
-            Provider.of<LocationProvider>(context, listen: false).remove();
-            Provider.of<AppUser>(context, listen: false).signOut();
+          onTap: () async {
             Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => const LandingPage()));
+                MaterialPageRoute(builder: (context) => const Loading2()));
           },
         ),
       ],
