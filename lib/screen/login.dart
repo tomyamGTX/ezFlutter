@@ -51,7 +51,8 @@ class _LoginState extends State<Login> {
                           Flexible(
                             child: FormUi(
                               controller: _email,
-                              hint: 'Email', isPhone: false,
+                              hint: 'Email',
+                              isPhone: false,
                             ),
                           ),
                         ],
@@ -68,7 +69,8 @@ class _LoginState extends State<Login> {
                             try {
                               await Provider.of<AppUser>(context, listen: false)
                                   .signIn(
-                                      email: _email.text, password: _pass.text);
+                                      email: _email.text.trim(),
+                                      password: _pass.text);
                               Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
@@ -85,7 +87,7 @@ class _LoginState extends State<Login> {
                   ),
                   const Padding(
                     padding: EdgeInsets.all(8.0),
-                    child: Text('OR'),
+                    child: Text('Or'),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
