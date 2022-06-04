@@ -51,7 +51,7 @@ class _LoginState extends State<Login> {
                           Flexible(
                             child: FormUi(
                               controller: _email,
-                              hint: 'Email',
+                              hint: 'Email', isPhone: false,
                             ),
                           ),
                         ],

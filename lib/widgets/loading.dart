@@ -4,7 +4,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/auth.provider.dart';
-import '../screen/home.dart';
+import '../screen/navigation.dart';
 import '../style/text/text.dart';
 
 class Loading extends StatefulWidget {
@@ -18,8 +18,8 @@ class _LoadingState extends State<Loading> {
   @override
   void initState() {
     Future.delayed(const Duration(seconds: 3), () {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => const Home()));
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => const Navigation(1)));
     });
     super.initState();
   }

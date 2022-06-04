@@ -8,6 +8,7 @@ class DB extends ChangeNotifier {
       .collection('users')
       .doc(AppUser().user!.uid)
       .collection('bill');
+  CollectionReference items = FirebaseFirestore.instance.collection('items');
 
   Future<void> addBill(code, name, price, expired) {
     // Call the user's CollectionReference to add a new user
@@ -19,6 +20,19 @@ class DB extends ChangeNotifier {
           'billPrice': price, // 42
           'expired': expired,
           'paid': false
+        })
+        .then((value) => print("Bill Added"))
+        .catchError((error) => print("Failed to add bill: $error"));
+  }
+
+  Future<void> addItem(name, desc, price, url) {
+    // Call the user's CollectionReference to add a new user
+    return items
+        .add({
+          'name': name, // Stokes and Sons
+          'desc': desc, // 42
+          'price': price,
+          'pic-url': url
         })
         .then((value) => print("Bill Added"))
         .catchError((error) => print("Failed to add bill: $error"));

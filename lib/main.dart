@@ -1,8 +1,10 @@
 import 'package:ez_flutter/providers/auth.provider.dart';
 import 'package:ez_flutter/providers/azan.time.provider.dart';
 import 'package:ez_flutter/providers/db.provider.dart';
+import 'package:ez_flutter/providers/local.provider.dart';
 import 'package:ez_flutter/providers/location.provider.dart';
 import 'package:ez_flutter/providers/payment.provider.dart';
+import 'package:ez_flutter/providers/sandbox.payment.provider.dart';
 import 'package:ez_flutter/screen/landing.page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -40,15 +42,19 @@ class _MyAppState extends State<MyApp> {
             create: (context) => LocationProvider()),
         ChangeNotifierProvider<AzanProvider>(
             create: (context) => AzanProvider()),
+        ChangeNotifierProvider<SandBoxPaymentProvider>(
+            create: (context) => SandBoxPaymentProvider()),
         ChangeNotifierProvider<PaymentProvider>(
             create: (context) => PaymentProvider()),
-        ChangeNotifierProvider<DB>(create: (context) => DB())
+        ChangeNotifierProvider<DB>(create: (context) => DB()),
+        ChangeNotifierProvider<LocalProvider>(
+            create: (context) => LocalProvider())
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'EZFlutter',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primarySwatch: Colors.amber,
         ),
         home: SplashScreen.navigate(
           backgroundColor: Colors.white,

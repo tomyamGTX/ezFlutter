@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/auth.provider.dart';
-import '../providers/payment.provider.dart';
+import '../providers/sandbox.payment.provider.dart';
 import '../style/button/button1.dart';
 import '../style/text/text.dart';
 import '../widgets/form.dart';
@@ -62,6 +62,7 @@ class _RegisterState extends State<Register> {
                               child: FormUi(
                                 controller: _name,
                                 hint: 'Username',
+                                isPhone: false,
                               ),
                             ),
                           ],
@@ -78,6 +79,7 @@ class _RegisterState extends State<Register> {
                               child: FormUi(
                                 controller: _email,
                                 hint: 'Email',
+                                isPhone: false,
                               ),
                             ),
                           ],
@@ -96,7 +98,7 @@ class _RegisterState extends State<Register> {
                                 password: _pass.text,
                                 name: _name.text,
                               );
-                              Provider.of<PaymentProvider>(context,
+                              Provider.of<SandBoxPaymentProvider>(context,
                                       listen: false)
                                   .init();
                               ScaffoldMessenger.of(context).showSnackBar(

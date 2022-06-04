@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-import '../providers/payment.provider.dart';
+import '../providers/sandbox.payment.provider.dart';
 
 class WebViewExample extends StatefulWidget {
   final String billcode;
@@ -27,7 +27,7 @@ class WebViewExampleState extends State<WebViewExample> {
     super.initState();
     timer = Timer.periodic(const Duration(seconds: 5), (timer) {
       if (!widget.status) {
-        Provider.of<PaymentProvider>(context, listen: false)
+        Provider.of<SandBoxPaymentProvider>(context, listen: false)
             .getBillTransactions(context, widget.billcode);
       }
     });
@@ -53,7 +53,7 @@ class WebViewExampleState extends State<WebViewExample> {
             IconButton(onPressed: () {}, icon: const Icon(Icons.download))
         ],
       ),
-      body: Consumer<PaymentProvider>(builder: (context, bill, child) {
+      body: Consumer<SandBoxPaymentProvider>(builder: (context, bill, child) {
         return bill.paid
             ? Center(
                 child: Column(

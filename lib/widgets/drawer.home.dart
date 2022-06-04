@@ -1,4 +1,5 @@
 import 'package:ez_flutter/screen/animation.dart';
+import 'package:ez_flutter/screen/sandbox.payment.dart';
 import 'package:ez_flutter/screen/update.name.dart';
 import 'package:ez_flutter/widgets/loading.dart';
 import 'package:flutter/material.dart';
@@ -20,17 +21,17 @@ Drawer buildDrawer(BuildContext context) {
       padding: EdgeInsets.zero,
       children: [
         DrawerHeader(
-          decoration: const BoxDecoration(
-            color: Colors.blue,
+          decoration: BoxDecoration(
+            color: Theme.of(context).primaryColor,
           ),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 30.0),
             child: Center(
               child: CircleAvatar(
-                backgroundColor: Colors.blueGrey,
+                backgroundColor: Theme.of(context).backgroundColor,
                 radius: 40,
                 child: CircleAvatar(
-                  radius: 38,
+                  radius: 35,
                   child: Text(
                     AppUser.instance.user!.email!.substring(0, 1).toUpperCase(),
                     style: basicTextStyle(),
@@ -76,14 +77,6 @@ Drawer buildDrawer(BuildContext context) {
         ),
         ListTile(
           trailing: const Icon(Icons.navigate_next),
-          title: const Text('Update Name'),
-          onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const UpdateName()));
-          },
-        ),
-        ListTile(
-          trailing: const Icon(Icons.navigate_next),
           subtitle: AppUser.instance.user?.phoneNumber != null
               ? Text(AppUser.instance.user!.phoneNumber!)
               : const Text('Link Your Phone Number'),
@@ -95,6 +88,16 @@ Drawer buildDrawer(BuildContext context) {
                 context,
                 MaterialPageRoute(
                     builder: (context) => const PhoneNumberScreen()));
+          },
+        ),
+        ListTile(
+          trailing: const Icon(Icons.navigate_next),
+          title: const Text('SandBox Payment'),
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const SandBoxPayment()));
           },
         ),
         ListTile(

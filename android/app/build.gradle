@@ -22,7 +22,11 @@ if (flutterVersionName == null) {
 }
 def flutterMinSDK = localProperties.getProperty('flutter.minSdkVersion')
 if (flutterMinSDK == null) {
-    flutterMinSDK = 16
+    flutterMinSDK = 19
+}
+def flutterTargetSDK = localProperties.getProperty('flutter.targetSdkVersion')
+if (flutterTargetSDK == null) {
+    flutterTargetSDK = 29
 }
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = rootProject.file('key.properties')
@@ -54,7 +58,7 @@ android {
         multiDexEnabled true
         applicationId "com.kimi.ezFlutter"
         minSdkVersion flutterMinSDK
-        targetSdkVersion flutter.targetSdkVersion
+        targetSdkVersion flutterTargetSDK
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
