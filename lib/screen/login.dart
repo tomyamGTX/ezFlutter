@@ -9,6 +9,7 @@ import '../providers/auth.provider.dart';
 import '../style/text/text.dart';
 import '../widgets/form.dart';
 import '../widgets/pass.ui.dart';
+import 'forget.pass.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -26,6 +27,7 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).secondaryHeaderColor,
         resizeToAvoidBottomInset: false,
         body: Center(
           child: Padding(
@@ -60,6 +62,18 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                   PassUI(pass: _pass),
+                  Align(
+                      alignment: Alignment.centerRight,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: TextButton(
+                            onPressed: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const ForgetPassword())),
+                            child: const Text('Forget Password')),
+                      )),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton(

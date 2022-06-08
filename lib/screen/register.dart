@@ -26,6 +26,7 @@ class _RegisterState extends State<Register> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+          backgroundColor: Theme.of(context).secondaryHeaderColor,
           floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
           floatingActionButton: Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
