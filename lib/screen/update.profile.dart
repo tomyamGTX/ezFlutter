@@ -2,6 +2,7 @@ import 'package:ez_flutter/providers/auth.provider.dart';
 import 'package:ez_flutter/screen/phone.number.screen.dart';
 import 'package:ez_flutter/screen/update.name.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_advanced_avatar/flutter_advanced_avatar.dart';
 
 import '../style/text/text.dart';
 
@@ -26,10 +27,21 @@ class _UpdateProfileState extends State<UpdateProfile> {
             style: titleTextStyle(),
           ),
         ),
+        AdvancedAvatar(
+          name: AppUser.instance.user!.displayName,
+          statusColor: Colors.green,
+          foregroundDecoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: Theme.of(context).primaryColorDark,
+              width: 5.0,
+            ),
+          ),
+        ),
         Card(
           child: ListTile(
             trailing: Icon(Icons.navigate_next),
-            title: Text('Change Name'),
+            title: const Text('Change Name'),
             subtitle:
                 Text(AppUser.instance.user!.displayName ?? 'Name not set yet'),
             onTap: () => Navigator.push(context,

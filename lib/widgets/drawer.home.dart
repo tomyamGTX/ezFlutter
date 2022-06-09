@@ -1,15 +1,14 @@
 import 'package:ez_flutter/screen/animation.dart';
 import 'package:ez_flutter/screen/sandbox.payment.dart';
-import 'package:ez_flutter/screen/update.name.dart';
 import 'package:ez_flutter/widgets/loading.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_advanced_avatar/flutter_advanced_avatar.dart';
 
 import '../providers/auth.provider.dart';
 import '../screen/getapi.dart';
 import '../screen/getlocation.dart';
 import '../screen/phone.number.screen.dart';
 import '../screen/timeline.dart';
-import '../style/text/text.dart';
 
 Drawer buildDrawer(BuildContext context) {
   return Drawer(
@@ -24,18 +23,15 @@ Drawer buildDrawer(BuildContext context) {
           decoration: BoxDecoration(
             color: Theme.of(context).primaryColor,
           ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 30.0),
-            child: Center(
-              child: CircleAvatar(
-                backgroundColor: Theme.of(context).backgroundColor,
-                radius: 40,
-                child: CircleAvatar(
-                  radius: 35,
-                  child: Text(
-                    AppUser.instance.user!.email!.substring(0, 1).toUpperCase(),
-                    style: basicTextStyle(),
-                  ),
+          child: Center(
+            child: AdvancedAvatar(
+              name: AppUser.instance.user!.displayName,
+              statusColor: Colors.green,
+              foregroundDecoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Theme.of(context).primaryColorDark,
+                  width: 5.0,
                 ),
               ),
             ),

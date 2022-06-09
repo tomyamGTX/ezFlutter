@@ -61,8 +61,7 @@ class LocationProvider extends ChangeNotifier {
 
   getAddress(double lang, double long) async {
     List<Placemark> placemarks = await placemarkFromCoordinates(lang, long);
-    print(placemarks.toString());
-    box.write('address1', "No ${placemarks.first.street}");
+    box.write('address1', "${placemarks.first.street}");
     box.write('address2', '${placemarks.first.subAdministrativeArea}');
     box.write('address3',
         "${placemarks.first.postalCode} ${placemarks.first.administrativeArea}, ${placemarks.first.country}");
