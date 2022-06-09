@@ -34,7 +34,7 @@ class _PassUIState extends State<PassUI> {
                   padding:
                       const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
                   child: TextFormField(
-                    obscureText: visible,
+                    obscureText: !visible,
                     validator: (e) {
                       if (e!.isEmpty) {
                         return 'Please insert password';
@@ -47,7 +47,7 @@ class _PassUIState extends State<PassUI> {
                                 visible = !visible;
                               }),
                           icon: Icon(
-                            !visible ? Icons.visibility : Icons.visibility_off,
+                            visible ? Icons.visibility : Icons.visibility_off,
                           )),
                       hintText: 'Password',
                       border: InputBorder.none,

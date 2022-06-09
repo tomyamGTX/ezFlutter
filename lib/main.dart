@@ -9,6 +9,7 @@ import 'package:ez_flutter/screen/landing.page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:ms_material_color/ms_material_color.dart';
 import 'package:provider/provider.dart';
 import 'package:rive_splash_screen/rive_splash_screen.dart';
 import 'firebase_options.dart';
@@ -29,10 +30,34 @@ class MyApp extends StatefulWidget {
 
   @override
   State<MyApp> createState() => _MyAppState();
+
+  static _MyAppState? of(BuildContext context) =>
+      context.findAncestorStateOfType<_MyAppState>();
 }
 
 class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
+  int color = GetStorage().read('theme') ?? 0xfff44336;
+
+  void changeColor(int colour) {
+    if (mounted) {
+      setState(() {
+        if (colour == 0) {
+          color = 0xfff44336;
+          GetStorage().write('theme', color);
+        }
+        if (colour == 1) {
+          color = 0xffffc107;
+          GetStorage().write('theme', color);
+        }
+        if (colour == 2) {
+          color = 0xff9c27b0;
+          GetStorage().write('theme', color);
+        }
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -53,14 +78,12 @@ class _MyAppState extends State<MyApp> {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'EZFlutter',
-        theme: ThemeData(
-          primarySwatch: Colors.amber,
-        ),
+        theme: ThemeData(primarySwatch: MsMaterialColor(color)),
         home: SplashScreen.navigate(
           backgroundColor: Colors.white,
           name: 'asset/rives/intro.riv',
           next: (context) => const LandingPage(),
-          until: () => Future.delayed(const Duration(seconds: 2)),
+          until: () => Future.delayed(const Duration(seconds: 1)),
           startAnimation: 'Landing',
         ),
       ),

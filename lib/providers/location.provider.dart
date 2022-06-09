@@ -61,6 +61,7 @@ class LocationProvider extends ChangeNotifier {
 
   getAddress(double lang, double long) async {
     List<Placemark> placemarks = await placemarkFromCoordinates(lang, long);
+    print(placemarks.toString());
     box.write('address1', "No ${placemarks.first.street}");
     box.write('address2', '${placemarks.first.subAdministrativeArea}');
     box.write('address3',
@@ -80,7 +81,7 @@ class LocationProvider extends ChangeNotifier {
     if (box.read('sync') != null) {
       lastSync = box.read('sync').toString();
     }
-    if (box.read('address') != null) {
+    if (box.read('address1') != null) {
       address1 = box.read('address1').toString();
       address2 = box.read('address2').toString();
       address3 = box.read('address3').toString();

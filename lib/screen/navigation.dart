@@ -107,19 +107,20 @@ class _NavigationState extends State<Navigation>
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.amber,
+        backgroundColor: Theme.of(context).primaryColor,
         onPressed: () async {
           await buildShowModalBottomSheet(context);
         },
-        child: const Icon(
+        child: Icon(
           Icons.add,
-          color: Colors.black,
+          color: Theme.of(context).canvasColor,
         ),
         //params
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: AnimatedBottomNavigationBar(
-        activeColor: Colors.redAccent,
+        inactiveColor:Theme.of(context).hintColor,
+        activeColor: Theme.of(context).canvasColor,
         icons: iconList,
         activeIndex: _bottomNavIndex,
         gapLocation: GapLocation.center,
@@ -169,16 +170,16 @@ class _NavigationState extends State<Navigation>
                                   isPhone: false,
                                 ),
                                 FormUi(
-                                  controller: _note,
-                                  hint: 'Note',
-                                  isPhone: false,
-                                ),
-                                FormUi(
                                   controller: _price,
                                   hint: 'Price',
                                   isPhone: false,
                                   type: const TextInputType.numberWithOptions(
-                                      decimal: false),
+                                      decimal: true),
+                                ),
+                                FormUi(
+                                  controller: _note,
+                                  hint: 'Note',
+                                  isPhone: false,
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
@@ -189,9 +190,14 @@ class _NavigationState extends State<Navigation>
                                                   listen: false)
                                               .addList({
                                             "name": _name.text,
-                                            "note": _note.text,
-                                            "price": int.parse(_price.text),
-                                            "paid": false
+                                            "amount": [
+                                              {
+                                                "note": _note.text,
+                                                "price":
+                                                    double.parse(_price.text),
+                                                "paid": false
+                                              }
+                                            ],
                                           });
                                           _name.clear();
                                           _note.clear();
