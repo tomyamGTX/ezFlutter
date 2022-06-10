@@ -1,9 +1,8 @@
+import 'package:ez_flutter/screen/navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/auth.provider.dart';
-import '../widgets/loading.dart';
-import 'home.dart';
 import 'login.dart';
 
 class LandingPage extends StatefulWidget {
@@ -16,9 +15,9 @@ class LandingPage extends StatefulWidget {
 class _LandingPageState extends State<LandingPage> {
   @override
   Widget build(BuildContext context) {
-    var user = Provider.of<AppUser>(context).user;
+    var user = Provider.of<AppUser>(context,listen: false).user;
     if (user != null) {
-      return const Loading();
+      return const Navigation(1);
     }
     return const Login();
   }

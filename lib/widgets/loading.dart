@@ -1,10 +1,7 @@
+import 'package:ez_flutter/providers/auth.provider.dart';
 import 'package:ez_flutter/screen/login.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:provider/provider.dart';
-
-import '../providers/auth.provider.dart';
-import '../screen/navigation.dart';
 import '../style/text/text.dart';
 
 class Loading extends StatefulWidget {
@@ -15,15 +12,6 @@ class Loading extends StatefulWidget {
 }
 
 class _LoadingState extends State<Loading> {
-  @override
-  void initState() {
-    Future.delayed(const Duration(seconds: 3), () {
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => const Navigation(1)));
-    });
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,9 +48,9 @@ class Loading2 extends StatefulWidget {
 class _Loading2State extends State<Loading2> {
   @override
   void initState() {
-    Future.delayed(const Duration(seconds: 3), () {
-      Provider.of<AppUser>(context, listen: false).signOut();
-      Navigator.pushReplacement(
+    Future.delayed(const Duration(seconds: 3), () async {
+      await AppUser.instance.signOut();
+      await Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => const Login()));
     });
     super.initState();

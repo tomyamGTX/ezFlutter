@@ -24,7 +24,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
         ),
         body: Center(
             child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -33,7 +33,10 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                 style: titleTextStyle(),
               ),
             ),
-            FormUi(controller: _email, hint: 'Email', isPhone: false),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: FormUi(controller: _email, hint: 'Email', isPhone: false),
+            ),
             ElevatedButton(
                 onPressed: () {
                   FirebaseAuth.instance

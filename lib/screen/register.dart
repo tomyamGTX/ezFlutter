@@ -43,8 +43,9 @@ class _RegisterState extends State<Register> {
               child: Form(
                 key: _formKey,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
+                    Spacer(),
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Text(
@@ -131,7 +132,8 @@ class _RegisterState extends State<Register> {
                             }
                           }
                         },
-                        child: const Text('Register'))
+                        child: const Text('Register')),
+                    Spacer(),
                   ],
                 ),
               ),

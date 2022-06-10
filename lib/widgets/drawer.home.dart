@@ -100,8 +100,8 @@ Drawer buildDrawer(BuildContext context) {
           trailing: const Icon(Icons.logout),
           title: const Text('Logout'),
           onTap: () async {
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => const Loading2()));
+            await Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (context) => const Loading2()));
           },
         ),
       ],

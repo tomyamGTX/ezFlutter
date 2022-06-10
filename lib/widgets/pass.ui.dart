@@ -28,7 +28,7 @@ class _PassUIState extends State<PassUI> {
               child: Container(
                 margin: EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                    color: Colors.grey[200],
+                    color: Theme.of(context).primaryColorLight,
                     borderRadius: BorderRadius.circular(16)),
                 child: Padding(
                   padding:

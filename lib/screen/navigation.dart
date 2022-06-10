@@ -47,6 +47,7 @@ class _NavigationState extends State<Navigation>
   @override
   void initState() {
     super.initState();
+    Provider.of<AppUser>(context, listen: false).getName();
     Provider.of<LocalProvider>(context, listen: false).getList();
     _pageController = PageController(initialPage: _bottomNavIndex);
     _animationController = AnimationController(
@@ -74,7 +75,6 @@ class _NavigationState extends State<Navigation>
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<AppUser>(context, listen: false).getName();
     return SafeArea(
         child: Scaffold(
       resizeToAvoidBottomInset: false,
