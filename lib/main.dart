@@ -1,3 +1,4 @@
+import 'package:ez_flutter/providers/animation.provider.dart';
 import 'package:ez_flutter/providers/auth.provider.dart';
 import 'package:ez_flutter/providers/azan.time.provider.dart';
 import 'package:ez_flutter/providers/db.provider.dart';
@@ -73,7 +74,9 @@ class _MyAppState extends State<MyApp> {
             create: (context) => PaymentProvider()),
         ChangeNotifierProvider<DB>(create: (context) => DB()),
         ChangeNotifierProvider<LocalProvider>(
-            create: (context) => LocalProvider())
+            create: (context) => LocalProvider()),
+        ChangeNotifierProvider<AnimationProvider>(
+            create: (context) => AnimationProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
