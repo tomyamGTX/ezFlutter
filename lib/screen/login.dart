@@ -69,8 +69,9 @@ class _LoginState extends State<Login> {
                             transform: Matrix4.rotationY(scale),
                             child: Container(
                               height: 80,
-                              decoration: const BoxDecoration(
-                                  shape: BoxShape.circle, color: Colors.amber),
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Theme.of(context).primaryColor),
                               child: Center(
                                   child: Text(
                                 '^_^',

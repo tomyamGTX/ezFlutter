@@ -19,6 +19,7 @@ class _DebtListScreenState extends State<DebtListScreen> {
   final _notes = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeys = GlobalKey<FormState>();
+
   @override
   void initState() {
     super.initState();
@@ -67,6 +68,14 @@ class _DebtListScreenState extends State<DebtListScreen> {
                     .substring(1)
                     .toLowerCase();
                 var name = first + back;
+                var total = 0.0;
+                for (int i = 0;
+                    i < value.debtList[index]['amount'].length;
+                    i++) {
+                  if (!value.debtList[index]['amount'][i]['paid']) {
+                    total = total + value.debtList[index]['amount'][i]['price'];
+                  }
+                }
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Card(
@@ -205,31 +214,41 @@ class _DebtListScreenState extends State<DebtListScreen> {
                           ),
                         ),
                         subtitle: Text(
-                          "${value.debtList[index]['amount'].length} debt(s)",
+                          total == 0
+                              ? 'No Debt'
+                              : "Total Debt RM ${total.toStringAsFixed(2)}",
                         ),
                         controlAffinity: ListTileControlAffinity.leading,
                         children: <Widget>[
-                          for (var item in value.debtList[index]['amount'])
+                          for (int i = 0;
+                              i < value.debtList[index]['amount'].length;
+                              i++)
                             ListTile(
                                 tileColor:
                                     Theme.of(context).secondaryHeaderColor,
                                 leading: CircleAvatar(
                                   child: Icon(
-                                    item['paid'] ? Icons.check : Icons.close,
+                                    value.debtList[index]['amount'][i]['paid']
+                                        ? Icons.check
+                                        : Icons.close,
                                     color:
                                         Theme.of(context).secondaryHeaderColor,
                                   ),
-                                  backgroundColor: item['paid']
+                                  backgroundColor: value.debtList[index]
+                                          ['amount'][i]['paid']
                                       ? Colors.green
                                       : Theme.of(context).errorColor,
                                 ),
                                 title: Text(
-                                  'RM ' + item['price'].toStringAsFixed(2),
+                                  'RM ' +
+                                      value.debtList[index]['amount'][i]
+                                              ['price']
+                                          .toStringAsFixed(2),
                                   style: TextStyle(
                                       color: Theme.of(context).primaryColor),
                                 ),
                                 subtitle: Text(
-                                  item['note'],
+                                  value.debtList[index]['amount'][i]['note'],
                                   style: TextStyle(
                                       color: Theme.of(context).primaryColor),
                                 ),
@@ -248,17 +267,20 @@ class _DebtListScreenState extends State<DebtListScreen> {
                                                   actions: [
                                                     TextButton(
                                                         onPressed: () {
-                                                          Provider.of<LocalProvider>(
-                                                                  context,
-                                                                  listen: false)
-                                                              .updateList(
-                                                                  value.debtList[
-                                                                      index],
-                                                                  index,
-                                                                  item,
-                                                                  item['price'],
-                                                                  item['paid'],
-                                                                  item['note']);
+                                                          Provider.of<LocalProvider>(context, listen: false).updateList(
+                                                              index,
+                                                              i,
+                                                              value.debtList[index]
+                                                                      ['amount']
+                                                                  [i]['price'],
+                                                              value.debtList[
+                                                                          index]
+                                                                      ['amount']
+                                                                  [i]['paid'],
+                                                              value.debtList[
+                                                                          index]
+                                                                      ['amount']
+                                                                  [i]['note']);
                                                           ScaffoldMessenger.of(
                                                                   context)
                                                               .showSnackBar(
@@ -270,12 +292,18 @@ class _DebtListScreenState extends State<DebtListScreen> {
                                                               context);
                                                         },
                                                         child: Text(
-                                                          !item['paid']
+                                                          !value.debtList[index]
+                                                                      ['amount']
+                                                                  [i]['paid']
                                                               ? 'MARK AS PAID'
                                                               : 'MARK AS UNPAID',
                                                           style: TextStyle(
-                                                              color: !item[
-                                                                      'paid']
+                                                              color: !value.debtList[
+                                                                              index]
+                                                                          [
+                                                                          'amount']
+                                                                      [
+                                                                      i]['paid']
                                                                   ? Colors.green
                                                                   : Colors.red),
                                                         )),
@@ -301,40 +329,40 @@ class _DebtListScreenState extends State<DebtListScreen> {
                                                                     child:
                                                                         ListView(
                                                                       children: [
-                                                                        Text(
-                                                                          'Old Price: RM ' +
-                                                                              item['price'].toStringAsFixed(2),
-                                                                        ),
+                                                                        Text('Old Price: RM ' +
+                                                                            value.debtList[index]['amount'][i]['price'].toStringAsFixed(2)),
                                                                         FormUi(
-                                                                          controller:
-                                                                              _prices,
-                                                                          hint:
-                                                                              'New Price',
-                                                                          isPhone:
-                                                                              false,
-                                                                          type:
-                                                                              const TextInputType.numberWithOptions(decimal: true),
-                                                                        ),
-                                                                        Text(
-                                                                          'Old Note: ' +
-                                                                              item['note'],
-                                                                        ),
+                                                                            controller:
+                                                                                _prices,
+                                                                            hint:
+                                                                                'New Price',
+                                                                            isPhone:
+                                                                                false,
+                                                                            type:
+                                                                                const TextInputType.numberWithOptions(decimal: true)),
+                                                                        Text('Old Note: ' +
+                                                                            value.debtList[index]['amount'][i]['note']),
                                                                         FormUi(
-                                                                          controller:
-                                                                              _notes,
-                                                                          hint:
-                                                                              'New Note',
-                                                                          isPhone:
-                                                                              false,
-                                                                        ),
+                                                                            controller:
+                                                                                _notes,
+                                                                            hint:
+                                                                                'New Note',
+                                                                            isPhone:
+                                                                                false),
                                                                         Padding(
                                                                           padding:
                                                                               const EdgeInsets.all(8.0),
                                                                           child: ElevatedButton(
                                                                               onPressed: () {
                                                                                 if (_formKeys.currentState!.validate()) {
-                                                                                  bool isPaid = item['paid'];
-                                                                                  Provider.of<LocalProvider>(context, listen: false).updateValue(double.parse(_prices.text), _notes.text, isPaid, item);
+                                                                                  bool isPaid = value.debtList[index]['amount'][i]['paid'];
+                                                                                  Provider.of<LocalProvider>(context, listen: false).updateValue(
+                                                                                    index,
+                                                                                    i,
+                                                                                    double.parse(_prices.text),
+                                                                                    _notes.text,
+                                                                                    isPaid,
+                                                                                  );
                                                                                   _notes.clear();
                                                                                   _prices.clear();
                                                                                   ScaffoldMessenger.of(context).showSnackBar(
@@ -342,15 +370,33 @@ class _DebtListScreenState extends State<DebtListScreen> {
                                                                                   );
                                                                                   Navigator.pop(context);
                                                                                 } else {
-                                                                                  bool isPaid = item['paid'];
-                                                                                  String note = item['note'];
-                                                                                  double price = item['price'];
+                                                                                  bool isPaid = value.debtList[index]['amount'][i]['paid'];
+                                                                                  String note = value.debtList[index]['amount'][i]['note'];
+                                                                                  double price = value.debtList[index]['amount'][i]['price'];
                                                                                   if (_prices.text.isEmpty && _notes.text.isEmpty) {
-                                                                                    Provider.of<LocalProvider>(context, listen: false).updateValue(price, note, isPaid, item);
+                                                                                    Provider.of<LocalProvider>(context, listen: false).updateValue(
+                                                                                      index,
+                                                                                      i,
+                                                                                      price,
+                                                                                      note,
+                                                                                      isPaid,
+                                                                                    );
                                                                                   } else if (_prices.text.isNotEmpty && _notes.text.isEmpty) {
-                                                                                    Provider.of<LocalProvider>(context, listen: false).updateValue(double.parse(_prices.text), note, isPaid, item);
+                                                                                    Provider.of<LocalProvider>(context, listen: false).updateValue(
+                                                                                      index,
+                                                                                      i,
+                                                                                      double.parse(_prices.text),
+                                                                                      note,
+                                                                                      isPaid,
+                                                                                    );
                                                                                   } else if (_prices.text.isEmpty && _notes.text.isNotEmpty) {
-                                                                                    Provider.of<LocalProvider>(context, listen: false).updateValue(price, _notes.text, isPaid, item);
+                                                                                    Provider.of<LocalProvider>(context, listen: false).updateValue(
+                                                                                      index,
+                                                                                      i,
+                                                                                      price,
+                                                                                      _notes.text,
+                                                                                      isPaid,
+                                                                                    );
                                                                                   }
                                                                                   _notes.clear();
                                                                                   _prices.clear();
@@ -393,8 +439,10 @@ class _DebtListScreenState extends State<DebtListScreen> {
                                                           Provider.of<LocalProvider>(
                                                                   context,
                                                                   listen: false)
-                                                              .deletePrice(
-                                                                  item);
+                                                              .deletePrice(value
+                                                                          .debtList[
+                                                                      index][
+                                                                  'amount'][i]);
                                                           ScaffoldMessenger.of(
                                                                   context)
                                                               .showSnackBar(

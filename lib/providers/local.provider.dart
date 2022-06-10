@@ -39,34 +39,26 @@ class LocalProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateList(val, index, item, price, paid, note) {
-    var amount;
-    var index;
+  void updateList(index, priceIndex, price, paid, note) {
+    var oldData;
+    String notes = note;
     double prices = price;
     bool paids = !paid;
-    String notes = note;
-    debtList.forEach((element) {
-      amount = element['amount'];
-      index = amount.indexOf(item);
-    });
-    amount.replaceRange(index, index + 1, [
+    oldData = debtList[index]['amount'];
+    oldData.replaceRange(priceIndex, priceIndex + 1, [
       {"note": notes, "price": prices, "paid": paids}
     ]);
     notifyListeners();
     saveList();
   }
 
-  void updateValue(double price, String text2, bool isPaid, item) {
+  void updateValue(index, priceIndex,double price, String text2, bool isPaid,) {
     var amount;
-    var index;
     double prices = price;
     String texts = text2;
     bool isPaids = isPaid;
-    debtList.forEach((element) {
-      amount = element['amount'];
-      index = amount.indexOf(item);
-    });
-    amount.replaceRange(index, index + 1, [
+    amount = debtList[index]['amount'];
+    amount.replaceRange(priceIndex, priceIndex + 1, [
       {"price": prices, "paid": isPaids, "note": texts}
     ]);
     saveList();
