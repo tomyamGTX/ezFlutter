@@ -119,8 +119,7 @@ class _NavigationState extends State<Navigation>
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: AnimatedBottomNavigationBar(
-        inactiveColor: Theme.of(context).hintColor,
-        activeColor: Theme.of(context).canvasColor,
+        activeColor: Theme.of(context).primaryColorLight,
         icons: iconList,
         activeIndex: _bottomNavIndex,
         gapLocation: GapLocation.center,

@@ -111,9 +111,16 @@ class _RegisterState extends State<Register> {
                                   MaterialPageRoute(
                                       builder: (context) => const Loading()));
                             } catch (e) {
+                              print(e);
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text('Error. Try again')),
+                                SnackBar(
+                                    content: Text(e
+                                        .toString()
+                                        .replaceAll(
+                                            '[firebase_auth/invalid-email]', '')
+                                        .replaceAll(
+                                            '[firebase_auth/too-many-requests]',
+                                            '').replaceAll('[firebase_auth/weak-password]', ''))),
                               );
                             }
                           }

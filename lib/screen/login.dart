@@ -27,7 +27,7 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).secondaryHeaderColor,
+        backgroundColor: Theme.of(context).secondaryHeaderColor,
         resizeToAvoidBottomInset: false,
         body: Center(
           child: Padding(
@@ -91,8 +91,14 @@ class _LoginState extends State<Login> {
                                       builder: (context) => const Loading()));
                             } catch (e) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text('Error. Try again')),
+                                SnackBar(
+                                    content: Text(e
+                                        .toString()
+                                        .replaceAll(
+                                            '[firebase_auth/invalid-email]', '')
+                                        .replaceAll(
+                                            '[firebase_auth/too-many-requests]',
+                                            ''))),
                               );
                             }
                           }
