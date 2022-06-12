@@ -17,7 +17,7 @@ class _LandingPageState extends State<LandingPage> {
   Widget build(BuildContext context) {
     var user = Provider.of<AppUser>(context,listen: false).user;
     if (user != null) {
-      return const Navigation(1);
+      return const Navigation(0);
     }
     return const Login();
   }

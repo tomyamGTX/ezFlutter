@@ -64,7 +64,7 @@ class _RegisterState extends State<Register> {
                               child: FormUi(
                                 controller: _name,
                                 hint: 'Username',
-                                isPhone: false,
+                                canEmpty: false,
                               ),
                             ),
                           ],
@@ -81,7 +81,7 @@ class _RegisterState extends State<Register> {
                               child: FormUi(
                                 controller: _email,
                                 hint: 'Email',
-                                isPhone: false,
+                                canEmpty: false,
                               ),
                             ),
                           ],

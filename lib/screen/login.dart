@@ -97,7 +97,7 @@ class _LoginState extends State<Login> {
                                   child: FormUi(
                                     controller: _email,
                                     hint: 'Email',
-                                    isPhone: false,
+                                    canEmpty: false,
                                   ),
                                 ),
                               ],

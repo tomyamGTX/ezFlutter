@@ -1,8 +1,6 @@
 import 'dart:async';
 
-import 'package:ez_flutter/screen/home.dart';
 import 'package:ez_flutter/screen/navigation.dart';
-import 'package:ez_flutter/screen/update.profile.dart';
 import 'package:ez_flutter/style/text/text.dart';
 import 'package:ez_flutter/widgets/form.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -51,7 +49,7 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
               controller: _phone,
               hint: 'Insert Phone Number',
               type: const TextInputType.numberWithOptions(decimal: false),
-              isPhone: true,
+              canEmpty: true,
             ),
             Visibility(
               visible: _visible,

@@ -1,5 +1,4 @@
 import 'package:ez_flutter/providers/local.provider.dart';
-import 'package:ez_flutter/style/text/text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -17,8 +16,12 @@ class _DebtListScreenState extends State<DebtListScreen> {
   final _note = TextEditingController();
   final _prices = TextEditingController();
   final _notes = TextEditingController();
+  final name = TextEditingController();
+  final price = TextEditingController();
+  final note = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeys = GlobalKey<FormState>();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -27,37 +30,118 @@ class _DebtListScreenState extends State<DebtListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-      Padding(
-        padding: const EdgeInsets.all(18.0),
-        child: Text(
-          'List of debt',
-          style: titleTextStyle(),
-        ),
+    return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton.extended(
+        label: const Text('Add New Debtor'),
+        icon: const Icon(Icons.add),
+        onPressed: () async {
+          await showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('New Debtor',textAlign: TextAlign.center,),
+                content: SizedBox(
+                  height: 350,
+                  width: 600,
+                  child: Form(
+                    key: formKey,
+                    child: ListView(
+                      children: [
+                        FormUi(
+                          controller: name,
+                          hint: 'Name',
+                          canEmpty: false,
+                        ),
+                        FormUi(
+                          controller: price,
+                          hint: 'Price',
+                          canEmpty: false,
+                          type: const TextInputType.numberWithOptions(
+                              decimal: true),
+                        ),
+                        FormUi(
+                          controller: note,
+                          hint: 'Note',
+                          canEmpty: true,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ElevatedButton(
+                              style: ButtonStyle(),
+                              onPressed: () {
+                                if (formKey.currentState!.validate()) {
+                                  Provider.of<LocalProvider>(context,
+                                          listen: false)
+                                      .addList({
+                                    "name": name.text,
+                                    "amount": [
+                                      {
+                                        "note":
+                                            note.text.isEmpty ? '' : note.text,
+                                        "price": double.parse(price.text),
+                                        "paid": false
+                                      }
+                                    ],
+                                  });
+                                  name.clear();
+                                  note.clear();
+                                  price.clear();
+                                  Navigator.pop(context);
+                                }
+                              },
+                              child: const Text('Submit')),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        },
       ),
-      Consumer<LocalProvider>(
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        title: const Text('My Debt List'),
+        actions: [
+          Consumer<LocalProvider>(builder: (context, local, child) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Chip(
+                backgroundColor: Theme.of(context).primaryColorLight,
+                label: Text('Total ${local.debtList.length} Debt'),
+              ),
+            );
+          })
+        ],
+      ),
+      body: Consumer<LocalProvider>(
         builder: (BuildContext context, value, Widget? child) {
           if (value.debtList.isEmpty) {
-            return SizedBox(
-              height: 400,
+            return Center(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
                     Icons.monetization_on,
                     color: Theme.of(context).primaryColor,
                     size: 180,
                   ),
-                  Text(
-                    'Good. Your debt list is empty.',
-                    style: const TextTheme().titleLarge,
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Good. Your debt list is empty.',
+                      style: const TextTheme().titleLarge,
+                    ),
                   ),
                 ],
               ),
             );
           }
-          return SizedBox(
-            height: MediaQuery.of(context).size.height * 0.6,
+          return Container(
+            margin: EdgeInsets.symmetric(vertical: 16),
+            height: MediaQuery.of(context).size.height * 0.74,
             child: ListView.builder(
               itemCount: value.debtList.length,
               itemBuilder: (BuildContext context, int index) {
@@ -77,7 +161,7 @@ class _DebtListScreenState extends State<DebtListScreen> {
                   }
                 }
                 return Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Card(
                     color: Theme.of(context).primaryColorLight,
                     child: Center(
@@ -108,7 +192,7 @@ class _DebtListScreenState extends State<DebtListScreen> {
                                                   FormUi(
                                                     controller: _price,
                                                     hint: 'Price',
-                                                    isPhone: false,
+                                                    canEmpty: false,
                                                     type: const TextInputType
                                                             .numberWithOptions(
                                                         decimal: true),
@@ -116,7 +200,7 @@ class _DebtListScreenState extends State<DebtListScreen> {
                                                   FormUi(
                                                     controller: _note,
                                                     hint: 'Note',
-                                                    isPhone: false,
+                                                    canEmpty: false,
                                                   ),
                                                   Padding(
                                                     padding:
@@ -336,7 +420,7 @@ class _DebtListScreenState extends State<DebtListScreen> {
                                                                                 _prices,
                                                                             hint:
                                                                                 'New Price',
-                                                                            isPhone:
+                                                                            canEmpty:
                                                                                 false,
                                                                             type:
                                                                                 const TextInputType.numberWithOptions(decimal: true)),
@@ -347,7 +431,7 @@ class _DebtListScreenState extends State<DebtListScreen> {
                                                                                 _notes,
                                                                             hint:
                                                                                 'New Note',
-                                                                            isPhone:
+                                                                            canEmpty:
                                                                                 false),
                                                                         Padding(
                                                                           padding:
@@ -488,7 +572,7 @@ class _DebtListScreenState extends State<DebtListScreen> {
             ),
           );
         },
-      )
-    ]);
+      ),
+    );
   }
 }

@@ -2,8 +2,8 @@ import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:ez_flutter/providers/local.provider.dart';
 import 'package:ez_flutter/providers/sandbox.payment.provider.dart';
 import 'package:ez_flutter/screen/mall.item.dart';
+import 'package:ez_flutter/screen/search.dart';
 import 'package:ez_flutter/screen/update.profile.dart';
-import 'package:ez_flutter/widgets/form.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth.provider.dart';
@@ -11,7 +11,6 @@ import '../widgets/drawer.home.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 
 import 'Setting.dart';
-import 'debt.list.dart';
 import 'home.dart';
 
 class Navigation extends StatefulWidget {
@@ -32,7 +31,7 @@ class _NavigationState extends State<Navigation>
 
   final iconList = <IconData>[
     Icons.home,
-    Icons.attach_money_outlined,
+    Icons.search,
     Icons.person,
     Icons.settings,
   ];
@@ -96,7 +95,7 @@ class _NavigationState extends State<Navigation>
             controller: _pageController,
             children: const [
               Home(),
-              DebtListScreen(),
+              SearchScreen(),
               UpdateProfile(),
               Setting(),
             ],
@@ -151,75 +150,7 @@ class _NavigationState extends State<Navigation>
                 title: const Text('Debt List'),
                 onTap: () async {
                   Navigator.pop(context);
-                  await showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text('New Debtor'),
-                        content: SizedBox(
-                          height: 350,
-                          width: 600,
-                          child: Form(
-                            key: _formKey,
-                            child: ListView(
-                              children: [
-                                FormUi(
-                                  controller: _name,
-                                  hint: 'Name',
-                                  isPhone: false,
-                                ),
-                                FormUi(
-                                  controller: _price,
-                                  hint: 'Price',
-                                  isPhone: false,
-                                  type: const TextInputType.numberWithOptions(
-                                      decimal: true),
-                                ),
-                                FormUi(
-                                  controller: _note,
-                                  hint: 'Note',
-                                  isPhone: false,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ElevatedButton(
-                                      onPressed: () {
-                                        if (_formKey.currentState!.validate()) {
-                                          Provider.of<LocalProvider>(context,
-                                                  listen: false)
-                                              .addList({
-                                            "name": _name.text,
-                                            "amount": [
-                                              {
-                                                "note": _note.text,
-                                                "price":
-                                                    double.parse(_price.text),
-                                                "paid": false
-                                              }
-                                            ],
-                                          });
-                                          _name.clear();
-                                          _note.clear();
-                                          _price.clear();
-                                          Navigator.pop(context);
-                                        } else {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            const SnackBar(
-                                                content: Text(
-                                                    'Please fill all fields')),
-                                          );
-                                        }
-                                      },
-                                      child: const Text('Add')),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  );
+
                 },
               ),
             ],

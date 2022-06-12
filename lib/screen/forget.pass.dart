@@ -35,7 +35,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: FormUi(controller: _email, hint: 'Email', isPhone: false),
+              child: FormUi(controller: _email, hint: 'Email', canEmpty: false),
             ),
             ElevatedButton(
                 onPressed: () {

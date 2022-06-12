@@ -1,5 +1,4 @@
 import 'package:ez_flutter/providers/auth.provider.dart';
-import 'package:ez_flutter/screen/phone.number.screen.dart';
 import 'package:ez_flutter/style/text/text.dart';
 import 'package:ez_flutter/widgets/form.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +40,7 @@ class _UpdateNameState extends State<UpdateName> {
               FormUi(
                 controller: _name,
                 hint: 'Insert New Name',
-                isPhone: false,
+                canEmpty: false,
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
