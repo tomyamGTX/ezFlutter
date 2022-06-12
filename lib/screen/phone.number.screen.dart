@@ -4,6 +4,7 @@ import 'package:ez_flutter/screen/navigation.dart';
 import 'package:ez_flutter/style/text/text.dart';
 import 'package:ez_flutter/widgets/form.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
@@ -84,10 +85,14 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
                     code = v;
                   },
                   onChanged: (value) {
-                    print(value);
+                    if (kDebugMode) {
+                      print(value);
+                    }
                   },
                   beforeTextPaste: (text) {
-                    print("Allowing to paste $text");
+                    if (kDebugMode) {
+                      print("Allowing to paste $text");
+                    }
                     //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
                     //but you can show anything you want here, like your pop up saying wrong paste format or etc
                     return true;

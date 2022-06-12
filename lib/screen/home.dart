@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ez_flutter/screen/phone.number.screen.dart';
 import 'package:ez_flutter/screen/update.name.dart';
+import 'package:ez_flutter/style/text/text.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
@@ -87,7 +88,16 @@ class _HomeState extends State<Home> {
             ),
           ),
         Container(
-          margin: EdgeInsets.all(16),
+          margin: const EdgeInsets.all(16),
+          child: Text('Date Today ' +
+              DateTime.now().day.toString() +
+              '/' +
+              DateTime.now().month.toString() +
+              '/' +
+              DateTime.now().year.toString(),textAlign: TextAlign.center,style: titleTextStyle(),),
+        ),
+        Container(
+          margin: const EdgeInsets.all(16),
           decoration: BoxDecoration(
               color: Theme.of(context).primaryColorLight,
               borderRadius: BorderRadius.circular(8)),

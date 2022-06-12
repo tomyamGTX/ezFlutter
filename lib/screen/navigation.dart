@@ -5,6 +5,7 @@ import 'package:ez_flutter/screen/mall.item.dart';
 import 'package:ez_flutter/screen/search.dart';
 import 'package:ez_flutter/screen/update.profile.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_advanced_avatar/flutter_advanced_avatar.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth.provider.dart';
 import '../widgets/drawer.home.dart';
@@ -38,10 +39,7 @@ class _NavigationState extends State<Navigation>
 
   late PageController _pageController;
 
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final _name = TextEditingController();
-  final _note = TextEditingController();
-  final _price = TextEditingController();
+
 
   @override
   void initState() {
@@ -79,7 +77,20 @@ class _NavigationState extends State<Navigation>
       resizeToAvoidBottomInset: false,
       drawer: buildDrawer(context),
       appBar: AppBar(
-        title: Text('Welcome ${Provider.of<AppUser>(context).name}'),
+        title: ListTile(
+          leading: AdvancedAvatar(
+            size: 40,
+            name: AppUser.instance.user!.displayName,
+            statusColor: Colors.green,
+            foregroundDecoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: Theme.of(context).primaryColorDark,
+              ),
+            ),
+          ),
+          title: Text('${Provider.of<AppUser>(context).name}'),
+        ),
         actions: [
           IconButton(
               onPressed: () {}, icon: const Icon(Icons.shopping_cart_rounded)),
@@ -106,13 +117,10 @@ class _NavigationState extends State<Navigation>
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Theme.of(context).primaryColor,
-        onPressed: () async {
-          await buildShowModalBottomSheet(context);
-        },
+        onPressed: () async {},
         child: Icon(
-          Icons.add,
-          color: Theme.of(context).canvasColor,
+          Icons.chat,
+          color: Theme.of(context).primaryColorLight,
         ),
         //params
       ),
@@ -136,25 +144,5 @@ class _NavigationState extends State<Navigation>
         //other params
       ),
     ));
-  }
-
-  buildShowModalBottomSheet(BuildContext context) async {
-    showModalBottomSheet(
-        context: context,
-        builder: (context) {
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              ListTile(
-                leading: const Icon(Icons.monetization_on),
-                title: const Text('Debt List'),
-                onTap: () async {
-                  Navigator.pop(context);
-
-                },
-              ),
-            ],
-          );
-        });
   }
 }

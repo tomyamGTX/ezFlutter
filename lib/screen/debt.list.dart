@@ -40,7 +40,10 @@ class _DebtListScreenState extends State<DebtListScreen> {
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: const Text('New Debtor',textAlign: TextAlign.center,),
+                title: const Text(
+                  'New Debtor',
+                  textAlign: TextAlign.center,
+                ),
                 content: SizedBox(
                   height: 350,
                   width: 600,
@@ -77,8 +80,9 @@ class _DebtListScreenState extends State<DebtListScreen> {
                                     "name": name.text,
                                     "amount": [
                                       {
-                                        "note":
-                                            note.text.isEmpty ? '' : note.text,
+                                        "note": note.text.isEmpty
+                                            ? 'None'
+                                            : note.text,
                                         "price": double.parse(price.text),
                                         "paid": false
                                       }
@@ -140,7 +144,7 @@ class _DebtListScreenState extends State<DebtListScreen> {
             );
           }
           return Container(
-            margin: EdgeInsets.symmetric(vertical: 16),
+            margin: const EdgeInsets.symmetric(vertical: 16),
             height: MediaQuery.of(context).size.height * 0.74,
             child: ListView.builder(
               itemCount: value.debtList.length,
@@ -200,7 +204,7 @@ class _DebtListScreenState extends State<DebtListScreen> {
                                                   FormUi(
                                                     controller: _note,
                                                     hint: 'Note',
-                                                    canEmpty: false,
+                                                    canEmpty: true,
                                                   ),
                                                   Padding(
                                                     padding:
@@ -219,7 +223,11 @@ class _DebtListScreenState extends State<DebtListScreen> {
                                                                     double.parse(
                                                                         _price
                                                                             .text),
-                                                                    _note.text,
+                                                                    _note.text
+                                                                            .isEmpty
+                                                                        ? 'None'
+                                                                        : _note
+                                                                            .text,
                                                                     index);
                                                             _note.clear();
                                                             _price.clear();
