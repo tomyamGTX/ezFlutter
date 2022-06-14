@@ -39,8 +39,6 @@ class _NavigationState extends State<Navigation>
 
   late PageController _pageController;
 
-
-
   @override
   void initState() {
     super.initState();
@@ -89,7 +87,8 @@ class _NavigationState extends State<Navigation>
               ),
             ),
           ),
-          title: Text('${Provider.of<AppUser>(context).name}'),
+          title: Text('${Provider.of<AppUser>(context).name}',
+              style: themeStyle()),
         ),
         actions: [
           IconButton(
@@ -145,4 +144,7 @@ class _NavigationState extends State<Navigation>
       ),
     ));
   }
+
+  TextStyle themeStyle() =>
+      TextStyle(color: Theme.of(context).primaryColorLight);
 }

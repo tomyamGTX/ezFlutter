@@ -1,5 +1,4 @@
 /// Demonstrates playing a one-shot animation on demand
-
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
@@ -15,7 +14,7 @@ class _PlayOneShotAnimationState extends State<PlayOneShotAnimation> {
   late RiveAnimationController _controller;
 
   /// Is the animation currently playing?
-  bool _isPlaying = false;
+  final bool _isPlaying = false;
 
   @override
   void initState() {
@@ -25,7 +24,7 @@ class _PlayOneShotAnimationState extends State<PlayOneShotAnimation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xfff03c64),
+      backgroundColor: const Color(0xfff03c64),
       appBar: AppBar(
         title: const Text('One-Shot Example'),
         centerTitle: true,

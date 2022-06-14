@@ -48,11 +48,6 @@ class _LittleMachineState extends State<LittleMachine> {
     );
   }
 
-  /// Do something when the state machine changes state
-  void _onStateChange(String stateMachineName, String stateName) => setState(
-        () => stateChangeMessage = 'Status: $stateName',
-      );
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,7 +80,7 @@ class _LittleMachineState extends State<LittleMachine> {
                       top: 30,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text('$stateChangeMessage'),
+                        child: Text(stateChangeMessage),
                       ),
                     ),
                   ],

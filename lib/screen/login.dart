@@ -6,9 +6,8 @@ import 'package:ez_flutter/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../style/button/button1.dart';
-
 import '../providers/auth.provider.dart';
+import '../style/button/button1.dart';
 import '../style/text/text.dart';
 import '../widgets/form.dart';
 import '../widgets/pass.ui.dart';
@@ -42,7 +41,7 @@ class _LoginState extends State<Login> {
 
   @override
   dispose() {
-    time.dispose();
+    time.cancel();
     super.dispose();
   }
 
@@ -132,24 +131,18 @@ class _LoginState extends State<Login> {
                                         .signIn(
                                             email: _email.text.trim(),
                                             password: _pass.text);
-                                    Navigator.push(
+                                    Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                const Navigation(1)));
+                                                const Navigation(0)));
                                   } catch (e) {
                                     setState(() {});
                                     load = !load;
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
-                                          content: Text(e
-                                              .toString()
-                                              .replaceAll(
-                                                  '[firebase_auth/invalid-email]',
-                                                  '')
-                                              .replaceAll(
-                                                  '[firebase_auth/too-many-requests]',
-                                                  ''))),
+                                          content: Text(
+                                              e.toString().split(']').last)),
                                     );
                                   }
                                 }

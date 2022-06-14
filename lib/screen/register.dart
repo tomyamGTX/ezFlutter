@@ -114,20 +114,8 @@ class _RegisterState extends State<Register> {
                             } catch (e) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                    content: Text(e
-                                        .toString()
-                                        .replaceAll(
-                                            '[firebase_auth/invalid-email] ',
-                                            '')
-                                        .replaceAll(
-                                            '[firebase_auth/too-many-requests] ',
-                                            '')
-                                        .replaceAll(
-                                            '[firebase_auth/weak-password] ',
-                                            '')
-                                        .replaceAll(
-                                            '[firebase_auth/email-already-in-use] ',
-                                            ''))),
+                                    content:
+                                        Text(e.toString().split(']').last)),
                               );
                             }
                           }
