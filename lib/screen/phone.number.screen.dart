@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:ez_flutter/screen/navigation.dart';
+import 'package:ez_flutter/screen/navigation/navigation.dart';
 import 'package:ez_flutter/style/text/text.dart';
 import 'package:ez_flutter/widgets/form.dart';
 import 'package:firebase_auth/firebase_auth.dart';

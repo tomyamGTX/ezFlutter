@@ -1,3 +1,4 @@
+import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:ez_flutter/providers/local.provider.dart';
 import 'package:ez_flutter/providers/sandbox.payment.provider.dart';
@@ -7,11 +8,10 @@ import 'package:ez_flutter/screen/update.profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_avatar/flutter_advanced_avatar.dart';
 import 'package:provider/provider.dart';
-import '../providers/auth.provider.dart';
-import '../widgets/drawer.home.dart';
-import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 
-import 'Setting.dart';
+import '../../providers/auth.provider.dart';
+import '../../widgets/drawer.home.dart';
+import '../Setting.dart';
 import 'home.dart';
 
 class Navigation extends StatefulWidget {
@@ -91,8 +91,6 @@ class _NavigationState extends State<Navigation>
               style: themeStyle()),
         ),
         actions: [
-          IconButton(
-              onPressed: () {}, icon: const Icon(Icons.shopping_cart_rounded)),
           IconButton(
               onPressed: () => Navigator.push(
                   context, MaterialPageRoute(builder: (context) => MallItem())),

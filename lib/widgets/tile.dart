@@ -1,8 +1,10 @@
+import 'package:ez_flutter/screen/webview.stripe.dart';
 import 'package:flutter/material.dart';
 
 class Tile extends StatefulWidget {
   const Tile({
     Key? key,
+    required this.paymentUrl,
     required this.name,
     required this.index,
     this.extent,
@@ -10,6 +12,7 @@ class Tile extends StatefulWidget {
     this.backgroundColor,
     this.bottomSpace,
   }) : super(key: key);
+  final String paymentUrl;
   final String url;
   final int index;
   final String name;
@@ -51,7 +54,14 @@ class _TileState extends State<Tile> {
 
     return Column(
       children: [
-        Expanded(child: GestureDetector(onTap: () {}, child: child)),
+        Expanded(
+            child: GestureDetector(
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            StripeWebView(url: widget.paymentUrl))),
+                child: child)),
         SizedBox(
           height: widget.bottomSpace,
           child: Center(

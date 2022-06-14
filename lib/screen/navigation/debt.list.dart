@@ -2,7 +2,7 @@ import 'package:ez_flutter/providers/local.provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../widgets/form.dart';
+import '../../widgets/form.dart';
 
 class DebtListScreen extends StatefulWidget {
   const DebtListScreen({Key? key}) : super(key: key);
@@ -70,31 +70,33 @@ class _DebtListScreenState extends State<DebtListScreen> {
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: ElevatedButton(
-                              style: ButtonStyle(),
-                              onPressed: () {
-                                if (formKey.currentState!.validate()) {
-                                  Provider.of<LocalProvider>(context,
-                                          listen: false)
-                                      .addList({
-                                    "name": name.text,
-                                    "amount": [
-                                      {
-                                        "note": note.text.isEmpty
-                                            ? 'None'
-                                            : note.text,
-                                        "price": double.parse(price.text),
-                                        "paid": false
-                                      }
-                                    ],
-                                  });
-                                  name.clear();
-                                  note.clear();
-                                  price.clear();
-                                  Navigator.pop(context);
-                                }
-                              },
-                              child: const Text('Submit')),
+                          child: ElevatedButton.icon(
+                            style: const ButtonStyle(),
+                            onPressed: () {
+                              if (formKey.currentState!.validate()) {
+                                Provider.of<LocalProvider>(context,
+                                        listen: false)
+                                    .addList({
+                                  "name": name.text,
+                                  "amount": [
+                                    {
+                                      "note": note.text.isEmpty
+                                          ? 'None'
+                                          : note.text,
+                                      "price": double.parse(price.text),
+                                      "paid": false
+                                    }
+                                  ],
+                                });
+                                name.clear();
+                                note.clear();
+                                price.clear();
+                                Navigator.pop(context);
+                              }
+                            },
+                            label: const Text('Submit'),
+                            icon: const Icon(Icons.save),
+                          ),
                         )
                       ],
                     ),

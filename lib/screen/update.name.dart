@@ -4,7 +4,7 @@ import 'package:ez_flutter/widgets/form.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'navigation.dart';
+import 'navigation/navigation.dart';
 
 class UpdateName extends StatefulWidget {
   const UpdateName({Key? key}) : super(key: key);

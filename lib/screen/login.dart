@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:ez_flutter/screen/navigation.dart';
+import 'package:ez_flutter/screen/navigation/navigation.dart';
 import 'package:ez_flutter/screen/register.dart';
 import 'package:ez_flutter/widgets/loading.dart';
 import 'package:flutter/material.dart';

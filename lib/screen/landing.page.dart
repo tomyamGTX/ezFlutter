@@ -1,4 +1,4 @@
-import 'package:ez_flutter/screen/navigation.dart';
+import 'package:ez_flutter/screen/navigation/navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -15,7 +15,7 @@ class LandingPage extends StatefulWidget {
 class _LandingPageState extends State<LandingPage> {
   @override
   Widget build(BuildContext context) {
-    var user = Provider.of<AppUser>(context,listen: false).user;
+    var user = Provider.of<AppUser>(context, listen: false).user;
     if (user != null) {
       return const Navigation(0);
     }

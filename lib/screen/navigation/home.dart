@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ez_flutter/screen/navigation/todo.list.dart';
 import 'package:ez_flutter/screen/phone.number.screen.dart';
 import 'package:ez_flutter/screen/update.name.dart';
 import 'package:ez_flutter/style/text/text.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import '../providers/auth.provider.dart';
+
+import '../../providers/auth.provider.dart';
 import 'debt.list.dart';
 
 class Home extends StatefulWidget {
@@ -89,12 +91,16 @@ class _HomeState extends State<Home> {
           ),
         Container(
           margin: const EdgeInsets.all(16),
-          child: Text('Date Today ' +
-              DateTime.now().day.toString() +
-              '/' +
-              DateTime.now().month.toString() +
-              '/' +
-              DateTime.now().year.toString(),textAlign: TextAlign.center,style: titleTextStyle(),),
+          child: Text(
+            'Date Today ' +
+                DateTime.now().day.toString() +
+                '/' +
+                DateTime.now().month.toString() +
+                '/' +
+                DateTime.now().year.toString(),
+            textAlign: TextAlign.center,
+            style: titleTextStyle(),
+          ),
         ),
         Container(
           margin: const EdgeInsets.all(16),
@@ -115,14 +121,10 @@ class _HomeState extends State<Home> {
                         MaterialPageRoute(
                             builder: (context) => const DebtListScreen()));
                   } else if (index == 1) {
-                    Fluttertoast.showToast(
-                        msg: "Feature not available",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.CENTER,
-                        timeInSecForIosWeb: 1,
-                        backgroundColor: Theme.of(context).primaryColor,
-                        textColor: Theme.of(context).primaryColorLight,
-                        fontSize: 16.0);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const TodoList()));
                   } else if (index == 2) {
                     Fluttertoast.showToast(
                         msg: "Feature not available",

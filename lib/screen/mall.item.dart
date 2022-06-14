@@ -1,15 +1,13 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ez_flutter/screen/webview.payment.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:image_pickers/image_pickers.dart';
 import 'package:provider/provider.dart';
+
 import '../providers/db.provider.dart';
-import '../providers/sandbox.payment.provider.dart';
 import '../widgets/tile.dart';
 
 class MallItem extends StatefulWidget {
@@ -75,6 +73,7 @@ class _MallItemState extends State<MallItem> {
                       bottomSpace: 30,
                       url: item['pic-url'],
                       name: item['name'],
+                      paymentUrl: item['link'],
                     ),
                   ),
               ],
