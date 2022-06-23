@@ -82,9 +82,16 @@ class AppUser extends ChangeNotifier {
     if (result.status == LoginStatus.success) {
       final OAuthCredential facebookAuthCredential =
           FacebookAuthProvider.credential(result.accessToken!.token);
-      await FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const Navigation(0)));
+
+      try {
+        await FirebaseAuth.instance
+            .signInWithCredential(facebookAuthCredential);
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const Navigation(0)));
+      } on FirebaseAuthException catch (e) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(e.message!)));
+      }
     } else {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(result.message.toString())));
@@ -105,9 +112,14 @@ class AppUser extends ChangeNotifier {
         accessToken: googleAuth!.accessToken,
         idToken: googleAuth.idToken,
       );
-      await FirebaseAuth.instance.signInWithCredential(credential);
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const Navigation(0)));
+      try {
+        await FirebaseAuth.instance.signInWithCredential(credential);
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const Navigation(0)));
+      } on FirebaseAuthException catch (e) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(e.message!)));
+      }
     } catch (e) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(e.toString())));

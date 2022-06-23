@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ez_flutter/screen/navigation/todo.list.dart';
 import 'package:ez_flutter/screen/phone.number.screen.dart';
 import 'package:ez_flutter/screen/update.name.dart';
 import 'package:ez_flutter/style/text/text.dart';
@@ -121,10 +120,18 @@ class _HomeState extends State<Home> {
                         MaterialPageRoute(
                             builder: (context) => const DebtListScreen()));
                   } else if (index == 1) {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const TodoList()));
+                    Fluttertoast.showToast(
+                        msg: "Feature not available",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.CENTER,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Theme.of(context).primaryColor,
+                        textColor: Theme.of(context).primaryColorLight,
+                        fontSize: 16.0);
+                    // Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //         builder: (context) => const TodoList()));
                   } else if (index == 2) {
                     Fluttertoast.showToast(
                         msg: "Feature not available",

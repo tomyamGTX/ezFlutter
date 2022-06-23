@@ -1,5 +1,3 @@
-import 'package:ez_flutter/screen/animation.dart';
-import 'package:ez_flutter/screen/sandbox.payment.dart';
 import 'package:ez_flutter/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_avatar/flutter_advanced_avatar.dart';
@@ -24,22 +22,35 @@ Drawer buildDrawer(BuildContext context) {
             color: Theme.of(context).primaryColor,
           ),
           child: Center(
-            child: AdvancedAvatar(
-              image: AppUser.instance.user!.photoURL != null
-                  ? NetworkImage(AppUser.instance.user!.photoURL!)
-                  : null,
-              size: 60,
-              name: AppUser.instance.user!.photoURL != null
-                  ? null
-                  : AppUser.instance.user!.displayName ?? 'User',
-              statusColor: Colors.green,
-              foregroundDecoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: Theme.of(context).primaryColorDark,
-                  width: 5.0,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                AdvancedAvatar(
+                  image: AppUser.instance.user!.photoURL != null
+                      ? NetworkImage(AppUser.instance.user!.photoURL!)
+                      : null,
+                  size: 60,
+                  name: AppUser.instance.user!.photoURL != null
+                      ? null
+                      : AppUser.instance.user!.displayName ?? 'User',
+                  statusColor: Colors.green,
+                  foregroundDecoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: Theme.of(context).primaryColorDark,
+                      width: 5.0,
+                    ),
+                  ),
                 ),
-              ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    AppUser.instance.user!.email ?? 'Email User',
+                    style:
+                        TextStyle(color: Theme.of(context).primaryColorLight),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -67,16 +78,16 @@ Drawer buildDrawer(BuildContext context) {
                 MaterialPageRoute(builder: (context) => const GetLocation()));
           },
         ),
-        ListTile(
-          trailing: const Icon(Icons.navigate_next),
-          title: const Text('Rive Animation'),
-          onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const AnimationScreen()));
-          },
-        ),
+        // ListTile(
+        //   trailing: const Icon(Icons.navigate_next),
+        //   title: const Text('Rive Animation'),
+        //   onTap: () {
+        //     Navigator.push(
+        //         context,
+        //         MaterialPageRoute(
+        //             builder: (context) => const AnimationScreen()));
+        //   },
+        // ),
         ListTile(
           trailing: const Icon(Icons.navigate_next),
           subtitle: AppUser.instance.user?.phoneNumber != null
@@ -92,16 +103,16 @@ Drawer buildDrawer(BuildContext context) {
                     builder: (context) => const PhoneNumberScreen()));
           },
         ),
-        ListTile(
-          trailing: const Icon(Icons.navigate_next),
-          title: const Text('SandBox Payment'),
-          onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const SandBoxPayment()));
-          },
-        ),
+        // ListTile(
+        //   trailing: const Icon(Icons.navigate_next),
+        //   title: const Text('SandBox Payment'),
+        //   onTap: () {
+        //     Navigator.push(
+        //         context,
+        //         MaterialPageRoute(
+        //             builder: (context) => const SandBoxPayment()));
+        //   },
+        // ),
         ListTile(
           trailing: const Icon(Icons.logout),
           title: const Text('Logout'),
