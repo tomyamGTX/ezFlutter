@@ -153,16 +153,28 @@ class _LoginState extends State<Login> {
                           padding: EdgeInsets.all(8.0),
                           child: Text('Or'),
                         ),
-                        IconButton(
-                            onPressed: () async {
-                              await Provider.of<AppUser>(context, listen: false)
-                                  .loginFB(context);
-                            },
-                            icon: const Icon(
-                              Icons.facebook,
-                              color: Colors.blueAccent,
-                              size: 40,
-                            )),
+                        LoginMethod(
+                          ontap: () async {
+                            await Provider.of<AppUser>(context, listen: false)
+                                .loginFB(context);
+                          },
+                          logoWidget: const Icon(
+                            Icons.facebook,
+                            color: Colors.blueAccent,
+                            size: 40,
+                          ),
+                          name: 'Facebook',
+                        ),
+                        LoginMethod(
+                          ontap: () async {
+                            await Provider.of<AppUser>(context, listen: false)
+                                .loginGoogle(context);
+                          },
+                          logoWidget: Image.network(
+                              'http://pngimg.com/uploads/google/google_PNG19635.png',
+                              fit: BoxFit.cover),
+                          name: 'Google',
+                        ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: TextButton(
@@ -182,5 +194,44 @@ class _LoginState extends State<Login> {
               ),
             ),
           );
+  }
+}
+
+class LoginMethod extends StatelessWidget {
+  final Function() ontap;
+  final Widget logoWidget;
+  final String name;
+  const LoginMethod({
+    required this.name,
+    required this.ontap,
+    required this.logoWidget,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: ontap,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          width: 250,
+          height: 50,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16), color: Colors.white70),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              logoWidget,
+              const SizedBox(
+                width: 5.0,
+              ),
+              Text('Sign-in with $name')
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
