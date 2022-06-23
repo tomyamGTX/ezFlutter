@@ -1,6 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get_storage/get_storage.dart';
+
+import '../screen/navigation/navigation.dart';
 
 class AppUser extends ChangeNotifier {
   String? name;
@@ -65,6 +68,26 @@ class AppUser extends ChangeNotifier {
     await AppUser.instance.user!.updateDisplayName(text);
     getName();
     notifyListeners();
+  }
+
+  Future<void> loginFB(context) async {
+    final LoginResult result = await FacebookAuth.instance.login(
+      permissions: [
+        'public_profile',
+        'email',
+      ],
+    ); // by default we request the email and the public profile
+// or FacebookAuth.i.login()
+    if (result.status == LoginStatus.success) {
+      final OAuthCredential facebookAuthCredential =
+          FacebookAuthProvider.credential(result.accessToken!.token);
+      await FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const Navigation(0)));
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(result.message.toString())));
+    }
   }
 
   void getName() {

@@ -7,12 +7,13 @@ import 'package:ez_flutter/providers/location.provider.dart';
 import 'package:ez_flutter/providers/payment.provider.dart';
 import 'package:ez_flutter/providers/sandbox.payment.provider.dart';
 import 'package:ez_flutter/screen/landing.page.dart';
-import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:ms_material_color/ms_material_color.dart';
 import 'package:provider/provider.dart';
 import 'package:rive_splash_screen/rive_splash_screen.dart';
+
 import 'firebase_options.dart';
 
 // ...

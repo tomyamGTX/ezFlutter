@@ -44,25 +44,25 @@ class _TodoListState extends State<TodoList> {
               alignment: TimelineAlign.center,
               lineXY: 0.3,
               endChild: index % 2 != 0
-                  ? detailWidget(list: list, index: index)
-                  : dateWidget(
+                  ? DetailWidget(list: list, index: index)
+                  : DateWidget(
                       date: date[index],
                     ),
               startChild: index % 2 != 0
-                  ? dateWidget(
+                  ? DateWidget(
                       date: date[index],
                     )
-                  : detailWidget(list: list, index: index),
+                  : DetailWidget(list: list, index: index),
             );
           },
         ));
   }
 }
 
-class dateWidget extends StatelessWidget {
+class DateWidget extends StatelessWidget {
   final DateTime date;
 
-  const dateWidget({
+  const DateWidget({
     required this.date,
     Key? key,
   }) : super(key: key);
@@ -77,17 +77,17 @@ class dateWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(8)),
       child: Center(
           child: Text(
-        '${date.day} -' + date.month.toString() + '-' + date.year.toString(),
+        '${date.day}.' + date.month.toString() + '.' + date.year.toString(),
         textAlign: TextAlign.center,
       )),
     );
   }
 }
 
-class detailWidget extends StatelessWidget {
+class DetailWidget extends StatelessWidget {
   final int index;
 
-  const detailWidget({
+  const DetailWidget({
     Key? key,
     required this.index,
     required this.list,

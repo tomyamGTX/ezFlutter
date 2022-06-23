@@ -153,6 +153,16 @@ class _LoginState extends State<Login> {
                           padding: EdgeInsets.all(8.0),
                           child: Text('Or'),
                         ),
+                        IconButton(
+                            onPressed: () async {
+                              await Provider.of<AppUser>(context, listen: false)
+                                  .loginFB(context);
+                            },
+                            icon: const Icon(
+                              Icons.facebook,
+                              color: Colors.blueAccent,
+                              size: 40,
+                            )),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: TextButton(

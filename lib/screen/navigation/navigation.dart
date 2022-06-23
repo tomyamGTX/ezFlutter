@@ -77,8 +77,13 @@ class _NavigationState extends State<Navigation>
       appBar: AppBar(
         title: ListTile(
           leading: AdvancedAvatar(
+            image: AppUser.instance.user!.photoURL != null
+                ? NetworkImage(AppUser.instance.user!.photoURL!)
+                : null,
             size: 40,
-            name: AppUser.instance.user!.displayName,
+            name: AppUser.instance.user!.photoURL != null
+                ? null
+                : AppUser.instance.user!.displayName ?? 'User',
             statusColor: Colors.green,
             foregroundDecoration: BoxDecoration(
               shape: BoxShape.circle,
@@ -92,8 +97,8 @@ class _NavigationState extends State<Navigation>
         ),
         actions: [
           IconButton(
-              onPressed: () => Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => MallItem())),
+              onPressed: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const MallItem())),
               icon: const Icon(Icons.local_mall))
         ],
       ),

@@ -25,7 +25,13 @@ Drawer buildDrawer(BuildContext context) {
           ),
           child: Center(
             child: AdvancedAvatar(
-              name: AppUser.instance.user!.displayName,
+              image: AppUser.instance.user!.photoURL != null
+                  ? NetworkImage(AppUser.instance.user!.photoURL!)
+                  : null,
+              size: 60,
+              name: AppUser.instance.user!.photoURL != null
+                  ? null
+                  : AppUser.instance.user!.displayName ?? 'User',
               statusColor: Colors.green,
               foregroundDecoration: BoxDecoration(
                 shape: BoxShape.circle,
@@ -100,8 +106,8 @@ Drawer buildDrawer(BuildContext context) {
           trailing: const Icon(Icons.logout),
           title: const Text('Logout'),
           onTap: () async {
-            await Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (context) => const Loading2()));
+            await Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => const Loading2()));
           },
         ),
       ],
