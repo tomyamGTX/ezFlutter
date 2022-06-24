@@ -242,6 +242,28 @@ class _HomeState extends State<Home> {
               icon: const Icon(Icons.search),
             ),
           ),
+        Visibility(
+          visible: labels.isEmpty ? false : true,
+          child: SizedBox(
+              height: 120,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                child: Wrap(
+                  alignment: WrapAlignment.spaceAround,
+                  children: [
+                    for (var item in labels)
+                      Chip(
+                        label: Text(
+                          item.text ?? 'No data',
+                          style:
+                              TextStyle(color: Theme.of(context).primaryColor),
+                        ),
+                        backgroundColor: Theme.of(context).primaryColorLight,
+                      )
+                  ],
+                ),
+              )),
+        ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32.0),
           child: ElevatedButton(
@@ -299,28 +321,6 @@ class _HomeState extends State<Home> {
               ],
             ),
           ),
-        ),
-        Visibility(
-          visible: labels.isEmpty ? false : true,
-          child: SizedBox(
-              height: 200,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Wrap(
-                  alignment: WrapAlignment.spaceAround,
-                  children: [
-                    for (var item in labels)
-                      Chip(
-                        label: Text(
-                          item.text ?? 'No data',
-                          style: TextStyle(
-                              color: Theme.of(context).primaryColorLight),
-                        ),
-                        backgroundColor: Theme.of(context).primaryColor,
-                      )
-                  ],
-                ),
-              )),
         ),
       ],
     )));
