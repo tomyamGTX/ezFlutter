@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:clipboard/clipboard.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ez_flutter/screen/phone.number.screen.dart';
 import 'package:ez_flutter/screen/update.name.dart';
 import 'package:ez_flutter/style/text/text.dart';
@@ -26,23 +25,11 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home> with TickerProviderStateMixin {
   var index = 0;
+  late AnimationController animationController;
   List<ImageLabel> labels = [];
   var name = ['Add category', 'Display All Category', 'Make Payment'];
-
-  var billName = TextEditingController();
-
-  var billDesc = TextEditingController();
-
-  var price = TextEditingController();
-
-  var expired = TextEditingController();
-
-  CollectionReference bills = FirebaseFirestore.instance
-      .collection('users')
-      .doc(AppUser().user!.uid)
-      .collection('bill');
 
   var _visible = true;
 
@@ -64,6 +51,23 @@ class _HomeState extends State<Home> {
   List<Face> faces = [];
 
   RecognizedText? result;
+
+  @override
+  void initState() {
+    super.initState();
+    animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1),
+    )
+      ..forward()
+      ..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    animationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -250,28 +254,41 @@ class _HomeState extends State<Home> {
               )),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32.0),
-          child: ElevatedButton(
-              onPressed: () async {
-                await showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return InputCameraView(
-                        canSwitchMode: false,
-                        mode: InputCameraMode.gallery,
-                        title: 'Text Recognition',
-                        onImage: (InputImage image) async {
-                          TextRecognition textRecognition = TextRecognition();
-                          RecognizedText? _result =
-                              await textRecognition.process(image);
-                          setState(() {});
-                          result = _result;
-                          Navigator.pop(context);
-                        },
-                      );
-                    });
-              },
-              child: const Text('Convert Images to Text')),
+          padding: const EdgeInsets.all(32.0),
+          child: AnimatedBuilder(
+              animation: animationController,
+              builder: (context, child) {
+                return Container(
+                  padding: EdgeInsets.all(
+                    16.0 * animationController.value,
+                  ),
+                  child: ElevatedButton(
+                      onPressed: () async {
+                        await showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return InputCameraView(
+                                canSwitchMode: false,
+                                mode: InputCameraMode.gallery,
+                                title: 'Text Recognition',
+                                onImage: (InputImage image) async {
+                                  TextRecognition textRecognition =
+                                      TextRecognition();
+                                  RecognizedText? _result =
+                                      await textRecognition.process(image);
+                                  setState(() {});
+                                  result = _result;
+                                  Navigator.pop(context);
+                                },
+                              );
+                            });
+                      },
+                      child: const Text(
+                        'Convert Images to Text',
+                        textAlign: TextAlign.center,
+                      )),
+                );
+              }),
         ),
         if (result != null)
           const Text(
