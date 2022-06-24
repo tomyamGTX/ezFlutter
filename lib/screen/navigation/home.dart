@@ -11,6 +11,8 @@ import 'package:google_ml_vision/google_ml_vision.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:learning_input_image/learning_input_image.dart';
 import 'package:learning_text_recognition/learning_text_recognition.dart';
+import 'package:progress_state_button/iconed_button.dart';
+import 'package:progress_state_button/progress_button.dart';
 import 'package:provider/provider.dart';
 import 'package:text_to_speech/text_to_speech.dart';
 
@@ -30,7 +32,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   late AnimationController animationController;
   List<ImageLabel> labels = [];
   var name = ['Add category', 'Display All Category', 'Make Payment'];
-
+  ButtonState stateOnlyText = ButtonState.idle;
+  ButtonState stateTextWithIcon = ButtonState.idle;
   var _visible = true;
 
   final _icon = [Icons.attach_money, Icons.task, Icons.mic, Icons.camera];
@@ -74,7 +77,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     Provider.of<AppUser>(context, listen: false).getName();
     return SafeArea(
         child: Scaffold(
-            body: ListView(
+            body: Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         if (AppUser.instance.user?.displayName == null)
           Visibility(
@@ -118,20 +122,17 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
               ),
             ),
           ),
-        Container(
-          margin: const EdgeInsets.all(16),
-          child: Text(
-            'Date Today ' +
-                DateTime.now().day.toString() +
-                '/' +
-                DateTime.now().month.toString() +
-                '/' +
-                DateTime.now().year.toString(),
-            textAlign: TextAlign.center,
-            style: titleTextStyle(),
-          ),
+        Text(
+          'Date Today ' +
+              DateTime.now().day.toString() +
+              '/' +
+              DateTime.now().month.toString() +
+              '/' +
+              DateTime.now().year.toString(),
+          textAlign: TextAlign.center,
+          style: titleTextStyle(),
         ),
-        Container(
+        SizedBox(
           height: 100,
           child: GridView.builder(
             itemCount: 4,
@@ -197,11 +198,21 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                     }
                   }
                 },
-                child: AnimationIcon(
-                  icon: _icon[index],
-                  index: index,
-                  text: _label[index],
-                ),
+                child: AnimatedBuilder(
+                    animation: animationController,
+                    builder: (context, child) {
+                      return Container(
+                        height: 90,
+                        padding: EdgeInsets.all(
+                          1.0 * animationController.value,
+                        ),
+                        child: AnimationIcon(
+                          icon: _icon[index],
+                          index: index,
+                          text: _label[index],
+                        ),
+                      );
+                    }),
               );
             },
           ),
@@ -253,43 +264,46 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                 ),
               )),
         ),
-        Padding(
-          padding: const EdgeInsets.all(32.0),
-          child: AnimatedBuilder(
-              animation: animationController,
-              builder: (context, child) {
-                return Container(
-                  padding: EdgeInsets.all(
-                    16.0 * animationController.value,
+        ProgressButton.icon(
+            iconedButtons: {
+              ButtonState.idle: IconedButton(
+                  text: 'Images to Text',
+                  icon: const Icon(Icons.send, color: Colors.white),
+                  color: Theme.of(context).primaryColor),
+              ButtonState.loading: IconedButton(
+                  text: 'Loading', color: Theme.of(context).primaryColor),
+              ButtonState.fail: IconedButton(
+                  text: 'Failed',
+                  icon: const Icon(Icons.cancel, color: Colors.white),
+                  color: Colors.red.shade300),
+              ButtonState.success: IconedButton(
+                  text: 'Success',
+                  icon: const Icon(
+                    Icons.check_circle,
+                    color: Colors.white,
                   ),
-                  child: ElevatedButton(
-                      onPressed: () async {
-                        await showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return InputCameraView(
-                                canSwitchMode: false,
-                                mode: InputCameraMode.gallery,
-                                title: 'Text Recognition',
-                                onImage: (InputImage image) async {
-                                  TextRecognition textRecognition =
-                                      TextRecognition();
-                                  RecognizedText? _result =
-                                      await textRecognition.process(image);
-                                  setState(() {});
-                                  result = _result;
-                                  Navigator.pop(context);
-                                },
-                              );
-                            });
+                  color: Colors.green.shade400)
+            },
+            onPressed: () async {
+              await showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return InputCameraView(
+                      canSwitchMode: false,
+                      mode: InputCameraMode.gallery,
+                      title: 'Text Recognition',
+                      onImage: (InputImage image) async {
+                        TextRecognition textRecognition = TextRecognition();
+                        RecognizedText? _result =
+                            await textRecognition.process(image);
+                        setState(() {});
+                        result = _result;
+                        Navigator.pop(context);
                       },
-                      child: const Text(
-                        'Convert Images to Text',
-                        textAlign: TextAlign.center,
-                      )),
-                );
-              }),
-        ),
+                    );
+                  });
+            },
+            state: stateTextWithIcon),
         if (result != null)
           const Text(
             'Long press to copy text',

@@ -89,6 +89,9 @@ class _NavigationState extends State<Navigation> with TickerProviderStateMixin {
   @override
   void dispose() {
     super.dispose();
+    _assetsAudioPlayer.stop();
+    _assetsAudioPlayer.dispose();
+    _animationController.dispose();
   }
 
   @override

@@ -1,5 +1,7 @@
 import 'package:ez_flutter/providers/local.provider.dart';
 import 'package:flutter/material.dart';
+import 'package:progress_state_button/iconed_button.dart';
+import 'package:progress_state_button/progress_button.dart';
 import 'package:provider/provider.dart';
 
 import '../../widgets/form.dart';
@@ -22,6 +24,8 @@ class _DebtListScreenState extends State<DebtListScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeys = GlobalKey<FormState>();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  ButtonState stateOnlyText = ButtonState.idle;
+  ButtonState stateTextWithIcon = ButtonState.idle;
 
   @override
   void initState() {
@@ -36,73 +40,168 @@ class _DebtListScreenState extends State<DebtListScreen> {
         label: const Text('Add New Debtor'),
         icon: const Icon(Icons.add),
         onPressed: () async {
+          setState(() {});
+          stateTextWithIcon = ButtonState.idle;
           await showDialog(
             context: context,
             builder: (BuildContext context) {
-              return AlertDialog(
-                title: const Text(
-                  'New Debtor',
-                  textAlign: TextAlign.center,
-                ),
-                content: SizedBox(
-                  height: 350,
-                  width: 600,
-                  child: Form(
-                    key: formKey,
-                    child: ListView(
-                      children: [
-                        FormUi(
-                          controller: name,
-                          hint: 'Name',
-                          canEmpty: false,
-                        ),
-                        FormUi(
-                          controller: price,
-                          hint: 'Price',
-                          canEmpty: false,
-                          type: const TextInputType.numberWithOptions(
-                              decimal: true),
-                        ),
-                        FormUi(
-                          controller: note,
-                          hint: 'Note',
-                          canEmpty: true,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ElevatedButton.icon(
-                            style: const ButtonStyle(),
-                            onPressed: () {
-                              if (formKey.currentState!.validate()) {
-                                Provider.of<LocalProvider>(context,
-                                        listen: false)
-                                    .addList({
-                                  "name": name.text,
-                                  "amount": [
-                                    {
-                                      "note": note.text.isEmpty
-                                          ? 'None'
-                                          : note.text,
-                                      "price": double.parse(price.text),
-                                      "paid": false
-                                    }
-                                  ],
-                                });
-                                name.clear();
-                                note.clear();
-                                price.clear();
-                                Navigator.pop(context);
-                              }
-                            },
-                            label: const Text('Submit'),
-                            icon: const Icon(Icons.save),
+              return StatefulBuilder(builder: (context, setState) {
+                return AlertDialog(
+                  title: const Text(
+                    'New Debtor',
+                    textAlign: TextAlign.center,
+                  ),
+                  content: SizedBox(
+                    height: 350,
+                    width: 600,
+                    child: Form(
+                      key: formKey,
+                      child: ListView(
+                        children: [
+                          FormUi(
+                            controller: name,
+                            hint: 'Name',
+                            canEmpty: false,
                           ),
-                        )
-                      ],
+                          FormUi(
+                            controller: price,
+                            hint: 'Price',
+                            canEmpty: false,
+                            type: const TextInputType.numberWithOptions(
+                                decimal: true),
+                          ),
+                          FormUi(
+                            controller: note,
+                            hint: 'Note',
+                            canEmpty: true,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ProgressButton.icon(
+                                iconedButtons: {
+                                  ButtonState.idle: IconedButton(
+                                      text: 'Add Debtor',
+                                      icon: const Icon(Icons.send,
+                                          color: Colors.white),
+                                      color: Theme.of(context).primaryColor),
+                                  ButtonState.loading: IconedButton(
+                                      text: 'Loading',
+                                      color: Theme.of(context).primaryColor),
+                                  ButtonState.fail: IconedButton(
+                                      text: 'Failed',
+                                      icon: const Icon(Icons.cancel,
+                                          color: Colors.white),
+                                      color: Colors.red.shade300),
+                                  ButtonState.success: IconedButton(
+                                      text: 'Success',
+                                      icon: const Icon(
+                                        Icons.check_circle,
+                                        color: Colors.white,
+                                      ),
+                                      color: Colors.green.shade400)
+                                },
+                                onPressed: () async {
+                                  if (formKey.currentState!.validate()) {
+                                    switch (stateTextWithIcon) {
+                                      case ButtonState.idle:
+                                        setState(() {});
+                                        stateTextWithIcon = ButtonState.loading;
+                                        Future.delayed(
+                                            const Duration(seconds: 1), () {
+                                          try {
+                                            Provider.of<LocalProvider>(context,
+                                                    listen: false)
+                                                .addList({
+                                              "name": name.text,
+                                              "amount": [
+                                                {
+                                                  "note": note.text.isEmpty
+                                                      ? 'None'
+                                                      : note.text,
+                                                  "price":
+                                                      double.parse(price.text),
+                                                  "paid": false
+                                                }
+                                              ],
+                                            });
+
+                                            setState(() {});
+                                            stateTextWithIcon =
+                                                ButtonState.success;
+                                            name.clear();
+                                            note.clear();
+                                            price.clear();
+                                            Future.delayed(Duration(seconds: 3),
+                                                () {
+                                              Navigator.pop(context);
+                                            });
+                                          } catch (e) {
+                                            setState(() {});
+                                            stateTextWithIcon =
+                                                ButtonState.fail;
+                                          }
+                                        });
+
+                                        break;
+                                      case ButtonState.loading:
+                                        break;
+                                      case ButtonState.success:
+                                        stateTextWithIcon = ButtonState.idle;
+                                        break;
+                                      case ButtonState.fail:
+                                        stateTextWithIcon = ButtonState.idle;
+                                        break;
+                                    }
+                                    setState(
+                                      () {
+                                        stateTextWithIcon = stateTextWithIcon;
+                                      },
+                                    );
+                                  } else {
+                                    switch (stateTextWithIcon) {
+                                      case ButtonState.idle:
+                                        setState(() {});
+                                        stateTextWithIcon = ButtonState.loading;
+                                        Future.delayed(
+                                          const Duration(seconds: 1),
+                                          () {
+                                            setState(() {});
+                                            stateTextWithIcon =
+                                                ButtonState.fail;
+                                            Future.delayed(Duration(seconds: 3),
+                                                () {
+                                              setState(() {});
+                                              stateTextWithIcon =
+                                                  ButtonState.idle;
+                                            });
+                                          },
+                                        );
+
+                                        break;
+                                      case ButtonState.loading:
+                                        break;
+                                      case ButtonState.success:
+                                        stateTextWithIcon = ButtonState.idle;
+                                        break;
+                                      case ButtonState.fail:
+                                        stateTextWithIcon = ButtonState.idle;
+                                        break;
+                                    }
+                                    setState(
+                                      () {
+                                        stateTextWithIcon = stateTextWithIcon;
+                                      },
+                                    );
+                                  }
+                                },
+                                state: stateTextWithIcon),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              );
+                );
+              });
             },
           );
         },

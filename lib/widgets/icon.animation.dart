@@ -18,12 +18,13 @@ class _AnimationIconState extends State<AnimationIcon> {
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
     return Container(
-      margin: const EdgeInsets.all(8),
+      margin: EdgeInsets.symmetric(horizontal: 4),
+      padding: EdgeInsets.all(8),
       decoration: BoxDecoration(
           color: Theme.of(context).primaryColorLight,
           borderRadius: BorderRadius.circular(8)),
       height: w / 2.75,
-      width: w / 4,
+      width: w / 2,
       child: Animator<double>(
         duration: Duration(milliseconds: 5000 - widget.index * 1000),
         cycles: 0,
@@ -51,12 +52,11 @@ class _AnimationIconState extends State<AnimationIcon> {
                 size: 32,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Text(
-                widget.text,
-                textAlign: TextAlign.center,
-              ),
+            Text(
+              widget.text,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
+              textAlign: TextAlign.center,
             )
           ],
         ),
