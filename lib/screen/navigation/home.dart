@@ -16,6 +16,7 @@ import 'package:provider/provider.dart';
 import 'package:text_to_speech/text_to_speech.dart';
 
 import '../../providers/auth.provider.dart';
+import '../../widgets/icon.animation.dart';
 import 'debt.list.dart';
 
 class Home extends StatefulWidget {
@@ -50,7 +51,7 @@ class _HomeState extends State<Home> {
     'Debt\n List',
     'Todo\n List',
     'Text to Speech',
-    'Image\n Recognition'
+    'Image Recognition'
   ];
 
   Uint8List? image_value;
@@ -127,11 +128,7 @@ class _HomeState extends State<Home> {
           ),
         ),
         Container(
-          margin: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-              color: Theme.of(context).primaryColorLight,
-              borderRadius: BorderRadius.circular(8)),
-          height: 85,
+          height: 100,
           child: GridView.builder(
             itemCount: 4,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -196,22 +193,10 @@ class _HomeState extends State<Home> {
                     }
                   }
                 },
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      _icon[index],
-                      color: Theme.of(context).primaryColorDark,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        _label[index],
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Theme.of(context).hintColor),
-                      ),
-                    ),
-                  ],
+                child: AnimationIcon(
+                  icon: _icon[index],
+                  index: index,
+                  text: _label[index],
                 ),
               );
             },

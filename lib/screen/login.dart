@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:animator/animator.dart';
 import 'package:ez_flutter/screen/navigation/navigation.dart';
 import 'package:ez_flutter/screen/register.dart';
 import 'package:ez_flutter/widgets/loading.dart';
@@ -61,23 +62,22 @@ class _LoginState extends State<Login> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Transform(
-                            alignment: Alignment.center,
-                            transform: Matrix4.rotationY(scale),
-                            child: Container(
-                              height: 80,
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Theme.of(context).primaryColor),
-                              child: Center(
-                                  child: Text(
-                                '^_^',
-                                style: titleTextStyle(),
-                              )),
-                            ),
-                          ),
+                        Container(
+                          height: 120,
+                          child: Animator<double>(
+                              duration: const Duration(milliseconds: 1000),
+                              cycles: 0,
+                              curve: Curves.bounceIn,
+                              tween: Tween<double>(begin: 30.0, end: 35.0),
+                              builder: (context, animatorState, child) {
+                                return CircleAvatar(
+                                  backgroundColor: Colors.transparent,
+                                  radius: animatorState.value * 2.5,
+                                  child: Image.asset(
+                                    'asset/playstore-removebg-preview.png',
+                                  ),
+                                );
+                              }),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -171,8 +171,10 @@ class _LoginState extends State<Login> {
                                 .loginGoogle(context);
                           },
                           logoWidget: Image.network(
-                              'http://pngimg.com/uploads/google/google_PNG19635.png',
-                              fit: BoxFit.cover),
+                              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQY7-ZlXeNpdFOxML6-kCHjMVnPaWS5CuRrIQ&usqp=CAU',
+                              height: 35,
+                              width: 35,
+                              fit: BoxFit.contain),
                           name: 'Google',
                         ),
                         Padding(
@@ -201,6 +203,7 @@ class LoginMethod extends StatelessWidget {
   final Function() ontap;
   final Widget logoWidget;
   final String name;
+
   const LoginMethod({
     required this.name,
     required this.ontap,
@@ -220,15 +223,9 @@ class LoginMethod extends StatelessWidget {
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16), color: Colors.white70),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             mainAxisSize: MainAxisSize.min,
-            children: [
-              logoWidget,
-              const SizedBox(
-                width: 5.0,
-              ),
-              Text('Sign-in with $name')
-            ],
+            children: [logoWidget, Text('Sign-in with $name')],
           ),
         ),
       ),
