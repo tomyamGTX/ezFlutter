@@ -131,8 +131,8 @@ class _DebtListScreenState extends State<DebtListScreen> {
                                             name.clear();
                                             note.clear();
                                             price.clear();
-                                            Future.delayed(Duration(seconds: 3),
-                                                () {
+                                            Future.delayed(
+                                                const Duration(seconds: 3), () {
                                               Navigator.pop(context);
                                             });
                                           } catch (e) {
