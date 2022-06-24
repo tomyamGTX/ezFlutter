@@ -32,7 +32,7 @@ class _AnimationIconState extends State<AnimationIcon> {
         builder: (context, animatorState, child) => Column(
           children: [
             SizedBox(
-              height: animatorState.value * 1.2,
+              height: animatorState.value * 0.5,
             ),
             Container(
               decoration: BoxDecoration(

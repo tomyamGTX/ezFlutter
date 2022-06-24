@@ -67,6 +67,8 @@ dependencies:
   learning_input_image: ^0.0.6+2
   clipboard: ^0.1.3
   animator:
+  avatar_glow: ^2.0.2
+  assets_audio_player: ^3.0.4+3
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
@@ -98,6 +100,7 @@ flutter:
     - asset/rives/
     - asset/playstore.png
     - asset/playstore-removebg-preview.png
+    - asset/musics/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

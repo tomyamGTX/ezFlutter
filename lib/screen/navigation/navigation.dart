@@ -1,4 +1,8 @@
+import 'dart:math' as math;
+
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:avatar_glow/avatar_glow.dart';
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:ez_flutter/providers/local.provider.dart';
 import 'package:ez_flutter/providers/sandbox.payment.provider.dart';
@@ -22,8 +26,7 @@ class Navigation extends StatefulWidget {
   State<Navigation> createState() => _NavigationState();
 }
 
-class _NavigationState extends State<Navigation>
-    with SingleTickerProviderStateMixin {
+class _NavigationState extends State<Navigation> with TickerProviderStateMixin {
   late int _bottomNavIndex = widget.index; //default index of a first screen
 
   late AnimationController _animationController;
@@ -36,14 +39,29 @@ class _NavigationState extends State<Navigation>
     Icons.person,
     Icons.settings,
   ];
-
+  late AnimationController _controller;
   late PageController _pageController;
+  late AssetsAudioPlayer _assetsAudioPlayer;
+
+  bool play = true;
 
   @override
   void initState() {
     super.initState();
     Provider.of<AppUser>(context, listen: false).getName();
     Provider.of<LocalProvider>(context, listen: false).getList();
+    _assetsAudioPlayer = AssetsAudioPlayer.newPlayer();
+    _assetsAudioPlayer.open(
+      Audio("asset/musics/music.mp3"),
+      autoStart: true,
+      showNotification: true,
+    );
+
+    _assetsAudioPlayer.play();
+    _controller = AnimationController(
+      duration: const Duration(seconds: 8),
+      vsync: this,
+    )..repeat();
     _pageController = PageController(initialPage: _bottomNavIndex);
     _animationController = AnimationController(
       duration: const Duration(seconds: 1),
@@ -66,6 +84,11 @@ class _NavigationState extends State<Navigation>
       const Duration(seconds: 1),
       () => _animationController.forward(),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -118,13 +141,39 @@ class _NavigationState extends State<Navigation>
           content: Text('Tap back again to leave'),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {},
-        child: Icon(
-          Icons.chat,
-          color: Theme.of(context).primaryColorLight,
-        ),
-        //params
+      floatingActionButton: AnimatedBuilder(
+        builder: (_, child) {
+          return Transform.rotate(
+            angle: _controller.value * 2 * math.pi,
+            child: AvatarGlow(
+              glowColor: Colors.blue,
+              endRadius: 40.0,
+              duration: const Duration(milliseconds: 2000),
+              repeat: true,
+              showTwoGlows: true,
+              repeatPauseDuration: const Duration(milliseconds: 100),
+              child: FloatingActionButton(
+                onPressed: () async {
+                  setState(() {});
+                  play = !play;
+                  if (play) {
+                    _assetsAudioPlayer.play();
+                    _controller.repeat();
+                  } else {
+                    _assetsAudioPlayer.stop();
+                    _controller.stop();
+                  }
+                },
+                child: Icon(
+                  Icons.headphones,
+                  color: Theme.of(context).primaryColorLight,
+                ),
+                //params
+              ),
+            ),
+          );
+        },
+        animation: _controller,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: AnimatedBottomNavigationBar(

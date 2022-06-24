@@ -67,7 +67,7 @@ class _LoginState extends State<Login> {
                           child: Animator<double>(
                               duration: const Duration(milliseconds: 1000),
                               cycles: 0,
-                              curve: Curves.bounceIn,
+                              curve: Curves.bounceInOut,
                               tween: Tween<double>(begin: 30.0, end: 35.0),
                               builder: (context, animatorState, child) {
                                 return CircleAvatar(
