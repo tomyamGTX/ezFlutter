@@ -1,10 +1,19 @@
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:clipboard/clipboard.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ez_flutter/screen/phone.number.screen.dart';
 import 'package:ez_flutter/screen/update.name.dart';
 import 'package:ez_flutter/style/text/text.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_ml_vision/google_ml_vision.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:learning_input_image/learning_input_image.dart';
+import 'package:learning_text_recognition/learning_text_recognition.dart';
 import 'package:provider/provider.dart';
+import 'package:text_to_speech/text_to_speech.dart';
 
 import '../../providers/auth.provider.dart';
 import 'debt.list.dart';
@@ -18,7 +27,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   var index = 0;
-
+  List<ImageLabel> labels = [];
   var name = ['Add category', 'Display All Category', 'Make Payment'];
 
   var billName = TextEditingController();
@@ -36,8 +45,24 @@ class _HomeState extends State<Home> {
 
   var _visible = true;
 
-  final _icon = [Icons.attach_money, Icons.task, Icons.man, Icons.access_alarm];
-  final _label = ['Debt List', 'Todo List', 'Location', 'Reminder'];
+  final _icon = [Icons.attach_money, Icons.task, Icons.mic, Icons.camera];
+  final _label = [
+    'Debt\n List',
+    'Todo\n List',
+    'Text to Speech',
+    'Image\n Recognition'
+  ];
+
+  Uint8List? image_value;
+
+  Uint8List data =
+      Uint8List.fromList([102, 111, 114, 116, 121, 45, 116, 119, 111, 0]);
+
+  String? path;
+
+  List<Face> faces = [];
+
+  RecognizedText? result;
 
   @override
   Widget build(BuildContext context) {
@@ -106,14 +131,14 @@ class _HomeState extends State<Home> {
           decoration: BoxDecoration(
               color: Theme.of(context).primaryColorLight,
               borderRadius: BorderRadius.circular(8)),
-          height: 80,
+          height: 85,
           child: GridView.builder(
             itemCount: 4,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 4),
             itemBuilder: (BuildContext context, int index) {
               return InkWell(
-                onTap: () {
+                onTap: () async {
                   if (index == 0) {
                     Navigator.push(
                         context,
@@ -133,23 +158,42 @@ class _HomeState extends State<Home> {
                     //     MaterialPageRoute(
                     //         builder: (context) => const TodoList()));
                   } else if (index == 2) {
-                    Fluttertoast.showToast(
-                        msg: "Feature not available",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.CENTER,
-                        timeInSecForIosWeb: 1,
-                        backgroundColor: Theme.of(context).primaryColor,
-                        textColor: Theme.of(context).primaryColorLight,
-                        fontSize: 16.0);
+                    await showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        var value;
+                        return AlertDialog(
+                          title: const Text('Insert text'),
+                          content: TextField(
+                            onChanged: (e) {
+                              value = e;
+                            },
+                          ),
+                          actions: [
+                            IconButton(
+                                onPressed: () async {
+                                  try {
+                                    TextToSpeech tts = TextToSpeech();
+                                    tts.speak(value);
+                                  } catch (e) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                            content:
+                                                Text('Please insert text')));
+                                  }
+                                },
+                                icon: const Icon(Icons.volume_up)),
+                          ],
+                        );
+                      },
+                    );
                   } else {
-                    Fluttertoast.showToast(
-                        msg: "Feature not available",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.CENTER,
-                        timeInSecForIosWeb: 1,
-                        backgroundColor: Theme.of(context).primaryColor,
-                        textColor: Theme.of(context).primaryColorLight,
-                        fontSize: 16.0);
+                    try {
+                      await getImageFile();
+                    } catch (e) {
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text(e.toString())));
+                    }
                   }
                 },
                 child: Column(
@@ -163,16 +207,147 @@ class _HomeState extends State<Home> {
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
                         _label[index],
+                        textAlign: TextAlign.center,
                         style: TextStyle(color: Theme.of(context).hintColor),
                       ),
-                    )
+                    ),
                   ],
                 ),
               );
             },
           ),
-        )
+        ),
+        Visibility(
+            visible: image_value != null ? true : false,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Image.memory(
+                image_value ?? data,
+                height: 100,
+              ),
+            )),
+        if (image_value != null)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32.0),
+            child: ElevatedButton.icon(
+              onPressed: () async {
+                try {
+                  await imageRecognition();
+                } catch (e) {
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text(e.toString())));
+                }
+              },
+              label: const Text('Detect Image'),
+              icon: const Icon(Icons.search),
+            ),
+          ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 32.0),
+          child: ElevatedButton(
+              onPressed: () async {
+                await showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return InputCameraView(
+                        canSwitchMode: false,
+                        mode: InputCameraMode.gallery,
+                        title: 'Text Recognition',
+                        onImage: (InputImage image) async {
+                          TextRecognition textRecognition = TextRecognition();
+                          RecognizedText? _result =
+                              await textRecognition.process(image);
+                          setState(() {});
+                          result = _result;
+                          Navigator.pop(context);
+                        },
+                      );
+                    });
+              },
+              child: const Text('Convert Images to Text')),
+        ),
+        if (result != null)
+          const Text(
+            'Long press to copy text',
+            textAlign: TextAlign.center,
+          ),
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 32.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (result != null)
+                  for (var item in result!.blocks)
+                    InkWell(
+                      onLongPress: () {
+                        FlutterClipboard.copy(item.text).then((value) =>
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Text Copied'))));
+                      },
+                      child: Card(
+                        margin: const EdgeInsets.all(8),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            item.text,
+                            textAlign: TextAlign.justify,
+                          ),
+                        ),
+                      ),
+                    ),
+              ],
+            ),
+          ),
+        ),
+        Visibility(
+          visible: labels.isEmpty ? false : true,
+          child: SizedBox(
+              height: 200,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Wrap(
+                  alignment: WrapAlignment.spaceAround,
+                  children: [
+                    for (var item in labels)
+                      Chip(
+                        label: Text(
+                          item.text ?? 'No data',
+                          style: TextStyle(
+                              color: Theme.of(context).primaryColorLight),
+                        ),
+                        backgroundColor: Theme.of(context).primaryColor,
+                      )
+                  ],
+                ),
+              )),
+        ),
       ],
     )));
+  }
+
+  Future<void> getImageFile() async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? pickedFile =
+        await _picker.pickImage(source: ImageSource.gallery);
+    var value = await pickedFile!.readAsBytes();
+    setState(() {
+      labels.clear();
+      image_value = value;
+      path = pickedFile.path;
+    });
+  }
+
+  Future<void> imageRecognition() async {
+    var imageFile = File(path!);
+    final GoogleVisionImage visionImage = GoogleVisionImage.fromFile(imageFile);
+
+    final ImageLabeler labeler = GoogleVision.instance.imageLabeler();
+
+    final _labels = await labeler.processImage(visionImage);
+    setState(() {
+      labels = _labels;
+    });
+    labeler.close();
   }
 }
