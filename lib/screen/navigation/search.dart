@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:learning_text_recognition/learning_text_recognition.dart';
 import 'package:provider/provider.dart';
 
-import 'html.view.dart';
+import 'htm.view.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
@@ -19,6 +19,7 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     return Consumer<WordpressProvider>(builder: (context, wp, child) {
       if (wp.post.isEmpty) {
+        wp.getPost();
         return const Scaffold(
           body: Center(child: Text('No Post available')),
         );
