@@ -6,8 +6,7 @@ import 'package:avatar_glow/avatar_glow.dart';
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:ez_flutter/providers/local.provider.dart';
 import 'package:ez_flutter/providers/sandbox.payment.provider.dart';
-import 'package:ez_flutter/screen/mall.item.dart';
-import 'package:ez_flutter/screen/search.dart';
+import 'package:ez_flutter/screen/navigation/search.dart';
 import 'package:ez_flutter/screen/update.profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_avatar/flutter_advanced_avatar.dart';
@@ -35,7 +34,7 @@ class _NavigationState extends State<Navigation> with TickerProviderStateMixin {
 
   final iconList = <IconData>[
     Icons.home,
-    Icons.search,
+    Icons.newspaper,
     Icons.person,
     Icons.settings,
   ];
@@ -43,7 +42,7 @@ class _NavigationState extends State<Navigation> with TickerProviderStateMixin {
   late PageController _pageController;
   late AssetsAudioPlayer _assetsAudioPlayer;
 
-  bool play = true;
+  bool play = false;
 
   @override
   void initState() {
@@ -53,15 +52,14 @@ class _NavigationState extends State<Navigation> with TickerProviderStateMixin {
     _assetsAudioPlayer = AssetsAudioPlayer.newPlayer();
     _assetsAudioPlayer.open(
       Audio("asset/musics/music.mp3"),
-      autoStart: true,
+      autoStart: false,
       showNotification: true,
     );
-
-    _assetsAudioPlayer.play();
     _controller = AnimationController(
       duration: const Duration(seconds: 8),
       vsync: this,
     )..repeat();
+    _controller.stop();
     _pageController = PageController(initialPage: _bottomNavIndex);
     _animationController = AnimationController(
       duration: const Duration(seconds: 1),
@@ -121,12 +119,7 @@ class _NavigationState extends State<Navigation> with TickerProviderStateMixin {
           title: Text('${Provider.of<AppUser>(context).name}',
               style: themeStyle()),
         ),
-        actions: [
-          IconButton(
-              onPressed: () => Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const MallItem())),
-              icon: const Icon(Icons.local_mall))
-        ],
+        actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.search))],
       ),
       body: DoubleBackToCloseApp(
         child: Consumer<SandBoxPaymentProvider>(builder: (context, pay, child) {

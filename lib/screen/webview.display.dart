@@ -1,24 +1,24 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import '../style/text/text.dart';
 
-class StripeWebView extends StatefulWidget {
+class WebViewDisplay extends StatefulWidget {
   final String url;
-
-  const StripeWebView({required this.url, Key? key}) : super(key: key);
+  final String title;
+  const WebViewDisplay({required this.url, required this.title, Key? key})
+      : super(key: key);
 
   @override
-  State<StripeWebView> createState() => _StripeWebViewState();
+  State<WebViewDisplay> createState() => _WebViewDisplayState();
 }
 
-class _StripeWebViewState extends State<StripeWebView> {
+class _WebViewDisplayState extends State<WebViewDisplay> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Checkout Product'),
+        title: Text(widget.title),
       ),
       body: widget.url == ''
           ? Center(

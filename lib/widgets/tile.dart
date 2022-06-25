@@ -1,4 +1,4 @@
-import 'package:ez_flutter/screen/webview.stripe.dart';
+import 'package:ez_flutter/screen/webview.display.dart';
 import 'package:flutter/material.dart';
 
 class Tile extends StatefulWidget {
@@ -59,8 +59,10 @@ class _TileState extends State<Tile> {
                 onTap: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>
-                            StripeWebView(url: widget.paymentUrl))),
+                        builder: (context) => WebViewDisplay(
+                              url: widget.paymentUrl,
+                              title: '',
+                            ))),
                 child: child)),
         SizedBox(
           height: widget.bottomSpace,
