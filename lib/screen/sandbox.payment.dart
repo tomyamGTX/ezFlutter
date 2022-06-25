@@ -1,13 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:ez_flutter/providers/sandbox.payment.provider.dart';
-import 'package:ez_flutter/screen/phone.number.screen.dart';
-import 'package:ez_flutter/screen/update.name.dart';
+import 'package:ez_flutter/screen/profile/phone.number.screen.dart';
+import 'package:ez_flutter/screen/profile/update.name.dart';
 import 'package:ez_flutter/screen/webview.payment.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../providers/auth.provider.dart';
-import '../widgets/drawer.home.dart';
 
 class SandBoxPayment extends StatefulWidget {
   const SandBoxPayment({Key? key}) : super(key: key);

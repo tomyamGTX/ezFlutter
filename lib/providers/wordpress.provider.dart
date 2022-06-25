@@ -12,7 +12,7 @@ class WordpressProvider extends ChangeNotifier {
 
   Future<void> getPost() async {
     final api = WordPressAPI('http://dev.islam.gov.my/isign/');
-    final WPResponse res = await api.posts.fetch(args: {"per_page": "20"});
+    final WPResponse res = await api.posts.fetch(args: {"per_page": "5"});
     for (final _post in res.data) {
       if (!post.contains(_post)) {
         post.add(_post);

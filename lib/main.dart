@@ -7,7 +7,7 @@ import 'package:ez_flutter/providers/location.provider.dart';
 import 'package:ez_flutter/providers/payment.provider.dart';
 import 'package:ez_flutter/providers/sandbox.payment.provider.dart';
 import 'package:ez_flutter/providers/wordpress.provider.dart';
-import 'package:ez_flutter/screen/landing.page.dart';
+import 'package:ez_flutter/screen/auth/landing.page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';

@@ -1,9 +1,10 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:clipboard/clipboard.dart';
-import 'package:ez_flutter/screen/phone.number.screen.dart';
-import 'package:ez_flutter/screen/update.name.dart';
+import 'package:ez_flutter/screen/profile/phone.number.screen.dart';
+import 'package:ez_flutter/screen/profile/update.name.dart';
 import 'package:ez_flutter/style/text/text.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -11,14 +12,13 @@ import 'package:google_ml_vision/google_ml_vision.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:learning_input_image/learning_input_image.dart';
 import 'package:learning_text_recognition/learning_text_recognition.dart';
-import 'package:progress_state_button/iconed_button.dart';
 import 'package:progress_state_button/progress_button.dart';
 import 'package:provider/provider.dart';
 import 'package:text_to_speech/text_to_speech.dart';
 
 import '../../providers/auth.provider.dart';
 import '../../widgets/icon.animation.dart';
-import 'debt.list.dart';
+import '../home/debt.list.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -36,12 +36,19 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   ButtonState stateTextWithIcon = ButtonState.idle;
   var _visible = true;
 
-  final _icon = [Icons.attach_money, Icons.task, Icons.mic, Icons.camera];
+  final _icon = [
+    Icons.task,
+    Icons.checklist,
+    Icons.mic,
+    Icons.camera,
+    Icons.text_fields
+  ];
   final _label = [
     'Debt\n List',
     'Todo\n List',
     'Text to Speech',
-    'Image Recognition'
+    'Image Recognition',
+    'Text Recognition'
   ];
 
   Uint8List? image_value;
@@ -122,20 +129,34 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
               ),
             ),
           ),
-        Text(
-          'Date Today ' +
-              DateTime.now().day.toString() +
-              '/' +
-              DateTime.now().month.toString() +
-              '/' +
-              DateTime.now().year.toString(),
-          textAlign: TextAlign.center,
-          style: titleTextStyle(),
+        Flexible(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: AnimatedTextKit(
+              animatedTexts: [
+                TypewriterAnimatedText(
+                  'Date Today ' +
+                      DateTime.now().day.toString() +
+                      '/' +
+                      DateTime.now().month.toString() +
+                      '/' +
+                      DateTime.now().year.toString(),
+                  textAlign: TextAlign.center,
+                  textStyle: titleTextStyle(),
+                  speed: const Duration(milliseconds: 200),
+                ),
+              ],
+              totalRepeatCount: 4,
+              pause: const Duration(milliseconds: 500),
+              displayFullTextOnTap: true,
+              stopPauseOnTap: true,
+            ),
+          ),
         ),
-        SizedBox(
-          height: 100,
+        Expanded(
+          flex: 2,
           child: GridView.builder(
-            itemCount: 4,
+            itemCount: _icon.length,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 4),
             itemBuilder: (BuildContext context, int index) {
@@ -189,20 +210,38 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                         );
                       },
                     );
-                  } else {
+                  } else if (index == 3) {
                     try {
                       await getImageFile();
                     } catch (e) {
                       ScaffoldMessenger.of(context)
                           .showSnackBar(SnackBar(content: Text(e.toString())));
                     }
+                  } else if (index == 4) {
+                    await showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return InputCameraView(
+                            canSwitchMode: false,
+                            mode: InputCameraMode.gallery,
+                            title: 'Text Recognition',
+                            onImage: (InputImage image) async {
+                              TextRecognition textRecognition =
+                                  TextRecognition();
+                              RecognizedText? _result =
+                                  await textRecognition.process(image);
+                              setState(() {});
+                              result = _result;
+                              Navigator.pop(context);
+                            },
+                          );
+                        });
                   }
                 },
                 child: AnimatedBuilder(
                     animation: animationController,
                     builder: (context, child) {
                       return Container(
-                        height: 90,
                         padding: EdgeInsets.all(
                           1.0 * animationController.value,
                         ),
@@ -217,15 +256,16 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
             },
           ),
         ),
-        Visibility(
-            visible: image_value != null ? true : false,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Image.memory(
-                image_value ?? data,
-                height: 100,
-              ),
-            )),
+        Flexible(
+          child: Visibility(
+              visible: image_value != null ? true : false,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Image.memory(
+                  image_value ?? data,
+                ),
+              )),
+        ),
         if (image_value != null)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 32.0),
@@ -242,68 +282,31 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
               icon: const Icon(Icons.search),
             ),
           ),
-        Visibility(
-          visible: labels.isEmpty ? false : true,
-          child: SizedBox(
-              height: 120,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 32.0),
-                child: Wrap(
-                  alignment: WrapAlignment.spaceAround,
-                  children: [
-                    for (var item in labels)
-                      Chip(
+        Flexible(
+          child: Visibility(
+            visible: labels.isEmpty ? false : true,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32.0),
+              child: Wrap(
+                alignment: WrapAlignment.spaceAround,
+                children: [
+                  for (var item in labels)
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Chip(
                         label: Text(
                           item.text ?? 'No data',
                           style:
                               TextStyle(color: Theme.of(context).primaryColor),
                         ),
                         backgroundColor: Theme.of(context).primaryColorLight,
-                      )
-                  ],
-                ),
-              )),
+                      ),
+                    )
+                ],
+              ),
+            ),
+          ),
         ),
-        ProgressButton.icon(
-            iconedButtons: {
-              ButtonState.idle: IconedButton(
-                  text: 'Images to Text',
-                  icon: const Icon(Icons.send, color: Colors.white),
-                  color: Theme.of(context).primaryColor),
-              ButtonState.loading: IconedButton(
-                  text: 'Loading', color: Theme.of(context).primaryColor),
-              ButtonState.fail: IconedButton(
-                  text: 'Failed',
-                  icon: const Icon(Icons.cancel, color: Colors.white),
-                  color: Colors.red.shade300),
-              ButtonState.success: IconedButton(
-                  text: 'Success',
-                  icon: const Icon(
-                    Icons.check_circle,
-                    color: Colors.white,
-                  ),
-                  color: Colors.green.shade400)
-            },
-            onPressed: () async {
-              await showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return InputCameraView(
-                      canSwitchMode: false,
-                      mode: InputCameraMode.gallery,
-                      title: 'Text Recognition',
-                      onImage: (InputImage image) async {
-                        TextRecognition textRecognition = TextRecognition();
-                        RecognizedText? _result =
-                            await textRecognition.process(image);
-                        setState(() {});
-                        result = _result;
-                        Navigator.pop(context);
-                      },
-                    );
-                  });
-            },
-            state: stateTextWithIcon),
         if (result != null)
           const Text(
             'Long press to copy text',
@@ -364,6 +367,10 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     setState(() {
       labels = _labels;
     });
+    if (labels.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('No result found. Try again')));
+    }
     labeler.close();
   }
 }

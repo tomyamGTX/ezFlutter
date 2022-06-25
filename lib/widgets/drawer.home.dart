@@ -5,7 +5,7 @@ import 'package:flutter_advanced_avatar/flutter_advanced_avatar.dart';
 import '../providers/auth.provider.dart';
 import '../screen/getapi.dart';
 import '../screen/getlocation.dart';
-import '../screen/phone.number.screen.dart';
+import '../screen/profile/phone.number.screen.dart';
 import '../screen/timeline.dart';
 
 Drawer buildDrawer(BuildContext context) {

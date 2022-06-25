@@ -73,6 +73,8 @@ dependencies:
   wordpress_api: ^1.2.0
   flutter_widget_from_html:
   flutter_wordpress_content: ^1.0.26
+  animated_text_kit: ^4.2.2
+  auto_size_text: ^3.0.0
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
@@ -104,7 +106,6 @@ flutter:
     - asset/rives/
     - asset/playstore.png
     - asset/playstore-removebg-preview.png
-    - asset/musics/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

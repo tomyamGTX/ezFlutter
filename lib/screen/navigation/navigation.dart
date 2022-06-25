@@ -6,16 +6,16 @@ import 'package:avatar_glow/avatar_glow.dart';
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:ez_flutter/providers/local.provider.dart';
 import 'package:ez_flutter/providers/sandbox.payment.provider.dart';
-import 'package:ez_flutter/screen/navigation/search.dart';
-import 'package:ez_flutter/screen/update.profile.dart';
+import 'package:ez_flutter/screen/navigation/blog.list.dart';
+import 'package:ez_flutter/screen/navigation/update.profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_avatar/flutter_advanced_avatar.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/auth.provider.dart';
 import '../../widgets/drawer.home.dart';
-import '../Setting.dart';
 import 'home.dart';
+import 'setting.dart';
 
 class Navigation extends StatefulWidget {
   const Navigation(this.index, {Key? key}) : super(key: key);
@@ -34,7 +34,7 @@ class _NavigationState extends State<Navigation> with TickerProviderStateMixin {
 
   final iconList = <IconData>[
     Icons.home,
-    Icons.newspaper,
+    Icons.format_list_bulleted_outlined,
     Icons.person,
     Icons.settings,
   ];
@@ -51,7 +51,8 @@ class _NavigationState extends State<Navigation> with TickerProviderStateMixin {
     Provider.of<LocalProvider>(context, listen: false).getList();
     _assetsAudioPlayer = AssetsAudioPlayer.newPlayer();
     _assetsAudioPlayer.open(
-      Audio("asset/musics/music.mp3"),
+      Audio.network(
+          "https://firebasestorage.googleapis.com/v0/b/emailandphoneauth-6ab6d.appspot.com/o/music%2Fmusic.mp3?alt=media&token=cbf3bf9d-8440-4e6f-ad77-e8f2732638df"),
       autoStart: false,
       showNotification: true,
     );

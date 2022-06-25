@@ -90,4 +90,5 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'androidx.work:work-runtime-ktx:2.8.0-alpha02'
+    implementation ('com.google.android.exoplayer:exoplayer:2.18.0')
 }

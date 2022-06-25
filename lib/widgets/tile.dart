@@ -1,4 +1,4 @@
-import 'package:ez_flutter/screen/webview.display.dart';
+import 'package:ez_flutter/screen/blog/webview.display.dart';
 import 'package:flutter/material.dart';
 
 class Tile extends StatefulWidget {

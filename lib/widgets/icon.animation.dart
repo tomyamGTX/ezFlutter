@@ -1,11 +1,13 @@
 import 'package:animator/animator.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 class AnimationIcon extends StatefulWidget {
   final IconData icon;
   final int index;
   final String text;
-  AnimationIcon(
+
+  const AnimationIcon(
       {required this.index, required this.icon, required this.text, Key? key})
       : super(key: key);
 
@@ -18,29 +20,27 @@ class _AnimationIconState extends State<AnimationIcon> {
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 4),
-      padding: EdgeInsets.all(8),
-      decoration: BoxDecoration(
-          color: Theme.of(context).primaryColorLight,
-          borderRadius: BorderRadius.circular(8)),
-      height: w / 2.75,
+      margin: const EdgeInsets.symmetric(horizontal: 4),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+      height: w / 1.75,
       width: w / 2,
       child: Animator<double>(
-        duration: Duration(milliseconds: 5000 - widget.index * 1000),
+        duration: const Duration(milliseconds: 2000),
         cycles: 0,
         curve: Curves.easeInOut,
         tween: Tween<double>(begin: 0.0, end: 10.0),
         builder: (context, animatorState, child) => Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             SizedBox(
-              height: animatorState.value * 0.5,
+              height: animatorState.value * 2,
             ),
             Container(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.pink.withOpacity(.15),
+                    color: Theme.of(context).primaryColorLight,
                     blurRadius: 20,
                     offset: const Offset(0, 5),
                   ),
@@ -48,13 +48,16 @@ class _AnimationIconState extends State<AnimationIcon> {
               ),
               child: Icon(
                 widget.icon,
-                color: Colors.pink,
+                color: Theme.of(context).primaryColor,
                 size: 32,
               ),
             ),
-            Text(
+            AutoSizeText(
               widget.text,
-              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                  fontSize: 14,
+                  color: Theme.of(context).primaryColorDark,
+                  fontWeight: FontWeight.w300),
               maxLines: 2,
               textAlign: TextAlign.center,
             )

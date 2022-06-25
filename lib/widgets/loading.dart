@@ -1,7 +1,8 @@
 import 'package:ez_flutter/providers/auth.provider.dart';
-import 'package:ez_flutter/screen/login.dart';
+import 'package:ez_flutter/screen/auth/login.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+
 import '../style/text/text.dart';
 
 class Loading extends StatefulWidget {
