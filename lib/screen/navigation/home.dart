@@ -46,7 +46,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     'Text to Speech',
     'Image Recognition',
     'Text Recognition',
-    'Hijri Calender',
+    'Calender',
   ];
 
   Uint8List? image_value;

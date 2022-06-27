@@ -310,7 +310,10 @@ class _CalendarState extends State<Calendar> {
             date: day,
             dateStyles: configureDateStyle(monthStarted, monthEnded),
             isSelected: Utils.isSameDay(selectedDate, day),
-            inMonth: day.month == selectedDate.month,
+            inMonth: widget.isHijri
+                ? HijriCalendar.fromDate(day).hMonth ==
+                    HijriCalendar.fromDate(selectedDate).hMonth
+                : day.month == selectedDate.month,
             isHijri: widget.isHijri,
           ),
         );

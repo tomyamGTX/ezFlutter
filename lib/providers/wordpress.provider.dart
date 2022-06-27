@@ -4,18 +4,20 @@ import 'package:wordpress_api/wordpress_api.dart';
 
 class WordpressProvider extends ChangeNotifier {
   WordpressProvider() {
-    getPost();
+    getPostIsign();
+    getPostPintarHub();
   }
 
-  List<Post> post = [];
+  List<Post> postPintarHub = [];
+  List<Post> postIsign = [];
   List<VideoUrl> url = [];
 
-  Future<void> getPost() async {
+  Future<void> getPostIsign() async {
     final api = WordPressAPI('http://dev.islam.gov.my/isign/');
     final WPResponse res = await api.posts.fetch(args: {"per_page": "5"});
     for (final _post in res.data) {
-      if (!post.contains(_post)) {
-        post.add(_post);
+      if (!postIsign.contains(_post)) {
+        postIsign.add(_post);
         String content = _post.content!;
         var videoBlock = content.split('<hr class="wp-block-separator"/>');
         var cleanData = videoBlock.first
@@ -43,6 +45,17 @@ class WordpressProvider extends ChangeNotifier {
             content: content));
       }
       notifyListeners();
+    }
+  }
+
+  Future<void> getPostPintarHub() async {
+    final api = WordPressAPI('https://pintarhub.com/');
+    final WPResponse res = await api.posts.fetch(args: {"per_page": "5"});
+    for (final _post in res.data) {
+      if (!postPintarHub.contains(_post)) {
+        postPintarHub.add(_post);
+        notifyListeners();
+      }
     }
   }
 }

@@ -123,16 +123,9 @@ class _CalendarTileState extends State<CalendarTile> {
                           ? Colors.white
                           : Utils.isSameDay(widget.date!, DateTime.now())
                               ? widget.todayColor
-                              : widget.isHijri
-                                  ? HijriCalendar.now().hMonth ==
-                                          HijriCalendar.fromDate(widget.date!)
-                                              .hMonth
-                                      ? Colors.black
-                                      : Colors.grey
-                                  : widget.inMonth
-                                      ? Colors.black
-                                      : Colors
-                                          .grey), // Grey color for previous or next months dates
+                              : widget.inMonth
+                                  ? Colors.black
+                                  : Colors.grey),
                 ),
                 // Dots for the events
                 widget.events != null && widget.events!.isNotEmpty
