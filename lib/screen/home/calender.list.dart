@@ -99,6 +99,7 @@ class _CalendarEventState extends State<CalendarEvent> {
                 onDateSelected: (date) {
                   _handleNewDate(date);
                 },
+                isExpanded: true,
                 isExpandable: true,
                 eventDoneColor: Colors.green,
                 selectedColor: Colors.pink,

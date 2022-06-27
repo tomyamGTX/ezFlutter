@@ -218,28 +218,26 @@ class _CalendarState extends State<Calendar> {
   }
 
   Widget get calendarGridView {
-    return Container(
-      child: SimpleGestureDetector(
-        onSwipeUp: _onSwipeUp,
-        onSwipeDown: _onSwipeDown,
-        onSwipeLeft: _onSwipeLeft,
-        onSwipeRight: _onSwipeRight,
-        swipeConfig: const SimpleSwipeConfig(
-          verticalThreshold: 10.0,
-          horizontalThreshold: 40.0,
-          swipeDetectionMoment: SwipeDetectionMoment.onUpdate,
-        ),
-        child: Column(children: <Widget>[
-          GridView.count(
-            childAspectRatio: 1.5,
-            primary: false,
-            shrinkWrap: true,
-            crossAxisCount: 7,
-            padding: const EdgeInsets.only(bottom: 0.0),
-            children: calendarBuilder(),
-          ),
-        ]),
+    return SimpleGestureDetector(
+      onSwipeUp: _onSwipeUp,
+      onSwipeDown: _onSwipeDown,
+      onSwipeLeft: _onSwipeLeft,
+      onSwipeRight: _onSwipeRight,
+      swipeConfig: const SimpleSwipeConfig(
+        verticalThreshold: 10.0,
+        horizontalThreshold: 40.0,
+        swipeDetectionMoment: SwipeDetectionMoment.onUpdate,
       ),
+      child: Column(children: <Widget>[
+        GridView.count(
+          childAspectRatio: 1.5,
+          primary: false,
+          shrinkWrap: true,
+          crossAxisCount: 7,
+          padding: const EdgeInsets.only(bottom: 0.0),
+          children: calendarBuilder(),
+        ),
+      ]),
     );
   }
 
