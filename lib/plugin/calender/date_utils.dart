@@ -1,3 +1,4 @@
+import 'package:hijri/hijri_calendar.dart';
 import 'package:intl/intl.dart';
 
 class Utils {
@@ -57,6 +58,11 @@ class Utils {
     return DateTime(month.year, month.month);
   }
 
+  static HijriCalendar firstDayOfMonthHijri(DateTime month) {
+    var date = DateTime(month.year, month.month, 1);
+    return HijriCalendar.fromDate(date);
+  }
+
   static DateTime firstDayOfWeek(DateTime day) {
     /// Handle Daylight Savings by setting hour to 12:00 Noon
     /// rather than the default of Midnight
@@ -110,6 +116,10 @@ class Utils {
     return a.year == b.year && a.month == b.month && a.day == b.day;
   }
 
+  static bool isSameDayHijri(HijriCalendar a, HijriCalendar b) {
+    return a.hYear == b.hYear && a.hMonth == b.hMonth && a.hMonth == b.hMonth;
+  }
+
   static bool isSameWeek(DateTime a, DateTime b) {
     /// Handle Daylight Savings by setting hour to 12:00 Noon
     /// rather than the default of Midnight
@@ -158,5 +168,10 @@ class Utils {
 
   static DateTime nextWeek(DateTime w) {
     return w.add(const Duration(days: 7));
+  }
+
+  static bool isFirstDayOfMonthHijri(DateTime day) {
+    return isSameDayHijri(
+        firstDayOfMonthHijri(day), HijriCalendar.fromDate(day));
   }
 }

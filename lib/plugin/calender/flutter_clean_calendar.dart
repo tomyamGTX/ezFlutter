@@ -274,11 +274,9 @@ class _CalendarState extends State<Calendar> {
         day = day.toLocal();
         day = day.subtract(Duration(hours: day.hour));
       }
-
       if (monthStarted && day.day == 01) {
         monthEnded = true;
       }
-
       if (Utils.isFirstDayOfMonth(day)) {
         monthStarted = true;
       }
@@ -309,7 +307,11 @@ class _CalendarState extends State<Calendar> {
             onDateSelected: () => handleSelectedDateAndUserCallback(day),
             date: day,
             dateStyles: configureDateStyle(monthStarted, monthEnded),
-            isSelected: Utils.isSameDay(selectedDate, day),
+            isSelected: widget.isHijri
+                ? HijriCalendar.fromDate(day).hDay == 1 &&
+                    HijriCalendar.fromDate(day).hMonth ==
+                        HijriCalendar.fromDate(selectedDate).hMonth
+                : Utils.isSameDay(selectedDate, day),
             inMonth: widget.isHijri
                 ? HijriCalendar.fromDate(day).hMonth ==
                     HijriCalendar.fromDate(selectedDate).hMonth
@@ -631,8 +633,9 @@ class _CalendarState extends State<Calendar> {
   void toggleExpanded() {
     if (widget.isExpandable) {
       setState(() => isExpanded = !isExpanded);
-      if (widget.onExpandStateChanged != null)
+      if (widget.onExpandStateChanged != null) {
         widget.onExpandStateChanged!(isExpanded);
+      }
     }
   }
 
@@ -713,20 +716,44 @@ class _CalendarState extends State<Calendar> {
   List<DateTime> _daysInMonth(
     DateTime month,
   ) {
-    var first = Utils.firstDayOfMonth(month);
-    var daysBefore = first.weekday;
+    var first;
+    if (widget.isHijri) {
+      var date = HijriCalendar.fromDate(month).hDay;
+      if (date == 1) {
+        first = Utils.firstDayOfMonth(month);
+      } else {
+        var diff = date - 1;
+        first = DateTime(month.year, month.month, month.day - diff);
+      }
+    } else {
+      first = Utils.firstDayOfMonth(month);
+    }
+    var daysBefore;
+    if (widget.isHijri) {
+      daysBefore = HijriCalendar.fromDate(first).wkDay;
+    } else {
+      daysBefore = first.weekday;
+    }
     var firstToDisplay = first.subtract(Duration(days: daysBefore - 1));
     var last = Utils.lastDayOfMonth(month);
 
-    var daysAfter = 7 - last.weekday;
+    var daysAfter;
+    if (widget.isHijri) {
+      daysAfter = 7 - HijriCalendar.fromDate(last).wkDay!.toInt();
+    } else {
+      daysAfter = 7 - last.weekday;
+    }
 
     // If the last day is sunday (7) the entire week must be rendered
     if (daysAfter == 0) {
       daysAfter = 7;
     }
+
     // Adding an extra day necessary. Otherwise the week with days in next month
     // would always end on Saturdays.
     var lastToDisplay = last.add(Duration(days: daysAfter + 1));
+    print(firstToDisplay);
+    print(lastToDisplay);
     if (!widget.isHijri) {
       return Utils.daysInRange(firstToDisplay, lastToDisplay).toList();
     } else {
@@ -741,9 +768,11 @@ class ExpansionCrossFade extends StatelessWidget {
   final bool isExpanded;
 
   const ExpansionCrossFade(
-      {required this.collapsed,
+      {Key? key,
+      required this.collapsed,
       required this.expanded,
-      required this.isExpanded});
+      required this.isExpanded})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
