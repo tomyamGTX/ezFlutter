@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:clipboard/clipboard.dart';
+import 'package:ez_flutter/screen/home/calender.list.dart';
 import 'package:ez_flutter/screen/profile/phone.number.screen.dart';
 import 'package:ez_flutter/screen/profile/update.name.dart';
 import 'package:ez_flutter/style/text/text.dart';
@@ -12,7 +13,6 @@ import 'package:google_ml_vision/google_ml_vision.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:learning_input_image/learning_input_image.dart';
 import 'package:learning_text_recognition/learning_text_recognition.dart';
-import 'package:progress_state_button/progress_button.dart';
 import 'package:provider/provider.dart';
 import 'package:text_to_speech/text_to_speech.dart';
 
@@ -31,24 +31,22 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   var index = 0;
   late AnimationController animationController;
   List<ImageLabel> labels = [];
-  var name = ['Add category', 'Display All Category', 'Make Payment'];
-  ButtonState stateOnlyText = ButtonState.idle;
-  ButtonState stateTextWithIcon = ButtonState.idle;
   var _visible = true;
-
   final _icon = [
     Icons.task,
     Icons.checklist,
     Icons.mic,
     Icons.camera,
-    Icons.text_fields
+    Icons.text_fields,
+    Icons.calendar_month,
   ];
   final _label = [
     'Debt\n List',
     'Todo\n List',
     'Text to Speech',
     'Image Recognition',
-    'Text Recognition'
+    'Text Recognition',
+    'Hijri Calender',
   ];
 
   Uint8List? image_value;
@@ -236,6 +234,11 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                             },
                           );
                         });
+                  } else if (index == 5) {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const CalendarEvent()));
                   }
                 },
                 child: AnimatedBuilder(
