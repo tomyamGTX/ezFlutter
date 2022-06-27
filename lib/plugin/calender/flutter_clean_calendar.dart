@@ -157,8 +157,10 @@ class _CalendarState extends State<Calendar> {
     initializeDateFormatting(widget.locale, null).then((_) => setState(() {
           var monthFormat =
               DateFormat('MMMM yyyy', widget.locale).format(_selectedDate);
-          displayMonth =
-              '${monthFormat[0].toUpperCase()}${monthFormat.substring(1)}';
+          var hijriDate = HijriCalendar.fromDate(_selectedDate);
+          displayMonth = widget.isHijri
+              ? '${hijriDate.longMonthName} ${hijriDate.hYear}'
+              : '${monthFormat[0].toUpperCase()}${monthFormat.substring(1)}';
         }));
     _selectedEvents = widget.events?[DateTime(
             _selectedDate.year, _selectedDate.month, _selectedDate.day)] ??
@@ -192,7 +194,7 @@ class _CalendarState extends State<Calendar> {
     } else {
       todayIcon = Container();
     }
-    var hijriDate = HijriCalendar.fromDate(DateTime.now());
+    var hijriDate = HijriCalendar.fromDate(_selectedDate);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -349,7 +351,7 @@ class _CalendarState extends State<Calendar> {
               widget.bottomBarColor ?? const Color.fromRGBO(200, 200, 200, 0.2),
           height: 40,
           margin: const EdgeInsets.only(top: 8.0),
-          padding: EdgeInsets.all(0),
+          padding: const EdgeInsets.all(0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -701,16 +703,18 @@ class _CalendarState extends State<Calendar> {
   }
 
   _lastDayOfWeek(DateTime date) {
-    return _firstDayOfWeek(date).add(new Duration(days: 7));
+    return _firstDayOfWeek(date).add(const Duration(days: 7));
   }
 
   /// The function [_daysInMonth] takes the parameter [month] (which is of type [DateTime])
   /// and calculates then all the days to be displayed in month view based on it. It returns
   /// all that days in a [List<DateTime].
-  List<DateTime> _daysInMonth(DateTime month) {
+  List<DateTime> _daysInMonth(
+    DateTime month,
+  ) {
     var first = Utils.firstDayOfMonth(month);
     var daysBefore = first.weekday;
-    var firstToDisplay = first.subtract(new Duration(days: daysBefore - 1));
+    var firstToDisplay = first.subtract(Duration(days: daysBefore - 1));
     var last = Utils.lastDayOfMonth(month);
 
     var daysAfter = 7 - last.weekday;
@@ -719,11 +723,14 @@ class _CalendarState extends State<Calendar> {
     if (daysAfter == 0) {
       daysAfter = 7;
     }
-
     // Adding an extra day necessary. Otherwise the week with days in next month
     // would always end on Saturdays.
-    var lastToDisplay = last.add(new Duration(days: daysAfter + 1));
-    return Utils.daysInRange(firstToDisplay, lastToDisplay).toList();
+    var lastToDisplay = last.add(Duration(days: daysAfter + 1));
+    if (!widget.isHijri) {
+      return Utils.daysInRange(firstToDisplay, lastToDisplay).toList();
+    } else {
+      return Utils.daysInRange(firstToDisplay, lastToDisplay).toList();
+    }
   }
 }
 

@@ -83,7 +83,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     return SafeArea(
         child: Scaffold(
             body: Column(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         if (AppUser.instance.user?.displayName == null)
           Visibility(
