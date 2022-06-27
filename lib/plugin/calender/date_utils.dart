@@ -116,8 +116,9 @@ class Utils {
     return a.year == b.year && a.month == b.month && a.day == b.day;
   }
 
-  static bool isSameDayHijri(HijriCalendar a, HijriCalendar b) {
-    return a.hYear == b.hYear && a.hMonth == b.hMonth && a.hMonth == b.hMonth;
+  static bool isSameDayHijri(DateTime a, DateTime b) {
+    return HijriCalendar.fromDate(b).hDay == 1 &&
+        HijriCalendar.fromDate(b).hMonth == HijriCalendar.fromDate(a).hMonth;
   }
 
   static bool isSameWeek(DateTime a, DateTime b) {
@@ -168,10 +169,5 @@ class Utils {
 
   static DateTime nextWeek(DateTime w) {
     return w.add(const Duration(days: 7));
-  }
-
-  static bool isFirstDayOfMonthHijri(DateTime day) {
-    return isSameDayHijri(
-        firstDayOfMonthHijri(day), HijriCalendar.fromDate(day));
   }
 }
