@@ -86,7 +86,7 @@ class AppUser extends ChangeNotifier {
       try {
         await FirebaseAuth.instance
             .signInWithCredential(facebookAuthCredential);
-        Navigator.push(context,
+        Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) => const Navigation(0)));
       } on FirebaseAuthException catch (e) {
         ScaffoldMessenger.of(context)
@@ -114,7 +114,7 @@ class AppUser extends ChangeNotifier {
       );
       try {
         await FirebaseAuth.instance.signInWithCredential(credential);
-        Navigator.push(context,
+        Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) => const Navigation(0)));
       } on FirebaseAuthException catch (e) {
         ScaffoldMessenger.of(context)

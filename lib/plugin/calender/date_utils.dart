@@ -117,7 +117,7 @@ class Utils {
   }
 
   static bool isSameDayHijri(DateTime a, DateTime b) {
-    return HijriCalendar.fromDate(b).hDay == 1 &&
+    return HijriCalendar.fromDate(b).hDay == HijriCalendar.fromDate(a).hDay &&
         HijriCalendar.fromDate(b).hMonth == HijriCalendar.fromDate(a).hMonth;
   }
 

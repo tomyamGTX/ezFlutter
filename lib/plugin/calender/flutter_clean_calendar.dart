@@ -358,13 +358,12 @@ class _CalendarState extends State<Calendar> {
             children: <Widget>[
               const SizedBox(width: 40.0),
               Text(
-                widget.isHijri
-                    ? DateFormat(widget.expandableDateFormat, widget.locale)
-                            .format(_selectedDate) +
-                        HijriCalendar.fromDate(_selectedDate)
-                            .toFormat("dd MMMM yyyy")
-                    : DateFormat(widget.expandableDateFormat, widget.locale)
-                        .format(_selectedDate),
+                DateFormat(widget.expandableDateFormat, widget.locale)
+                        .format(_selectedDate) +
+                    '\n' +
+                    HijriCalendar.fromDate(_selectedDate)
+                        .toFormat("dd MMMM yyyy"),
+                textAlign: TextAlign.center,
                 style:
                     widget.bottomBarTextStyle ?? const TextStyle(fontSize: 13),
               ),

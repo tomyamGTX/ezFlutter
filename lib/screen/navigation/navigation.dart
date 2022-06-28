@@ -5,6 +5,7 @@ import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:ez_flutter/providers/local.provider.dart';
+import 'package:ez_flutter/providers/notification.provider.dart';
 import 'package:ez_flutter/providers/sandbox.payment.provider.dart';
 import 'package:ez_flutter/screen/navigation/blog.list.dart';
 import 'package:ez_flutter/screen/navigation/update.profile.dart';
@@ -14,6 +15,7 @@ import 'package:provider/provider.dart';
 
 import '../../providers/auth.provider.dart';
 import '../../widgets/drawer.home.dart';
+import '../home/notification.screen.dart';
 import 'home.dart';
 import 'setting.dart';
 
@@ -123,16 +125,24 @@ class _NavigationState extends State<Navigation> with TickerProviderStateMixin {
         actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.search))],
       ),
       body: DoubleBackToCloseApp(
-        child: Consumer<SandBoxPaymentProvider>(builder: (context, pay, child) {
-          return PageView(
-            controller: _pageController,
-            children: const [
-              Home(),
-              SearchScreen(),
-              UpdateProfile(),
-              Setting(),
-            ],
-          );
+        child: Consumer<NotificationProvider>(builder: (context, noti, child) {
+          if (noti.bodyReceive == null &&
+              noti.titleReceive == null &&
+              noti.dateTime == null) {
+            return Consumer<SandBoxPaymentProvider>(
+                builder: (context, pay, child) {
+              return PageView(
+                controller: _pageController,
+                children: const [
+                  Home(),
+                  SearchScreen(),
+                  UpdateProfile(),
+                  Setting(),
+                ],
+              );
+            });
+          }
+          return const NotificationList();
         }),
         snackBar: const SnackBar(
           content: Text('Tap back again to leave'),

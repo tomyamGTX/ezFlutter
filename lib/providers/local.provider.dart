@@ -6,6 +6,7 @@ import 'package:get_storage/get_storage.dart';
 class LocalProvider extends ChangeNotifier {
   var box = GetStorage();
   List debtList = [];
+  List taskList = [];
 
   LocalProvider() {
     getList();
@@ -14,32 +15,56 @@ class LocalProvider extends ChangeNotifier {
   void getList() {
     try {
       var jsonString = box.read('localDebt');
-      var localJson = json.decode(jsonString);
-      debtList = localJson;
+      var jsonStringTask = box.read('localTask');
+      if (jsonString != null) {
+        var localJson = json.decode(jsonString);
+        debtList = localJson;
+      } else if (jsonStringTask != null) {
+        var localJsonTask = json.decode(jsonStringTask);
+        taskList = localJsonTask;
+      }
     } catch (e) {
-      box.remove('localDebt');
       print(e.toString());
     }
   }
 
-  void addList(val) {
+  void addDebtList(val) {
     debtList.add(val);
-    saveList();
+    saveDebtList();
     notifyListeners();
   }
 
-  void saveList() {
+  void addTaskList(val) {
+    taskList.add(val);
+    taskList.sort((a, b) =>
+        DateTime.parse(a['date']).compareTo(DateTime.parse(b['date'])));
+    saveTaskList();
+    notifyListeners();
+  }
+
+  void saveDebtList() {
     box.write('localDebt', json.encode(debtList));
+    notifyListeners();
+  }
+
+  void saveTaskList() {
+    box.write('localTask', json.encode(taskList));
     notifyListeners();
   }
 
   void deleteList(Object val) {
     debtList.remove(val);
-    saveList();
+    saveDebtList();
     notifyListeners();
   }
 
-  void updateList(index, priceIndex, price, paid, note) {
+  void deleteTaskList(Object val) {
+    taskList.remove(val);
+    saveTaskList();
+    notifyListeners();
+  }
+
+  void updateDebtList(index, priceIndex, price, paid, note) {
     var oldData;
     String notes = note;
     double prices = price;
@@ -49,10 +74,26 @@ class LocalProvider extends ChangeNotifier {
       {"note": notes, "price": prices, "paid": paids}
     ]);
     notifyListeners();
-    saveList();
+    saveDebtList();
   }
 
-  void updateValue(index, priceIndex,double price, String text2, bool isPaid,) {
+  void updateTaskList(index, name, desc, date) {
+    var oldData;
+    oldData = taskList[index];
+    oldData.replaceRange(index, index + 1, [
+      {"name": name, "date": date, "desc": desc}
+    ]);
+    notifyListeners();
+    saveTaskList();
+  }
+
+  void updateValue(
+    index,
+    priceIndex,
+    double price,
+    String text2,
+    bool isPaid,
+  ) {
     var amount;
     double prices = price;
     String texts = text2;
@@ -61,7 +102,7 @@ class LocalProvider extends ChangeNotifier {
     amount.replaceRange(priceIndex, priceIndex + 1, [
       {"price": prices, "paid": isPaids, "note": texts}
     ]);
-    saveList();
+    saveDebtList();
     notifyListeners();
   }
 
@@ -72,7 +113,7 @@ class LocalProvider extends ChangeNotifier {
         amount.add({"price": price, "paid": false, "note": text2});
       }
     }
-    saveList();
+    saveDebtList();
     notifyListeners();
   }
 

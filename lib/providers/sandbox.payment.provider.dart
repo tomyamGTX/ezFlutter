@@ -12,7 +12,7 @@ import '../models/Bill.model.dart';
 
 class SandBoxPaymentProvider extends ChangeNotifier {
   SandBoxPaymentProvider() {
-    init();
+    // init();
   }
 
   bool paid = false;

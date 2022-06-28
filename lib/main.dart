@@ -4,6 +4,7 @@ import 'package:ez_flutter/providers/azan.time.provider.dart';
 import 'package:ez_flutter/providers/db.provider.dart';
 import 'package:ez_flutter/providers/local.provider.dart';
 import 'package:ez_flutter/providers/location.provider.dart';
+import 'package:ez_flutter/providers/notification.provider.dart';
 import 'package:ez_flutter/providers/payment.provider.dart';
 import 'package:ez_flutter/providers/sandbox.payment.provider.dart';
 import 'package:ez_flutter/providers/wordpress.provider.dart';
@@ -25,6 +26,7 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await GetStorage.init();
+
   runApp(const MyApp());
 }
 
@@ -81,6 +83,8 @@ class _MyAppState extends State<MyApp> {
             create: (context) => AnimationProvider()),
         ChangeNotifierProvider<WordpressProvider>(
             create: (context) => WordpressProvider()),
+        ChangeNotifierProvider<NotificationProvider>(
+            create: (context) => NotificationProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

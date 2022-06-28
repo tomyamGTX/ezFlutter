@@ -92,6 +92,17 @@ class LocationProvider extends ChangeNotifier {
     long = null;
     accuracy = null;
     lastSync = null;
+    removeLocal();
     notifyListeners();
+  }
+
+  void removeLocal() {
+    box.remove('long');
+    box.remove('lang');
+    box.remove('acc');
+    box.remove('sync');
+    box.remove('address1');
+    box.remove('address2');
+    box.remove('address3');
   }
 }

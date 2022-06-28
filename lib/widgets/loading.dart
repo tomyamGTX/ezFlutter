@@ -1,5 +1,6 @@
 import 'package:ez_flutter/providers/auth.provider.dart';
 import 'package:ez_flutter/screen/auth/login.dart';
+import 'package:ez_flutter/screen/navigation/navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
@@ -13,6 +14,15 @@ class Loading extends StatefulWidget {
 }
 
 class _LoadingState extends State<Loading> {
+  @override
+  void initState() {
+    Future.delayed(const Duration(seconds: 3), () async {
+      await Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => const Navigation(0)));
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -1,8 +1,9 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../providers/auth.provider.dart';
-import '../../providers/sandbox.payment.provider.dart';
 import '../../style/button/button1.dart';
 import '../../style/text/text.dart';
 import '../../widgets/form.dart';
@@ -22,10 +23,15 @@ class _RegisterState extends State<Register> {
   final TextEditingController _name = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  var _value = false;
+
+  bool _hover = false;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+          resizeToAvoidBottomInset: false,
           backgroundColor: Theme.of(context).secondaryHeaderColor,
           floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
           floatingActionButton: Padding(
@@ -45,7 +51,7 @@ class _RegisterState extends State<Register> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Spacer(),
+                    const Spacer(),
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Text(
@@ -89,39 +95,77 @@ class _RegisterState extends State<Register> {
                       ),
                     ),
                     PassUI(pass: _pass),
-                    ElevatedButton(
+                    Row(
+                      children: <Widget>[
+                        Checkbox(
+                          value: _value,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              _value = !_value;
+                            });
+                          },
+                        ), //Text
+                        Flexible(
+                          child: InkWell(
+                            onHover: (e) => setState(() {
+                              _hover = !_hover;
+                            }),
+                            onTap: () => launchUrl(Uri.parse(
+                                'https://www.freeprivacypolicy.com/live/32bcf9cd-be26-4282-b655-6021a2ed009d')),
+                            child: AutoSizeText(
+                              'I agree with EZFlutter\'s privacy policy and term condition ',
+                              maxLines: 2,
+                              style: TextStyle(
+                                  color: _hover
+                                      ? Theme.of(context).primaryColor
+                                      : null),
+                            ),
+                          ),
+                        ),
+                      ], //<Widget>[]
+                    ), //Row
+                    ElevatedButton.icon(
                         style: buttonStyle(),
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
-                            try {
-                              await Provider.of<AppUser>(context, listen: false)
-                                  .signUp(
-                                email: _email.text,
-                                password: _pass.text,
-                                name: _name.text,
-                              );
-                              Provider.of<SandBoxPaymentProvider>(context,
-                                      listen: false)
-                                  .init();
+                            if (_value == false) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text('Creating new account')),
-                              );
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const Loading()));
-                            } catch (e) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                    content:
-                                        Text(e.toString().split(']').last)),
-                              );
+                                  const SnackBar(
+                                      content: Text(
+                                          'Please agree privacy policy and term condition')));
+                            } else {
+                              try {
+                                await Provider.of<AppUser>(context,
+                                        listen: false)
+                                    .signUp(
+                                  email: _email.text,
+                                  password: _pass.text,
+                                  name: _name.text,
+                                );
+                                // Provider.of<SandBoxPaymentProvider>(context,
+                                //         listen: false)
+                                //     .init();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text('Creating new account')),
+                                );
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const Loading()));
+                              } catch (e) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content:
+                                          Text(e.toString().split(']').last)),
+                                );
+                              }
                             }
                           }
                         },
-                        child: const Text('Register')),
-                    Spacer(),
+                        icon: const Icon(Icons.app_registration),
+                        label: const Text('Register')),
+                    const Spacer(),
                   ],
                 ),
               ),

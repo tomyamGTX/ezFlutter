@@ -39,7 +39,13 @@ class _UpdateProfileState extends State<UpdateProfile> {
           ),
         ),
         AdvancedAvatar(
-          name: AppUser.instance.user!.displayName,
+          image: AppUser.instance.user!.photoURL != null
+              ? NetworkImage(AppUser.instance.user!.photoURL!)
+              : null,
+          size: 60,
+          name: AppUser.instance.user!.photoURL != null
+              ? null
+              : AppUser.instance.user!.displayName ?? 'User',
           statusColor: Colors.green,
           foregroundDecoration: BoxDecoration(
             shape: BoxShape.circle,

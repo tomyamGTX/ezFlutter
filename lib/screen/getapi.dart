@@ -1,6 +1,7 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:ez_flutter/models/method.azan.dart';
 import 'package:ez_flutter/providers/azan.time.provider.dart';
+import 'package:ez_flutter/providers/location.provider.dart';
 import 'package:ez_flutter/screen/getlocation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
@@ -16,10 +17,10 @@ class GetApi extends StatefulWidget {
 class _GetAPIState extends State<GetApi> {
   @override
   void initState() {
-    if (GetStorage().read('lat') != null) {
+    if (Provider.of<LocationProvider>(context, listen: false).lat != null) {
       Provider.of<AzanProvider>(context, listen: false).getResponse(
-          GetStorage().read('lat'),
-          GetStorage().read('long'),
+          Provider.of<LocationProvider>(context, listen: false).lat,
+          Provider.of<LocationProvider>(context, listen: false).long,
           GetStorage().read('id') ?? 3);
     } else {
       Future.delayed(const Duration(seconds: 1), () {
@@ -38,7 +39,7 @@ class _GetAPIState extends State<GetApi> {
   @override
   Widget build(BuildContext context) {
     return Consumer<AzanProvider>(builder: (context, azan, child) {
-      if (azan.time.isEmpty || GetStorage().read('lat') == null) {
+      if (Provider.of<LocationProvider>(context, listen: false).lat == null) {
         return Scaffold(
             appBar: AppBar(
               actions: [

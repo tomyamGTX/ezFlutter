@@ -111,7 +111,7 @@ class _DebtListScreenState extends State<DebtListScreen> {
                                           try {
                                             Provider.of<LocalProvider>(context,
                                                     listen: false)
-                                                .addList({
+                                                .addDebtList({
                                               "name": name.text,
                                               "amount": [
                                                 {
@@ -460,20 +460,22 @@ class _DebtListScreenState extends State<DebtListScreen> {
                                                   actions: [
                                                     TextButton(
                                                         onPressed: () {
-                                                          Provider.of<LocalProvider>(context, listen: false).updateList(
-                                                              index,
-                                                              i,
-                                                              value.debtList[index]
-                                                                      ['amount']
-                                                                  [i]['price'],
-                                                              value.debtList[
-                                                                          index]
-                                                                      ['amount']
-                                                                  [i]['paid'],
-                                                              value.debtList[
-                                                                          index]
-                                                                      ['amount']
-                                                                  [i]['note']);
+                                                          Provider.of<LocalProvider>(
+                                                                  context,
+                                                                  listen: false)
+                                                              .updateDebtList(
+                                                                  index,
+                                                                  i,
+                                                                  value.debtList[index]
+                                                                          ['amount'][i]
+                                                                      ['price'],
+                                                                  value.debtList[index]
+                                                                          ['amount'][i]
+                                                                      ['paid'],
+                                                                  value.debtList[
+                                                                              index]
+                                                                          ['amount'][i]
+                                                                      ['note']);
                                                           ScaffoldMessenger.of(
                                                                   context)
                                                               .showSnackBar(

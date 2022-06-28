@@ -1,5 +1,16 @@
+import 'package:date_time_picker/date_time_picker.dart';
+import 'package:ez_flutter/providers/local.provider.dart';
+import 'package:ez_flutter/style/text/text.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:timeline_tile/timeline_tile.dart';
+
+import '../../providers/notification.provider.dart';
+import '../../widgets/date.widget.dart';
+import '../../widgets/detail.widget.dart';
+import 'notification.screen.dart';
 
 class TodoList extends StatefulWidget {
   const TodoList({Key? key}) : super(key: key);
@@ -9,106 +20,189 @@ class TodoList extends StatefulWidget {
 }
 
 class _TodoListState extends State<TodoList> {
-  List list = ['No Task', 'No Task'];
-  List date = [
-    DateTime.now(),
-    DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day + 1)
-  ];
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        floatingActionButton: FloatingActionButton.extended(
-            onPressed: () {
-              setState(() {});
-              list.add('New Task');
-              date.add(DateTime(DateTime.now().year, DateTime.now().month,
-                  DateTime.now().day + 1));
-            },
-            label: const Text('Add Task')),
-        appBar: AppBar(
-          title: const Text('Todo List'),
-        ),
-        body: ListView.builder(
-          padding: const EdgeInsets.all(8),
-          itemCount: list.length,
-          itemBuilder: (BuildContext context, int index) {
-            return TimelineTile(
-              afterLineStyle: LineStyle(color: Theme.of(context).primaryColor),
-              beforeLineStyle: LineStyle(color: Theme.of(context).primaryColor),
-              indicatorStyle: IndicatorStyle(
-                  color: Theme.of(context).primaryColorDark, drawGap: true),
-              isFirst: index == 0 ? true : false,
-              isLast: index == list.length - 1 ? true : false,
-              hasIndicator: true,
-              alignment: TimelineAlign.center,
-              lineXY: 0.3,
-              endChild: index % 2 != 0
-                  ? DetailWidget(list: list, index: index)
-                  : DateWidget(
-                      date: date[index],
+    return Consumer<LocalProvider>(builder: (context, local, child) {
+      return Scaffold(
+          floatingActionButton: FloatingActionButton.extended(
+              onPressed: () async {
+                String name = '';
+                String desc = '';
+                String dateTime = '';
+                await showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    var date = DateTime.now();
+                    return AlertDialog(
+                      title: const Text('Add task'),
+                      content: SizedBox(
+                        height: 200,
+                        child: Column(
+                          children: [
+                            TextField(
+                              decoration:
+                                  const InputDecoration(hintText: 'Task Name'),
+                              onChanged: (value) {
+                                setState(() {
+                                  name = value;
+                                });
+                              },
+                            ),
+                            TextField(
+                              decoration: const InputDecoration(
+                                  hintText: 'Task Description'),
+                              onChanged: (value) {
+                                setState(() {
+                                  desc = value;
+                                });
+                              },
+                            ),
+                            DateTimePicker(
+                              type: DateTimePickerType.dateTime,
+                              initialValue: DateTime(
+                                      date.year,
+                                      date.month,
+                                      date.day,
+                                      date.hour,
+                                      DateTime.now().minute + 10)
+                                  .toString(),
+                              firstDate: DateTime(2000),
+                              lastDate: DateTime(2100),
+                              dateLabelText: 'Date',
+                              onChanged: (val) {
+                                setState(() {});
+                                dateTime = val;
+                              },
+                              validator: (val) {
+                                print(val);
+                                return null;
+                              },
+                              onSaved: (val) {
+                                setState(() {});
+                                dateTime = val!;
+                              },
+                            )
+                          ],
+                        ),
+                      ),
+                      actions: [
+                        ElevatedButton(
+                            onPressed: () {
+                              if (name != '' && desc != '') {
+                                _addData(
+                                    desc: desc,
+                                    context: context,
+                                    dateTime: dateTime == ''
+                                        ? DateTime(
+                                            date.year,
+                                            date.month,
+                                            date.day,
+                                            date.hour,
+                                            DateTime.now().minute + 10)
+                                        : DateTime.parse(dateTime),
+                                    name: name);
+                                Navigator.pop(context);
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content:
+                                            Text('Please input all fields')));
+                              }
+                            },
+                            child: const Text('Submit'))
+                      ],
+                    );
+                  },
+                );
+              },
+              label: const Text('Add Task')),
+          appBar: AppBar(
+            title: const Text('Todo List'),
+          ),
+          body: Consumer<NotificationProvider>(builder: (context, noti, child) {
+            if (local.taskList.isEmpty) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Center(
+                      child: Icon(
+                    Icons.task,
+                    color: Theme.of(context).primaryColor,
+                    size: 120,
+                  )),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'No Task Available',
+                      style: basicTextStyle(),
                     ),
-              startChild: index % 2 != 0
-                  ? DateWidget(
-                      date: date[index],
-                    )
-                  : DetailWidget(list: list, index: index),
-            );
-          },
-        ));
+                  ),
+                ],
+              );
+            }
+            if (noti.bodyReceive == null &&
+                noti.titleReceive == null &&
+                noti.dateTime == null) {
+              return ListView.builder(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 48, horizontal: 8),
+                itemCount: local.taskList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return TimelineTile(
+                    afterLineStyle:
+                        LineStyle(color: Theme.of(context).primaryColor),
+                    beforeLineStyle:
+                        LineStyle(color: Theme.of(context).primaryColor),
+                    indicatorStyle: IndicatorStyle(
+                        color: Theme.of(context).primaryColor, drawGap: true),
+                    isFirst: index == 0 ? true : false,
+                    isLast: index == local.taskList.length - 1 ? true : false,
+                    alignment: TimelineAlign.center,
+                    lineXY: 0.3,
+                    endChild: index % 2 != 0
+                        ? DetailWidget(
+                            name: local.taskList[index]['name'],
+                            desc: local.taskList[index]['desc'],
+                            date: DateTime.parse(local.taskList[index]['date']),
+                          )
+                        : DateWidget(
+                            date: DateTime.parse(local.taskList[index]['date']),
+                          ),
+                    startChild: index % 2 != 0
+                        ? DateWidget(
+                            date: DateTime.parse(local.taskList[index]['date']),
+                          )
+                        : DetailWidget(
+                            name: local.taskList[index]['name'],
+                            desc: local.taskList[index]['desc'],
+                            date: DateTime.parse(local.taskList[index]['date']),
+                          ),
+                  );
+                },
+              );
+            }
+            return const NotificationList();
+          }));
+    });
   }
-}
 
-class DateWidget extends StatelessWidget {
-  final DateTime date;
-
-  const DateWidget({
-    required this.date,
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-          color: Theme.of(context).secondaryHeaderColor,
-          shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.circular(8)),
-      child: Center(
-          child: Text(
-        '${date.day}.' + date.month.toString() + '.' + date.year.toString(),
-        textAlign: TextAlign.center,
-      )),
-    );
-  }
-}
-
-class DetailWidget extends StatelessWidget {
-  final int index;
-
-  const DetailWidget({
-    Key? key,
-    required this.index,
-    required this.list,
-  }) : super(key: key);
-
-  final List list;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          color: Theme.of(context).primaryColorLight,
-        ),
-        constraints: const BoxConstraints(
-          minHeight: 50,
-        ),
-        child: Center(child: Text(list[index])),
-      ),
-    );
+  Future<void> _addData(
+      {required BuildContext context,
+      required String name,
+      required String desc,
+      required DateTime dateTime}) async {
+    final f = DateFormat('dd MMMM yyyy, hh:mm a');
+    var date = dateTime.toString();
+    Provider.of<LocalProvider>(context, listen: false)
+        .addTaskList({"name": name, "desc": desc, "date": date});
+    var timebefore = DateTime(dateTime.year, dateTime.month, dateTime.day,
+        dateTime.hour, dateTime.minute - 5);
+    await Provider.of<NotificationProvider>(context, listen: false)
+        .scheduleNotification(
+            channelName: name,
+            channelDesc: desc,
+            title: '5 minutes before due date. Finish your task now!!',
+            body: '$name, ${f.format(dateTime)}',
+            dateTime: timebefore);
   }
 }

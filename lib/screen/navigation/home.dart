@@ -2,13 +2,13 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:clipboard/clipboard.dart';
 import 'package:ez_flutter/screen/home/calender.list.dart';
+import 'package:ez_flutter/screen/home/text.block.list.dart';
+import 'package:ez_flutter/screen/home/todo.list.dart';
 import 'package:ez_flutter/screen/profile/phone.number.screen.dart';
 import 'package:ez_flutter/screen/profile/update.name.dart';
 import 'package:ez_flutter/style/text/text.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_ml_vision/google_ml_vision.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:learning_input_image/learning_input_image.dart';
@@ -165,18 +165,19 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                         MaterialPageRoute(
                             builder: (context) => const DebtListScreen()));
                   } else if (index == 1) {
-                    Fluttertoast.showToast(
-                        msg: "Feature not available",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.CENTER,
-                        timeInSecForIosWeb: 1,
-                        backgroundColor: Theme.of(context).primaryColor,
-                        textColor: Theme.of(context).primaryColorLight,
-                        fontSize: 16.0);
-                    // Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //         builder: (context) => const TodoList()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const TodoList()));
+
+                    // Fluttertoast.showToast(
+                    //     msg: "Feature not available",
+                    //     toastLength: Toast.LENGTH_SHORT,
+                    //     gravity: ToastGravity.CENTER,
+                    //     timeInSecForIosWeb: 1,
+                    //     backgroundColor: Theme.of(context).primaryColor,
+                    //     textColor: Theme.of(context).primaryColorLight,
+                    //     fontSize: 16.0);
                   } else if (index == 2) {
                     await showDialog(
                       context: context,
@@ -229,7 +230,12 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                   await textRecognition.process(image);
                               setState(() {});
                               result = _result;
-                              Navigator.pop(context);
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => TextBlockList(
+                                            textRecognizer: result,
+                                          )));
                             },
                           );
                         });
@@ -306,40 +312,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                     )
                 ],
               ),
-            ),
-          ),
-        ),
-        if (result != null)
-          const Text(
-            'Long press to copy text',
-            textAlign: TextAlign.center,
-          ),
-        Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 32.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                if (result != null)
-                  for (var item in result!.blocks)
-                    InkWell(
-                      onLongPress: () {
-                        FlutterClipboard.copy(item.text).then((value) =>
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Text Copied'))));
-                      },
-                      child: Card(
-                        margin: const EdgeInsets.all(8),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            item.text,
-                            textAlign: TextAlign.justify,
-                          ),
-                        ),
-                      ),
-                    ),
-              ],
             ),
           ),
         ),

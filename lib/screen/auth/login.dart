@@ -62,7 +62,7 @@ class _LoginState extends State<Login> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Container(
+                        SizedBox(
                           height: 120,
                           child: Animator<double>(
                               duration: const Duration(milliseconds: 1000),
@@ -181,7 +181,7 @@ class _LoginState extends State<Login> {
                           padding: const EdgeInsets.all(8.0),
                           child: TextButton(
                               onPressed: () {
-                                Navigator.push(
+                                Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
