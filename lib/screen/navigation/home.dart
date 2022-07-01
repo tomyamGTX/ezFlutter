@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:ez_flutter/screen/home/calender.list.dart';
 import 'package:ez_flutter/screen/home/text.block.list.dart';
 import 'package:ez_flutter/screen/home/todo.list.dart';
 import 'package:ez_flutter/screen/profile/phone.number.screen.dart';
@@ -13,6 +12,7 @@ import 'package:google_ml_vision/google_ml_vision.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:learning_input_image/learning_input_image.dart';
 import 'package:learning_text_recognition/learning_text_recognition.dart';
+import 'package:manage_calendar_events/manage_calendar_events.dart';
 import 'package:provider/provider.dart';
 import 'package:text_to_speech/text_to_speech.dart';
 
@@ -34,19 +34,17 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   var _visible = true;
   final _icon = [
     Icons.task,
-    Icons.checklist,
+    Icons.calendar_month,
     Icons.mic,
     Icons.camera,
     Icons.text_fields,
-    Icons.calendar_month,
   ];
   final _label = [
     'Debt\n List',
-    'Todo\n List',
+    'Todo\n Calendar',
     'Text to Speech',
     'Image Recognition',
     'Text Recognition',
-    'Calender',
   ];
 
   Uint8List? image_value;
@@ -76,6 +74,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     animationController.dispose();
     super.dispose();
   }
+
+  final CalendarPlugin _myPlugin = CalendarPlugin();
 
   @override
   Widget build(BuildContext context) {
@@ -165,10 +165,16 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                         MaterialPageRoute(
                             builder: (context) => const DebtListScreen()));
                   } else if (index == 1) {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const TodoList()));
+                    _myPlugin.hasPermissions().then((value) {
+                      if (!value!) {
+                        _myPlugin.requestPermissions();
+                      } else {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const TodoList()));
+                      }
+                    });
 
                     // Fluttertoast.showToast(
                     //     msg: "Feature not available",
@@ -239,11 +245,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                             },
                           );
                         });
-                  } else if (index == 5) {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const CalendarEvent()));
                   }
                 },
                 child: AnimatedBuilder(

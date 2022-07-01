@@ -1,13 +1,18 @@
+import 'dart:math';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 import '../screen/navigation/navigation.dart';
 
 class AppUser extends ChangeNotifier {
   String? name;
+  Random random = Random();
+  var box = GetStorage();
 
   AppUser._() {
     FirebaseAuth.instance.authStateChanges().listen((user) {
@@ -38,6 +43,7 @@ class AppUser extends ChangeNotifier {
     try {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
+      await registerOneSignal();
       print('Sign in Successful');
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
@@ -59,6 +65,7 @@ class AppUser extends ChangeNotifier {
       await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
       await AppUser.instance.user!.updateDisplayName(name);
+      await registerOneSignal();
       return true;
     } catch (e) {
       rethrow;
@@ -86,6 +93,7 @@ class AppUser extends ChangeNotifier {
       try {
         await FirebaseAuth.instance
             .signInWithCredential(facebookAuthCredential);
+        await registerOneSignal();
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) => const Navigation(0)));
       } on FirebaseAuthException catch (e) {
@@ -114,6 +122,7 @@ class AppUser extends ChangeNotifier {
       );
       try {
         await FirebaseAuth.instance.signInWithCredential(credential);
+        await registerOneSignal();
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) => const Navigation(0)));
       } on FirebaseAuthException catch (e) {
@@ -123,6 +132,26 @@ class AppUser extends ChangeNotifier {
     } catch (e) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(e.toString())));
+    }
+  }
+
+  Future<void> registerOneSignal() async {
+    var id = box.read('osID');
+    if (id == null) {
+      int randomNumber = random.nextInt(123456789);
+      var externalUserId = randomNumber.toString();
+      box.write('osID', externalUserId);
+      OneSignal.shared.setExternalUserId(externalUserId);
+      OneSignal().setEmail(email: AppUser().user!.email!);
+      linkPhoneNumber();
+      notifyListeners();
+    }
+  }
+
+  void linkPhoneNumber() {
+    if (AppUser.instance.user!.phoneNumber != null) {
+      OneSignal.shared
+          .setSMSNumber(smsNumber: AppUser.instance.user!.phoneNumber!);
     }
   }
 }

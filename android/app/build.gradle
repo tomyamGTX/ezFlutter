@@ -1,3 +1,5 @@
+
+
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
@@ -38,6 +40,19 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
+buildscript {
+    repositories {
+        // ...
+        maven { url 'https://plugins.gradle.org/m2/' } // Gradle Plugin Portal
+    }
+    dependencies {
+        // ...
+        // OneSignal-Gradle-Plugin
+        classpath 'gradle.plugin.com.onesignal:onesignal-gradle-plugin:0.14.0'
+    }
+}
+
+apply plugin: 'com.onesignal.androidsdk.onesignal-gradle-plugin'
 android {
     compileSdkVersion 31
     ndkVersion '21.3.6528147'
@@ -91,4 +106,5 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'androidx.work:work-runtime-ktx:2.8.0-alpha02'
     implementation ('com.google.android.exoplayer:exoplayer:2.18.0')
+
 }

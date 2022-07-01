@@ -28,7 +28,7 @@ class _NotificationListState extends State<NotificationList> {
             title: Text(noti.titleReceive!),
             content: Text(noti.bodyReceive!),
             actions: [
-              ElevatedButton.icon(
+              ElevatedButton(
                 onPressed: () {
                   var dateTime = DateTime.now();
                   var afterFiveMin = DateTime(dateTime.year, dateTime.month,
@@ -37,22 +37,20 @@ class _NotificationListState extends State<NotificationList> {
                       .scheduleNotification(
                           channelName: noti.titleReceive!,
                           channelDesc: noti.bodyReceive!,
-                          title:
-                              '5 minutes before due date. Finish your task now!!',
-                          body:
-                              '${noti.titleReceive!}, ${f.format(afterFiveMin)}',
+                          title: 'It\'s time to finish your task!!',
+                          body: noti.bodyReceive!,
                           dateTime: afterFiveMin);
+                  Provider.of<NotificationProvider>(context, listen: false)
+                      .receiveNotification();
                 },
-                icon: const Icon(Icons.snooze),
-                label: const Text('Snooze 5 minutes'),
+                child: const Text('Snooze 5 minutes'),
               ),
-              ElevatedButton.icon(
+              ElevatedButton(
                 onPressed: () {
                   Provider.of<NotificationProvider>(context, listen: false)
                       .receiveNotification();
                 },
-                icon: const Icon(Icons.check),
-                label: const Text('Mark As Done'),
+                child: const Text('Mark As Done'),
               )
             ],
           ),
