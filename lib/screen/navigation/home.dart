@@ -165,9 +165,15 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                         MaterialPageRoute(
                             builder: (context) => const DebtListScreen()));
                   } else if (index == 1) {
-                    _myPlugin.hasPermissions().then((value) {
+                    _myPlugin.hasPermissions().then((value) async {
                       if (!value!) {
-                        _myPlugin.requestPermissions();
+                        await _myPlugin.requestPermissions();
+                        if (value) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const TodoList()));
+                        }
                       } else {
                         Navigator.push(
                             context,
