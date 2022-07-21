@@ -14,9 +14,9 @@ class TodoList extends StatefulWidget {
 }
 
 class _TodoListState extends State<TodoList> {
-  var name;
-  var date;
-  var desc;
+  dynamic name;
+  dynamic date;
+  dynamic desc;
 
   @override
   Widget build(BuildContext context) {
@@ -153,7 +153,7 @@ class _TodoListState extends State<TodoList> {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Text('Confirm to delete?'),
+                              title: const Text('Confirm to delete?'),
                               actions: [
                                 TextButton(
                                     onPressed: () {
@@ -198,7 +198,10 @@ class _TodoListState extends State<TodoList> {
                               onPressed: () {
                                 local.deleteTaskList(data);
                               },
-                              icon: const Icon(Icons.delete)),
+                              icon: Icon(
+                                Icons.delete,
+                                color: Theme.of(context).primaryColor,
+                              )),
                       leading: GestureDetector(
                         onTap: () async {
                           await showDialog(
@@ -244,7 +247,7 @@ class _TodoListState extends State<TodoList> {
                               color: Colors.transparent,
                               shape: BoxShape.circle),
                           width: 50.0,
-                          isLive: true,
+                          isLive: false,
                           hourHandColor: Colors.black,
                           minuteHandColor: Colors.black,
                           showSecondHand: false,
