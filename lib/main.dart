@@ -27,8 +27,6 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await GetStorage.init();
-//Remove this method to stop OneSignal Debugging
-  OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
 
   OneSignal.shared.setAppId("7c28a152-35c5-4cd1-b867-1c03e7159a8b");
 

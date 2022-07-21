@@ -12,7 +12,6 @@ import 'package:google_ml_vision/google_ml_vision.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:learning_input_image/learning_input_image.dart';
 import 'package:learning_text_recognition/learning_text_recognition.dart';
-import 'package:manage_calendar_events/manage_calendar_events.dart';
 import 'package:provider/provider.dart';
 import 'package:text_to_speech/text_to_speech.dart';
 
@@ -41,13 +40,13 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   ];
   final _label = [
     'Debt\n List',
-    'Todo\n Calendar',
+    'Todo\n List',
     'Text to Speech',
     'Image Recognition',
     'Text Recognition',
   ];
 
-  Uint8List? image_value;
+  Uint8List? imageValue;
 
   Uint8List data =
       Uint8List.fromList([102, 111, 114, 116, 121, 45, 116, 119, 111, 0]);
@@ -74,8 +73,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     animationController.dispose();
     super.dispose();
   }
-
-  final CalendarPlugin _myPlugin = CalendarPlugin();
 
   @override
   Widget build(BuildContext context) {
@@ -165,31 +162,10 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                         MaterialPageRoute(
                             builder: (context) => const DebtListScreen()));
                   } else if (index == 1) {
-                    _myPlugin.hasPermissions().then((value) async {
-                      if (!value!) {
-                        await _myPlugin.requestPermissions();
-                        if (value) {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const TodoList()));
-                        }
-                      } else {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const TodoList()));
-                      }
-                    });
-
-                    // Fluttertoast.showToast(
-                    //     msg: "Feature not available",
-                    //     toastLength: Toast.LENGTH_SHORT,
-                    //     gravity: ToastGravity.CENTER,
-                    //     timeInSecForIosWeb: 1,
-                    //     backgroundColor: Theme.of(context).primaryColor,
-                    //     textColor: Theme.of(context).primaryColorLight,
-                    //     fontSize: 16.0);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const TodoList()));
                   } else if (index == 2) {
                     await showDialog(
                       context: context,
@@ -273,15 +249,15 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         ),
         Flexible(
           child: Visibility(
-              visible: image_value != null ? true : false,
+              visible: imageValue != null ? true : false,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Image.memory(
-                  image_value ?? data,
+                  imageValue ?? data,
                 ),
               )),
         ),
-        if (image_value != null)
+        if (imageValue != null)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 32.0),
             child: ElevatedButton.icon(
@@ -333,7 +309,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     var value = await pickedFile!.readAsBytes();
     setState(() {
       labels.clear();
-      image_value = value;
+      imageValue = value;
       path = pickedFile.path;
     });
   }

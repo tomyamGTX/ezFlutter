@@ -61,7 +61,7 @@ class NotificationProvider extends ChangeNotifier {
         .show(0, title, body, platformChannelSpecifics, payload: jsonString);
   }
 
-  Future<void> scheduleNotification(
+  Future<void> scheduleNotification(BuildContext context,
       {required String channelName,
       required String channelDesc,
       required String title,
@@ -89,6 +89,8 @@ class NotificationProvider extends ChangeNotifier {
         payload: jsonString,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime);
+    ScaffoldMessenger.of(context)
+        .showSnackBar(const SnackBar(content: Text('Reminder Set')));
   }
 
   Future<void> scheduleDaily(

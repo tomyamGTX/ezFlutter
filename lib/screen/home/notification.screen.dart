@@ -34,7 +34,7 @@ class _NotificationListState extends State<NotificationList> {
                   var afterFiveMin = DateTime(dateTime.year, dateTime.month,
                       dateTime.day, dateTime.hour, dateTime.minute + 5);
                   Provider.of<NotificationProvider>(context, listen: false)
-                      .scheduleNotification(
+                      .scheduleNotification(context,
                           channelName: noti.titleReceive!,
                           channelDesc: noti.bodyReceive!,
                           title: 'It\'s time to finish your task!!',

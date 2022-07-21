@@ -14,6 +14,7 @@ class LocalProvider extends ChangeNotifier {
 
   void getList() {
     try {
+      // box.remove('localTask');
       var jsonString = box.read('localDebt');
       var jsonStringTask = box.read('localTask');
       if (jsonString != null) {
@@ -36,8 +37,6 @@ class LocalProvider extends ChangeNotifier {
 
   void addTaskList(val) {
     taskList.add(val);
-    taskList.sort((a, b) =>
-        DateTime.parse(a['date']).compareTo(DateTime.parse(b['date'])));
     saveTaskList();
     notifyListeners();
   }
@@ -77,11 +76,9 @@ class LocalProvider extends ChangeNotifier {
     saveDebtList();
   }
 
-  void updateTaskList(index, name, desc, date) {
-    var oldData;
-    oldData = taskList[index];
-    oldData.replaceRange(index, index + 1, [
-      {"name": name, "date": date, "desc": desc}
+  void updateTaskList(index, name, desc, date, value) {
+    taskList.replaceRange(index, index + 1, [
+      {"name": name, "date": date, "desc": desc, "value": value}
     ]);
     notifyListeners();
     saveTaskList();
