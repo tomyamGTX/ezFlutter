@@ -11,6 +11,9 @@ class LocationProvider extends ChangeNotifier {
   String? address1;
   String? address2;
   String? address3;
+  String? state;
+  String? country;
+  String? locality;
   final box = GetStorage();
 
   Future<void> determinePosition() async {
@@ -49,7 +52,7 @@ class LocationProvider extends ChangeNotifier {
     // continue accessing the position of the device.
     Position _position = await Geolocator.getCurrentPosition(
         timeLimit: const Duration(seconds: 10),
-        desiredAccuracy: LocationAccuracy.high);
+        desiredAccuracy: LocationAccuracy.medium);
     box.write('lat', _position.latitude);
     box.write('long', _position.longitude);
     box.write('acc', _position.accuracy.toString());
@@ -61,10 +64,11 @@ class LocationProvider extends ChangeNotifier {
 
   getAddress(double lang, double long) async {
     List<Placemark> placemarks = await placemarkFromCoordinates(lang, long);
-    box.write('address1', "${placemarks.first.street}");
-    box.write('address2', '${placemarks.first.subAdministrativeArea}');
-    box.write('address3',
-        "${placemarks.first.postalCode} ${placemarks.first.administrativeArea}, ${placemarks.first.country}");
+    country = placemarks.first.country;
+    state = placemarks.first.administrativeArea;
+    locality = placemarks.first.locality;
+    box.write('state', state);
+    notifyListeners();
   }
 
   void readLocal() {
@@ -80,11 +84,6 @@ class LocationProvider extends ChangeNotifier {
     if (box.read('sync') != null) {
       lastSync = box.read('sync').toString();
     }
-    if (box.read('address1') != null) {
-      address1 = box.read('address1').toString();
-      address2 = box.read('address2').toString();
-      address3 = box.read('address3').toString();
-    }
   }
 
   void remove() {
@@ -92,6 +91,8 @@ class LocationProvider extends ChangeNotifier {
     long = null;
     accuracy = null;
     lastSync = null;
+    state = null;
+    country = null;
     removeLocal();
     notifyListeners();
   }
@@ -101,8 +102,6 @@ class LocationProvider extends ChangeNotifier {
     box.remove('lang');
     box.remove('acc');
     box.remove('sync');
-    box.remove('address1');
-    box.remove('address2');
-    box.remove('address3');
+    box.remove('state');
   }
 }

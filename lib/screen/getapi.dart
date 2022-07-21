@@ -1,11 +1,12 @@
 import 'package:dropdown_search/dropdown_search.dart';
-import 'package:ez_flutter/models/method.azan.dart';
 import 'package:ez_flutter/providers/azan.time.provider.dart';
-import 'package:ez_flutter/providers/location.provider.dart';
-import 'package:ez_flutter/screen/getlocation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:provider/provider.dart';
+import 'package:simple_icons/simple_icons.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../providers/notification.provider.dart';
 
 class GetApi extends StatefulWidget {
   const GetApi({Key? key}) : super(key: key);
@@ -15,182 +16,148 @@ class GetApi extends StatefulWidget {
 }
 
 class _GetAPIState extends State<GetApi> {
-  @override
-  void initState() {
-    if (Provider.of<LocationProvider>(context, listen: false).lat != null) {
-      Provider.of<AzanProvider>(context, listen: false).getResponse(
-          Provider.of<LocationProvider>(context, listen: false).lat,
-          Provider.of<LocationProvider>(context, listen: false).long,
-          GetStorage().read('id') ?? 3);
-    } else {
-      Future.delayed(const Duration(seconds: 1), () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const GetLocation()));
-      });
-    }
-
-    super.initState();
-  }
-
-  String? status;
+  String? state;
+  String? zone;
   int? code;
   bool search = false;
 
+  final List _value = GetStorage().read('azan') ??
+      [false, false, false, false, false, false, false];
+
   @override
   Widget build(BuildContext context) {
-    return Consumer<AzanProvider>(builder: (context, azan, child) {
-      if (Provider.of<LocationProvider>(context, listen: false).lat == null) {
-        return Scaffold(
-            appBar: AppBar(
-              actions: [
-                TextButton(
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const GetApi()));
-                    },
-                    child: const Text(
-                      'Refresh',
-                      style: TextStyle(color: Colors.white),
-                    ))
-              ],
-            ),
-            body: Center(
-                child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text(
-                    'Please enable location,then click the refresh button to get the Prayer Time',
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: CircularProgressIndicator(),
-                ),
-              ],
-            )));
-      }
+    return Consumer<AzanProvider>(builder: (context, data, _) {
       return Scaffold(
         appBar: AppBar(
-          title: Text(azan.source),
-          actions: [
-            IconButton(
-                onPressed: () async {
-                  await showDialog(
-                    barrierDismissible: false,
-                    context: context,
-                    builder: (BuildContext context) {
-                      var id;
-                      return AlertDialog(
-                        content: DropdownSearch<MWL>(
-                          asyncItems: (String filter) => getData(filter),
-                          itemAsString: (MWL m) => m.name!,
-                          onChanged: (MWL? data) async {
-                            GetStorage().write('id', data!.id);
-                            id = data.id;
-                          },
-                          dropdownDecoratorProps: const DropDownDecoratorProps(
-                              dropdownSearchDecoration: InputDecoration(
-                                  label: Text('Choose other method'))),
-                        ),
-                        actions: [
-                          TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: const Text('Back')),
-                          TextButton(
-                              onPressed: () {
-                                Provider.of<AzanProvider>(context,
-                                        listen: false)
-                                    .getResponse(GetStorage().read('lat'),
-                                        GetStorage().read('long'), id);
-                                Navigator.pop(context);
-                              },
-                              child: const Text('Change'))
-                        ],
-                      );
-                    },
-                  );
-                },
-                icon: const Icon(Icons.cached))
-          ],
+          title: Text(
+              '${GetStorage().read('zone') ?? 'Zone'},${GetStorage().read('state') ?? 'State'}'),
         ),
         body: Column(
           children: [
-            Flexible(
-              child: Row(
-                children: [
-                  Flexible(
-                    child: Card(
-                        child: ListTile(
-                      title: const Text('Date in Masihi'),
-                      subtitle: Text(azan.date),
-                    )),
-                  ),
-                  Flexible(
-                    child: Card(
-                        child: ListTile(
-                      title: const Text('Date in Hijri'),
-                      subtitle: Text(azan.dateHijri),
-                    )),
-                  ),
-                ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: DropdownSearch<String>(
+                asyncItems: (String filter) => getState(filter),
+                itemAsString: (v) => v.toUpperCase(),
+                selectedItem: state,
+                onChanged: (v) async {
+                  setState(() {
+                    state = v;
+                    GetStorage().write('state', v!.toUpperCase());
+                  });
+                  await data.getZone(v!);
+                },
+                dropdownDecoratorProps: const DropDownDecoratorProps(
+                    dropdownSearchDecoration:
+                        InputDecoration(label: Text('Select State'))),
               ),
             ),
-            Card(
-                child: ListTile(
-              leading: const Icon(Icons.nightlight_round),
-              title: const Text('Imsak'),
-              subtitle: Text(azan.time[0]),
-            )),
-            Card(
-                child: ListTile(
-              leading: const Icon(Icons.access_alarm),
-              title: const Text('Fajar'),
-              subtitle: Text(azan.time[1]),
-            )),
-            Card(
-                child: ListTile(
-              leading: const Icon(Icons.sunny_snowing),
-              title: const Text('Sunrise'),
-              subtitle: Text(azan.time[2]),
-            )),
-            Card(
-                child: ListTile(
-              leading: const Icon(Icons.sunny),
-              title: const Text('Zohor'),
-              subtitle: Text(azan.time[3]),
-            )),
-            Card(
-                child: ListTile(
-              leading: const Icon(Icons.sunny),
-              title: const Text('Asar'),
-              subtitle: Text(azan.time[4]),
-            )),
-            Card(
-                child: ListTile(
-              leading: const Icon(Icons.nightlight_round),
-              title: const Text('Maghrib'),
-              subtitle: Text(azan.time[5]),
-            )),
-            Card(
-                child: ListTile(
-              leading: const Icon(Icons.nightlight_round),
-              title: const Text('Isya'),
-              subtitle: Text(azan.time[6]),
-            )),
+            if (state != null)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: DropdownSearch<String>(
+                  selectedItem: zone,
+                  asyncItems: (String filter) => getZone(filter),
+                  itemAsString: (v) => v.toUpperCase(),
+                  onChanged: (v) async {
+                    data.getAzan(v!);
+                    setState(() {
+                      zone = v;
+                      GetStorage().write('zone', v.toUpperCase());
+                    });
+                  },
+                  dropdownDecoratorProps: const DropDownDecoratorProps(
+                      dropdownSearchDecoration:
+                          InputDecoration(label: Text('Select Zone'))),
+                ),
+              ),
+            if (data.azanModel != null)
+              ListView.builder(
+                itemBuilder: (BuildContext context, int index) {
+                  var item = data.azanModel!.data!.first.waktuSolat![index];
+                  var now = DateTime(
+                      DateTime.now().year,
+                      DateTime.now().month,
+                      DateTime.now().day,
+                      int.parse(item.time!.split(':').first),
+                      int.parse(item.time!.split(':').last));
+                  bool set = _value[index];
+                  if (set) {
+                    Provider.of<NotificationProvider>(context, listen: false)
+                        .scheduleNotification(context,
+                            channelDesc: 'Notification for ${item.name!}',
+                            channelName: item.name!,
+                            body: 'Take wudhu and prepare for prayer now!',
+                            title: 'Its time to perform ${item.name!} prayer ',
+                            dateTime: now);
+                  }
+                  return ListTile(
+                    title: Text(item.name!),
+                    subtitle: Text(item.time!),
+                    trailing: index != 0 && index != 2
+                        ? Switch(
+                            value: _value[index],
+                            onChanged: (bool value) {
+                              setState(() {
+                                _value[index] = value;
+                                GetStorage().write('azan', _value);
+                              });
+                              if (value) {
+                                Provider.of<NotificationProvider>(context,
+                                        listen: false)
+                                    .scheduleNotification(context,
+                                        channelDesc:
+                                            'Notification for ${item.name!}',
+                                        channelName: item.name!,
+                                        body:
+                                            'Take wudhu and prepare for prayer now!',
+                                        title:
+                                            'Its time to perform ${item.name!} prayer ',
+                                        dateTime: now);
+                              }
+                            },
+                          )
+                        : null,
+                  );
+                },
+                itemCount: data.azanModel!.data!.first.waktuSolat!.length,
+                primary: false,
+                shrinkWrap: true,
+              ),
+            if (data.state != null)
+              Flexible(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Divider(
+                        thickness: 2,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      IconButton(
+                          onPressed: () {
+                            launch(data.state!.about!.github!);
+                          },
+                          icon: const Icon(SimpleIcons.github)),
+                      Text('Created by: ' + data.state!.about!.createdBy!),
+                      Text('Source: ' + data.state!.about!.source!)
+                    ],
+                  ),
+                ),
+              ),
           ],
         ),
       );
     });
   }
 
-  Future<List<MWL>> getData(String filter) async {
-    return await Provider.of<AzanProvider>(context, listen: false).getMethod();
+  Future<List<String>> getState(String filter) async {
+    return await Provider.of<AzanProvider>(context, listen: false).getState();
+  }
+
+  Future<List<String>> getZone(String filter) async {
+    return await Provider.of<AzanProvider>(context, listen: false)
+        .getZone(state!);
   }
 }

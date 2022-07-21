@@ -211,7 +211,7 @@ class _TodoListState extends State<TodoList> {
                               return Scaffold(
                                 appBar: AppBar(
                                     title: Text(
-                                        ' ${date.hour}:${date.minute}, ${date.day}/${date.month}/${date.year}')),
+                                        'Task due at ${date.hour}:${date.minute}, ${date.day}/${date.month}/${date.year}')),
                                 body: Container(
                                   color: Colors.white,
                                   child: Padding(

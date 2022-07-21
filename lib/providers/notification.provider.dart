@@ -89,8 +89,9 @@ class NotificationProvider extends ChangeNotifier {
         payload: jsonString,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime);
-    ScaffoldMessenger.of(context)
-        .showSnackBar(const SnackBar(content: Text('Reminder Set')));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content:
+            Text('Reminder set at ${tz.TZDateTime.from(dateTime, tz.local)}')));
   }
 
   Future<void> scheduleDaily(

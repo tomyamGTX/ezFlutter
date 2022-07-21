@@ -1,8 +1,11 @@
-import 'package:ez_flutter/models/method.azan.dart';
-import 'package:flutter/material.dart';
 import 'dart:convert';
+
+import 'package:ez_flutter/models/zone.model.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import '../models/azan.model.dart' as azan;
+
+import '../models/azan.model.dart';
+import '../models/state.model.dart';
 
 class AzanProvider extends ChangeNotifier {
   List<String> time = [];
@@ -10,46 +13,33 @@ class AzanProvider extends ChangeNotifier {
   String dateHijri = '';
   String utc = '';
   String source = '';
-
-  Future<void> getResponse(lat, long, method) async {
+  ZoneModel? zone;
+  StateModel? state;
+  AzanModel? azanModel;
+  Future<List<String>> getZone(String states) async {
     var url = Uri.parse(
-        'http://api.aladhan.com/v1/timings/${DateTime.now().toIso8601String()}?latitude=${lat.toStringAsFixed(4)}&longitude=${long.toStringAsFixed(4)}&method=${method}');
+        'https://waktu-solat-api.herokuapp.com/api/v1/states.json?negeri=$states');
     var response = await http.get(url);
-    var data = azan.Azan.fromJson(json.decode(response.body));
-    time.clear();
-    time.add(data.data!.timings!.imsak!);
-    time.add(data.data!.timings!.fajr!);
-    time.add(data.data!.timings!.sunrise!);
-    time.add(data.data!.timings!.dhuhr!);
-    time.add(data.data!.timings!.asr!);
-    time.add(data.data!.timings!.maghrib!);
-    time.add(data.data!.timings!.isha!);
-    date = data.data!.date!.readable!;
-    dateHijri = data.data!.date!.hijri!.date!;
-    utc = data.data!.meta!.timezone!;
-    source = data.data!.meta!.method!.name!;
+    zone = ZoneModel.fromJson(jsonDecode(response.body));
     notifyListeners();
+    return zone!.data!.negeri!.zon!;
   }
 
-  Future<List<MWL>> getMethod() async {
-    List<MWL> list = [];
-    var response = await http.get(Uri.parse('https://api.aladhan.com/methods'));
-    var data = Method.fromJson(json.decode(response.body));
+  Future<List<String>> getState() async {
+    var url =
+        Uri.parse('https://waktu-solat-api.herokuapp.com/api/v1/states.json');
+    var response = await http.get(url);
+    state = StateModel.fromJson(jsonDecode(response.body));
+    notifyListeners();
+    return state!.data!.negeri!;
+  }
 
-    list.add(data.data!.eGYPT!);
-    list.add(data.data!.fRANCE!);
-    list.add(data.data!.gULF!);
-    list.add(data.data!.iSNA!);
-    list.add(data.data!.kARACHI!);
-    list.add(data.data!.kUWAIT!);
-    list.add(data.data!.mAKKAH!);
-    list.add(data.data!.mWL!);
-    list.add(data.data!.qATAR!);
-    list.add(data.data!.rUSSIA!);
-    list.add(data.data!.sINGAPORE!);
-    list.add(data.data!.tEHRAN!);
-    list.add(data.data!.tURKEY!);
-
-    return list;
+  Future<void> getAzan(String zone) async {
+    azanModel = null;
+    var url = Uri.parse(
+        'https://waktu-solat-api.herokuapp.com/api/v1/prayer_times.json?zon=$zone');
+    var response = await http.get(url);
+    azanModel = AzanModel.fromJson(jsonDecode(response.body));
+    notifyListeners();
   }
 }

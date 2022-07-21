@@ -14,6 +14,7 @@ import 'package:learning_input_image/learning_input_image.dart';
 import 'package:learning_text_recognition/learning_text_recognition.dart';
 import 'package:provider/provider.dart';
 import 'package:text_to_speech/text_to_speech.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../providers/auth.provider.dart';
 import '../../widgets/icon.animation.dart';
@@ -37,6 +38,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     Icons.mic,
     Icons.camera,
     Icons.text_fields,
+    Icons.public
   ];
   final _label = [
     'Debt\n List',
@@ -44,6 +46,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     'Text to Speech',
     'Image Recognition',
     'Text Recognition',
+    'Other Work'
   ];
 
   Uint8List? imageValue;
@@ -156,17 +159,17 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
             itemBuilder: (BuildContext context, int index) {
               return InkWell(
                 onTap: () async {
-                  if (index == 0) {
+                  if (_label[index] == 'Debt\n List') {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => const DebtListScreen()));
-                  } else if (index == 1) {
+                  } else if (_label[index] == 'Todo\n List') {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => const TodoList()));
-                  } else if (index == 2) {
+                  } else if (_label[index] == 'Text to Speech') {
                     await showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -196,14 +199,14 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                         );
                       },
                     );
-                  } else if (index == 3) {
+                  } else if (_label[index] == 'Image Recognition') {
                     try {
                       await getImageFile();
                     } catch (e) {
                       ScaffoldMessenger.of(context)
                           .showSnackBar(SnackBar(content: Text(e.toString())));
                     }
-                  } else if (index == 4) {
+                  } else if (_label[index] == 'Text Recognition') {
                     await showDialog(
                         context: context,
                         builder: (BuildContext context) {
@@ -227,6 +230,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                             },
                           );
                         });
+                  } else if (_label[index] == 'Other Work') {
+                    launchUrl(
+                        Uri.parse('https://rumahidamanku-83f07.web.app/#/'));
                   }
                 },
                 child: AnimatedBuilder(

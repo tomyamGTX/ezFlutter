@@ -12,6 +12,8 @@ import 'package:ez_flutter/screen/navigation/update.profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_avatar/flutter_advanced_avatar.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:whatsapp_unilink/whatsapp_unilink.dart';
 
 import '../../providers/auth.provider.dart';
 import '../../widgets/drawer.home.dart';
@@ -122,7 +124,13 @@ class _NavigationState extends State<Navigation> with TickerProviderStateMixin {
           title: Text('${Provider.of<AppUser>(context).name}',
               style: themeStyle()),
         ),
-        actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.search))],
+        actions: [
+          IconButton(
+              onPressed: () {
+                launchWhatsApp();
+              },
+              icon: const Icon(Icons.contact_support))
+        ],
       ),
       body: DoubleBackToCloseApp(
         child: Consumer<NotificationProvider>(builder: (context, noti, child) {
@@ -206,4 +214,15 @@ class _NavigationState extends State<Navigation> with TickerProviderStateMixin {
 
   TextStyle themeStyle() =>
       TextStyle(color: Theme.of(context).primaryColorLight);
+
+  launchWhatsApp() async {
+    const link = WhatsAppUnilink(
+      phoneNumber: '+6013-6595741',
+      text: "Hey! I want to ask something related to EZFlutter App",
+    );
+    // Convert the WhatsAppUnilink instance to a string.
+    // Use either Dart's string interpolation or the toString() method.
+    // The "launch" method is part of "url_launcher".
+    await launch('$link');
+  }
 }

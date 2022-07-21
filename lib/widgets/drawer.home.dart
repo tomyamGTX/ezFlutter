@@ -56,10 +56,10 @@ Drawer buildDrawer(BuildContext context) {
         ),
         ListTile(
           trailing: const Icon(Icons.navigate_next),
-          title: const Text('Get Azan Time API'),
+          title: const Text('Prayer Time in Malaysia'),
           onTap: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => GetApi()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const GetApi()));
           },
         ),
         ListTile(

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:country_picker/country_picker.dart';
 import 'package:ez_flutter/screen/navigation/navigation.dart';
 import 'package:ez_flutter/style/text/text.dart';
 import 'package:ez_flutter/widgets/form.dart';
@@ -27,7 +28,7 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
   bool _visible = false;
 
   String? code;
-
+  String cc = '60';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,11 +47,41 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
                 style: titleTextStyle(),
               ),
             ),
-            FormUi(
-              controller: _phone,
-              hint: 'Insert Phone Number',
-              type: const TextInputType.numberWithOptions(decimal: false),
-              canEmpty: true,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  margin: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColorLight,
+                      borderRadius: BorderRadius.circular(16)),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: TextButton(
+                        onPressed: () {
+                          showCountryPicker(
+                            context: context,
+                            showPhoneCode:
+                                true, // optional. Shows phone code before the country name.
+                            onSelect: (Country country) {
+                              setState(() {});
+                              cc = country.phoneCode;
+                            },
+                          );
+                        },
+                        child: Text('+' + cc)),
+                  ),
+                ),
+                Flexible(
+                  flex: 4,
+                  child: FormUi(
+                    controller: _phone,
+                    hint: 'Insert Phone Number',
+                    type: const TextInputType.numberWithOptions(decimal: false),
+                    canEmpty: true,
+                  ),
+                ),
+              ],
             ),
             Visibility(
               visible: _visible,
@@ -107,7 +138,7 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
                   onPressed: () async {
                     if (!_visible) {
                       if (_phone.text.isNotEmpty) {
-                        var phone = '+6' + _phone.text;
+                        var phone = '+$cc' + _phone.text;
                         getOtp(phone);
                         setState(() {});
                         _visible = !_visible;
